@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{{title}}</title>
+  <link rel="stylesheet" href="/css/main.css"/>
+  <script src="/vendor/socket.io-client/socket.io.js"></script>
+  <script src="/vendor/handlebars/handlebars.runtime.js"></script>
+  <script src="/vendor/jquery/dist/jquery.js"></script>
+  <script src="/js/main.js"></script>
+</head>
+<body>
+<main>
+  <div>
+    <a href="/">Home</a>
+    <b>User ID:</b> {{user}}
+  </div>
+  {{{body}}}
+</main>
+</body>
+</html>

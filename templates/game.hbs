@@ -1,0 +1,67 @@
+<meta http-equiv="refresh" content="2">
+
+<h1>SaladBowl</h1>
+<h2>{{phase.name}}</h2>
+<p>{{phase.instructions}}</p>
+
+{{#if (equal player.id currentPlayer.id)}}
+  Current Word: {{game.currentWord}}
+{{/if}}
+
+<ul id="team-list">
+  {{#each teams}}
+    <div class="team">
+      <div class="team-name">
+        Team {{@index}}
+        ({{get ../points @index}} points)
+        {{#if (and (equal @index ../game.currentTeam) (greaterThan ../game.currentPhase 0))}}(Current Team){{/if}}
+      </div>
+      {{#if (equal ../game.currentPhase 0)}}
+        <form action="/game/{{../../game._id}}/join-team" method="POST">
+          <input type="hidden" name="team" value="{{@index}}">
+          <button type="submit">Join</button>
+        </form>
+      {{/if}}
+      <ol>
+        {{#each this}}
+          <li>
+            {{#if (equal this.id ../currentPlayer.id)}}
+              >>>
+            {{/if}}
+            {{this.name}} ({{this.id}})
+          </li>
+        {{/each}}
+      </ol>
+    </div>
+  {{/each}}
+
+  {{#if (equal game.currentPhase 0)}}
+    <div class="team new-team">
+      New Team
+      <form action="/game/{{game._id}}/join-team" method="POST">
+        <input type="hidden" name="team" value="{{length teams}}">
+        <button type="submit">Join</button>
+      </form>
+    </div>
+  {{/if}}
+</ul>
+
+<div class="action-list">
+  {{#if (greaterThan game.currentPhase 0)}}
+    <a href="/game/{{game._id}}/next-team">Next Team </a>
+  {{/if}}
+  {{#if (lessThan game.currentPhase (length game.phases))}}
+    <a href="/game/{{game._id}}/next-phase">Next Phase ({{sum game.currentPhase 1}})</a>
+  {{/if}}
+  {{#if (greaterThan game.currentPhase 0)}}
+    <a href="/game/{{game._id}}/correct-word">CORRECT</a>
+    <a href="/game/{{game._id}}/skip-word">SKIP</a>
+  {{/if}}
+  <a href="/game/{{game._id}}/delete">Delete Game</a>
+</div>
+
+
+<div class="debug">
+  Debug Info
+  <pre>{{json game true}}</pre>
+</div>

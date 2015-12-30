@@ -1,0 +1,52 @@
+* {
+  box-sizing: border-box; }
+
+body {
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: 0; }
+
+main {
+  margin: auto;
+  max-width: 800px; }
+
+.padded {
+  padding: 15px; }
+
+#team-list {
+  align-content: stretch;
+  align-items: stretch;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-around;
+  list-style: none;
+  margin: 0;
+  padding: 0; }
+  #team-list .team {
+    border: 1px solid black;
+    padding: 20px;
+    flex-basis: 1;
+    flex-grow: 1; }
+    #team-list .team .team-name {
+      font-weight: bold;
+      padding-bottom: 5px; }
+    #team-list .team ol {
+      list-style: none;
+      margin: 0;
+      padding-left: 0; }
+    #team-list .team button {
+      display: block;
+      width: 100%; }
+
+.action-list a {
+  display: block;
+  padding: 10px; }
+  .action-list a:hover {
+    background: #EEE; }
+
+.debug {
+  background: #EEE;
+  margin-top: 50px;
+  padding: 20px; }
+
+/*# sourceMappingURL=main.css.map */

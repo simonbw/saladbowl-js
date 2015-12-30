@@ -1,0 +1,12 @@
+<h1>Salad Bowl</h1>
+<p>Welcome {{user}}</p>
+
+<div>
+  {{#each games}}
+    <div>
+      <a href="/game/{{this._id}}">{{this._id}}</a>
+    </div>
+  {{/each}}
+</div>
+
+<a href="/new-game">New Game</a>
