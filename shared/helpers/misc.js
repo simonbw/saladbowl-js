@@ -52,18 +52,6 @@ helpers.json = function (o, pretty) {
 };
 
 /**
- * Add all the values together
- */
-helpers.sum = function () {
-  var total = 0;
-  for (var i = 0; i < arguments.length - 1; i++) {
-    total += arguments[i];
-  }
-  console.log('total:', total);
-  return total;
-};
-
-/**
  * Convert markdown to HTML.
  *
  * @param s
@@ -81,4 +69,13 @@ helpers.markdown = function (s) {
  */
 helpers.debug = function () {
   return false;
+};
+
+/**
+ *
+ * @param team
+ * @param game
+ */
+helpers.isCurrentTeam = function (team, game) {
+  return (team == game.currentTeam) && (game.currentPhase > 0);
 };

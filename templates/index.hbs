@@ -1,12 +1,20 @@
-<h1>Salad Bowl</h1>
-<p>Welcome {{user}}</p>
+<div class="index">
+  <h1>Welcome to SaladBowl</h1>
+  <hr>
+  <a class="button" href="/new-game">New Game</a>
 
-<div>
-  {{#each games}}
-    <div>
-      <a href="/game/{{this._id}}">{{this._id}}</a>
+  {{#if games}}
+    <hr>
+    <h2>Recent Games</h2>
+
+    <div class="recent-games">
+      {{#each games}}
+        <div>
+          <a href="/game/{{this._id}}">{{or this.name this._id}}</a>
+        </div>
+      {{/each}}
     </div>
-  {{/each}}
+  {{/if}}
+
 </div>
 
-<a href="/new-game">New Game</a>

@@ -1,0 +1,34 @@
+<div id="team-list">
+  {{#each teams}}
+    <div
+        class="team
+          {{#if (isCurrentTeam @index ../game)}}current{{/if}}
+          {{#if (equal ../game.currentPhase 0)}}joinable{{/if}}"
+        data-team-id="{{@index}}">
+      <h1>
+        <div class="name">
+          Team {{@index}}
+        </div>
+        {{#if (greaterThan ../game.currentPhase 0)}}
+          <div class="points">
+            {{points}} points
+          </div>
+        {{/if}}
+      </h1>
+      <ol>
+        {{#each this.players}}
+          <li {{#if (equal this.id ../../currentPlayer.id)}}class="current"{{/if}}>
+            {{this.name}}
+          </li>
+        {{/each}}
+      </ol>
+    </div>
+  {{/each}}
+
+  {{#if (equal game.currentPhase 0)}}
+    <form action="/game/{{game._id}}/join-team" method="POST">
+      <input type="hidden" name="team" value="{{length teams}}">
+      <button type="submit">New Team</button>
+    </form>
+  {{/if}}
+</div>

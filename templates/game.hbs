@@ -1,67 +1,43 @@
-<meta http-equiv="refresh" content="2">
+{{!--<meta http-equiv="refresh" content="2">--}}
 
-<h1>SaladBowl</h1>
-<h2>{{phase.name}}</h2>
-<p>{{phase.instructions}}</p>
-
-{{#if (equal player.id currentPlayer.id)}}
-  Current Word: {{game.currentWord}}
+{{#if (and (equal player.id currentPlayer.id) (greaterThan game.currentPhase 0))}}
+  <h1>Your Turn</h1>
 {{/if}}
 
-<ul id="team-list">
-  {{#each teams}}
-    <div class="team">
-      <div class="team-name">
-        Team {{@index}}
-        ({{get ../points @index}} points)
-        {{#if (and (equal @index ../game.currentTeam) (greaterThan ../game.currentPhase 0))}}(Current Team){{/if}}
-      </div>
-      {{#if (equal ../game.currentPhase 0)}}
-        <form action="/game/{{../../game._id}}/join-team" method="POST">
-          <input type="hidden" name="team" value="{{@index}}">
-          <button type="submit">Join</button>
-        </form>
-      {{/if}}
-      <ol>
-        {{#each this}}
-          <li>
-            {{#if (equal this.id ../currentPlayer.id)}}
-              >>>
-            {{/if}}
-            {{this.name}} ({{this.id}})
-          </li>
-        {{/each}}
-      </ol>
-    </div>
-  {{/each}}
+<h1>{{phase.name}}</h1>
+<p>{{phase.instructions}}</p>
 
+<hr>
+
+{{#if (and (equal player.id currentPlayer.id) (greaterThan game.currentPhase 0))}}
+  {{#if ../game.started}}
+    <div id="timer"></div>
+    <div class="current-word">
+      {{game.currentWord}}
+    </div>
+    <div class="round-actions">
+      <a class="correct" href="/game/{{game._id}}/correct-word">CORRECT</a>
+      <a class="skip" href="/game/{{game._id}}/skip-word">SKIP</a>
+    </div>
+  {{else}}
+    <div class="round-actions">
+      <a class="start" href="/game/{{game._id}}/start-round">START</a>
+    </div>
+  {{/if}}
+{{/if}}
+
+{{> team_list}}
+
+<hr>
+
+<div class="debug-list">
   {{#if (equal game.currentPhase 0)}}
-    <div class="team new-team">
-      New Team
-      <form action="/game/{{game._id}}/join-team" method="POST">
-        <input type="hidden" name="team" value="{{length teams}}">
-        <button type="submit">Join</button>
-      </form>
-    </div>
+    <a class="button" href="/game/{{game._id}}/next-phase">Start Game</a>
   {{/if}}
-</ul>
-
-<div class="action-list">
-  {{#if (greaterThan game.currentPhase 0)}}
-    <a href="/game/{{game._id}}/next-team">Next Team </a>
-  {{/if}}
-  {{#if (lessThan game.currentPhase (length game.phases))}}
-    <a href="/game/{{game._id}}/next-phase">Next Phase ({{sum game.currentPhase 1}})</a>
-  {{/if}}
-  {{#if (greaterThan game.currentPhase 0)}}
-    <a href="/game/{{game._id}}/correct-word">CORRECT</a>
-    <a href="/game/{{game._id}}/skip-word">SKIP</a>
-  {{/if}}
-  <a href="/game/{{game._id}}/delete">Delete Game</a>
 </div>
 
+{{!--{{> debug_panel}}--}}
 
-<div class="debug">
-  Debug Info
-  <pre>{{json game true}}</pre>
-</div>
+<hr>
+
+<a href="/game/{{game._id}}/delete">Delete Game</a>

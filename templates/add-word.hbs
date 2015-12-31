@@ -1,6 +1,8 @@
-<h1>Add A Word</h1>
-
-<form method="POST">
-  <input name="word" autofocus>
-  <button type="submit">Submit</button>
-</form>
+<div class="add-word">
+  <h1>Add A Word</h1>
+  <hr>
+  <form method="POST">
+    <input name="word" placeholder="Person, Place, Thing, etc." autofocus>
+    <button type="submit">{{subtract game.wordsPerPlayer (length player.words)}} remaining</button>
+  </form>
+</div>

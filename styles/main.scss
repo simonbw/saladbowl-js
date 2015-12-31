@@ -1,70 +1,53 @@
+@import 'fonts';
+@import 'form';
+@import 'index';
+@import 'new-game';
+@import 'add-word';
+@import 'team-list';
+@import 'game';
 
 * {
   box-sizing: border-box;
 }
 
 body {
-  font: 14px "Lucida Grande",
-  Helvetica, Arial, sans-serif;
+  font: 14px "Raleway", Helvetica, Arial, sans-serif;
   margin: 0;
   padding: 0;
+  text-align: center;
 }
 
 main {
+  margin: 15% auto 0;
+  max-width: 600px;
+  padding: 40px;
+}
+
+p {
+  font-size: 1.1em;
   margin: auto;
-  max-width: 800px;
+  max-width: 400px;
 }
 
-.padded {
-  padding: 15px;
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 200;
+  text-align: center;
 }
 
-#team-list {
-  align-content: stretch;
-  align-items: stretch;
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: space-around;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-
-  .team {
-    border: 1px solid black;
-    padding: 20px;
-    flex-basis: 1;
-    flex-grow: 1;
-
-    .team-name {
-      font-weight: bold;
-      padding-bottom: 5px;
-    }
-
-    ol {
-      list-style: none;
-      margin: 0;
-      padding-left: 0;
-    }
-
-    button {
-      display: block;
-      width: 100%;
-    }
-  }
+h1 {
+  font-size: 36px;
 }
 
-.action-list {
-  a {
-    display: block;
-    padding: 10px;
-    &:hover {
-      background: #EEE;
-    }
-  }
+hr {
+  border-top: 1px solid #CCC;
+  border-bottom: none;
+  margin: 20px 0px;
 }
 
-.debug {
-  background: #EEE;
-  margin-top: 50px;
-  padding: 20px;
+a {
+  color: #666;
+}
+
+.github {
+  font-size: 12px;
 }

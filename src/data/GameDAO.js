@@ -4,21 +4,27 @@ var GameUtil = require('./GameUtil');
 var Random = require('../../shared/Random');
 var SimpleDAO = require('./SimpleDAO');
 
+//
 var DEFAULT_PHASES = [{
   'name': 'Join Teams',
-  'instructions': 'Join the team you want to be on.'
+  'instructions': 'Join the team you want to be on. When everyone is ready, start the game.'
 }, {
   'name': 'Describe It',
-  'instructions': 'Say anything but the word.'
+  'instructions': 'Say anything but the word.',
+  'duration': 10000
 }, {
   'name': 'Act It Out',
-  'instructions': 'No noises.'
+  'instructions': 'No noises.',
+  'duration': 10000
 }, {
   'name': 'One Word Only',
-  'instructions': 'Say only one word. No gestures.'
+  'instructions': 'Say only one word. No gestures.',
+  'duration': 10000
 }];
 
-var DEFAULT_WORDS_PER_PLAYER  = 3;
+//
+var DEFAULT_WORDS_PER_PLAYER = 5;
+
 
 /**
  * @constructor
@@ -40,6 +46,7 @@ GameDAO.prototype.transform = function (game) {
   if (!game) {
     return game;
   }
+  // TODO: set prototype
   game.getCurrentPlayer = GameUtil.getCurrentPlayer.bind(GameUtil, game);
   game.getPlayer = GameUtil.getPlayer.bind(GameUtil, game);
   game.getPoints = GameUtil.getPoints.bind(GameUtil, game);
@@ -52,7 +59,6 @@ GameDAO.prototype.transform = function (game) {
   game.phases = game.phases || DEFAULT_PHASES;
   game.players = game.players || [];
   game.points = game.points || [];
-  game.teams = game.teams || [];
   game.wordsInBowl = game.wordsInBowl || [];
   game.wordsPerPlayer = game.wordsPerPlayer || DEFAULT_WORDS_PER_PLAYER;
 
@@ -177,7 +183,8 @@ GameDAO.prototype.nextTeam = function (gameId) {
         '$set': {
           'currentTeam': team,
           'currentWord': currentWord,
-          'wordsInBowl': wordsInBowl
+          'wordsInBowl': wordsInBowl,
+          'started': false
         }
       });
     }.bind(this));
@@ -195,13 +202,17 @@ GameDAO.prototype.nextPhase = function (gameId) {
       var wordsInBowl = game.getWords();
       var currentWord = Random.take(wordsInBowl);
       var currentPhase = game.currentPhase + 1;
-      return this.update(gameId, {
+      var update = {
         '$set': {
           'currentPhase': currentPhase,
           'currentWord': currentWord,
           'wordsInBowl': wordsInBowl
         }
-      });
+      };
+      if (currentPhase > game.phases.length) {
+        update['started'] = false;
+      }
+      return this.update(gameId, update);
     }.bind(this));
 };
 
@@ -215,9 +226,15 @@ GameDAO.prototype.correctWord = function (gameId) {
   return this.fromId(gameId)
     .then(function (game) {
       var wordsInBowl = game.wordsInBowl;
+      var currentPhase = game.currentPhase;
+      if (wordsInBowl.length == 0) {
+        wordsInBowl = game.getWords();
+        currentPhase = game.currentPhase + 1;
+      }
       var currentWord = Random.take(wordsInBowl);
-      return this.update(gameId, {
+      var update = {
         '$set': {
+          'currentPhase': currentPhase,
           'currentWord': currentWord,
           'wordsInBowl': wordsInBowl
         }, '$push': {
@@ -227,7 +244,8 @@ GameDAO.prototype.correctWord = function (gameId) {
             'phase': game.currentPhase
           }
         }
-      });
+      };
+      return this.update(gameId, update);
     }.bind(this));
 };
 
@@ -247,6 +265,24 @@ GameDAO.prototype.skipWord = function (gameId) {
         '$set': {
           'currentWord': currentWord,
           'wordsInBowl': wordsInBowl
+        }
+      });
+    }.bind(this));
+};
+
+/**
+ * Start the round.
+ *
+ * @param gameId
+ * @returns {Promise}
+ */
+GameDAO.prototype.startRound = function (gameId) {
+  return this.fromId(gameId)
+    .then(function (game) {
+      return this.update(gameId, {
+        '$set': {
+          'started': true,
+          'startedAt': Date.now()
         }
       });
     }.bind(this));

@@ -1,20 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta name=viewport content='width=400'>
+
   <title>{{title}}</title>
   <link rel="stylesheet" href="/css/main.css"/>
   <script src="/vendor/socket.io-client/socket.io.js"></script>
   <script src="/vendor/handlebars/handlebars.runtime.js"></script>
   <script src="/vendor/jquery/dist/jquery.js"></script>
   <script src="/js/main.js"></script>
+
+  {{#if game}}
+    <script>
+      window.game = {{{json game}}};
+    </script>
+  {{/if}}
 </head>
 <body>
 <main>
-  <div>
-    <a href="/">Home</a>
-    <b>User ID:</b> {{user}}
-  </div>
   {{{body}}}
+  <hr>
+  <a class="github" href="https://github.com/simonbw/saladbowl-js">https://github.com/simonbw/saladbowl-js</a>
 </main>
 </body>
 </html>

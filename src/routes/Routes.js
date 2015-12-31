@@ -31,11 +31,17 @@ router.get('/', function (req, res, next) {
 });
 
 /**
+ * Show the new game page.
+ */
+router.get('/new-game', function (req, res, next) {
+  res.render('new-game');
+});
+
+/**
  * Create a new game and link to that game.
  */
-// TODO: Is this the right http method? Does it matter?
-router.get('/new-game', function (req, res, next) {
-  gameDao.create()
+router.post('/new-game', function (req, res, next) {
+  gameDao.create({'name': req.body.gameName})
     .then(function (game) {
       res.redirect('/game/' + game._id);
     }, next)
@@ -63,8 +69,7 @@ router.get('/game/:gameId', function (req, res, next) {
             user: req.user,
             game: game,
             phase: game.phases[game.currentPhase],
-            teams: game.getTeams(),
-            points: game.getPoints(),
+            teams: game.getTeams(true),
             currentPlayer: game.getCurrentPlayer(),
             player: player
           });
@@ -158,8 +163,10 @@ router.get('/game/:gameId/add-word', function (req, res, next) {
   var gameId = req.params['gameId'];
   gameDao.fromId(gameId)
     .then(function (game) {
+      var player = game.getPlayer(req.user);
       res.render('add-word', {
         'game': game,
+        'player': player,
         'user': req.user
       });
     }, next)
@@ -220,6 +227,18 @@ router.get('/game/:gameId/correct-word', function (req, res, next) {
 router.get('/game/:gameId/skip-word', function (req, res, next) {
   var gameId = req.params['gameId'];
   gameDao.skipWord(gameId)
+    .then(function (game) {
+      res.redirect('/game/' + gameId);
+    }, next)
+    .catch(next);
+});
+
+/**
+ *
+ */
+router.get('/game/:gameId/start-round', function (req, res, next) {
+  var gameId = req.params['gameId'];
+  gameDao.startRound(gameId)
     .then(function (game) {
       res.redirect('/game/' + gameId);
     }, next)

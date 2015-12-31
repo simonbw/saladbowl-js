@@ -1,9 +1,10 @@
-<h1>Add Player</h1>
-
-<form method="POST">
-  <label>
-    Your Name:
-    <input autofocus name="playerName">
-  </label>
-  <button type="submit">Join Game</button>
-</form>
+<div class="join">
+  <h1>{{game.name}}</h1>
+  <h4>{{game._id}}</h4>
+  <hr>
+  <form method="POST">
+    <input autofocus name="playerName" placeholder="Enter your name">
+    <button type="submit">Join Game</button>
+    <a class="button" href="/">Back</a>
+  </form>
+</div>

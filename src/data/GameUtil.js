@@ -7,18 +7,35 @@ module.exports = {
    * Get a list of lists of players.
    *
    * @param game
+   * @param includePoints
    * @returns {*}
    */
-  getTeams: function (game) {
+  getTeams: function (game, includePoints) {
     if (!game) {
       return undefined;
     }
 
     var teams = [];
+
+    if (includePoints) {
+      var points = game.getPoints();
+      for (var i = 0; i < points.length; i++) {
+        teams[i] = teams[i] || {players: []};
+        teams[i].points = points[i];
+      }
+    }
+
+    var max = 0;
     game.players.forEach(function (player) {
-      teams[player.team] = teams[player.team] || [];
-      teams[player.team].push(player);
+      max = Math.max(max, player.team);
+      teams[player.team] = teams[player.team] || {players: []};
+      teams[player.team].players.push(player);
     });
+
+    // guarantees stuff
+    for (var j = 0; j < max; j++) {
+      teams[j] = teams[j] || {players: []};
+    }
 
     return teams;
   },
@@ -34,9 +51,12 @@ module.exports = {
       return undefined;
     }
 
-    var points = [];
+    var points = game.getTeams().map(function () {
+      return 0;
+    });
+
     game.points.forEach(function (point) {
-      points[point.team] = (points[point.team] || 0) + 1;
+      points[point.team] += 1;
     });
 
     return points;
@@ -90,6 +110,6 @@ module.exports = {
       return undefined;
     }
     var team = game.getTeams()[game.currentTeam];
-    return team[game.currentPlayerIndex % team.length];
+    return team.players[game.currentPlayerIndex % team.players.length];
   }
 };
