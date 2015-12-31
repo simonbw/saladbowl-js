@@ -1,4 +1,6 @@
-{{!--<meta http-equiv="refresh" content="2">--}}
+{{#if autorefresh}}
+  <meta http-equiv="refresh" content="2">
+{{/if}}
 
 {{#if (and (equal player.id currentPlayer.id) (greaterThan game.currentPhase 0))}}
   <h1>Your Turn</h1>
@@ -30,14 +32,12 @@
 
 <hr>
 
-<div class="debug-list">
-  {{#if (equal game.currentPhase 0)}}
-    <a class="button" href="/game/{{game._id}}/next-phase">Start Game</a>
-  {{/if}}
-</div>
+{{#if (equal game.currentPhase 0)}}
+  <a class="button" href="/game/{{game._id}}/next-phase">Start Game</a>
+  <hr>
+{{/if}}
 
 {{!--{{> debug_panel}}--}}
 
-<hr>
 
 <a href="/game/{{game._id}}/delete">Delete Game</a>

@@ -11,15 +11,15 @@ var DEFAULT_PHASES = [{
 }, {
   'name': 'Describe It',
   'instructions': 'Say anything but the word.',
-  'duration': 10000
+  'duration': 60000
 }, {
   'name': 'Act It Out',
   'instructions': 'No noises.',
-  'duration': 10000
+  'duration': 60000
 }, {
   'name': 'One Word Only',
   'instructions': 'Say only one word. No gestures.',
-  'duration': 10000
+  'duration': 60000
 }];
 
 //

@@ -2,7 +2,15 @@
   <h1>New Game</h1>
   <hr>
   <form method="POST">
-    <input name="gameName" placeholder="Name your game" autofocus>
+    <label>
+      Name of game
+      <input name="gameName" placeholder="Name your game" autofocus>
+    </label>
+
+    <label>
+      Words Per Player
+      <input name="wordsPerPlayer" value="5" type="number" min="1" max="99">
+    </label>
 
     <div class="button-row">
       <button type="submit">Create</button>

@@ -41,7 +41,10 @@ router.get('/new-game', function (req, res, next) {
  * Create a new game and link to that game.
  */
 router.post('/new-game', function (req, res, next) {
-  gameDao.create({'name': req.body.gameName})
+  gameDao.create({
+      'name': req.body.gameName,
+      'wordsPerPlayer': parseInt(req.body.wordsPerPlayer) || 5
+    })
     .then(function (game) {
       res.redirect('/game/' + game._id);
     }, next)
@@ -65,13 +68,18 @@ router.get('/game/:gameId', function (req, res, next) {
           res.redirect('/game/' + gameId + '/add-word');
         } else {
           console.log('rendering game');
+          var autorefresh = true;
+          if (game.started && game.getCurrentPlayer().id == player.id) {
+            autorefresh = false;
+          }
           res.render('game', {
             user: req.user,
             game: game,
             phase: game.phases[game.currentPhase],
             teams: game.getTeams(true),
             currentPlayer: game.getCurrentPlayer(),
-            player: player
+            player: player,
+            autorefresh: autorefresh
           });
         }
       } else {
