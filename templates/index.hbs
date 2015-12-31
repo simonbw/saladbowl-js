@@ -1,12 +1,8 @@
-<div class="index">
+<div id="index-page">
   <h1>Welcome to SaladBowl</h1>
   <hr>
   <a class="button" href="/new-game">New Game</a>
-
   {{#if games}}
-    <hr>
-    <h2>Recent Games</h2>
-
     <div class="recent-games">
       {{#each games}}
         <div>
@@ -15,6 +11,5 @@
       {{/each}}
     </div>
   {{/if}}
-
 </div>
 

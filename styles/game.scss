@@ -1,38 +1,16 @@
 
 #timer {
+  font-size: 2em;
+}
 
+.phase-instructions {
+  text-align: center;
 }
 
 .current-word {
   text-align: center;
   font-size: 4em;
   padding: 20px;
-}
-
-.round-actions {
-  display: flex;
-  flex-flow: row wrap;
-
-  a {
-    color: #FFF;
-    flex-basis: 0;
-    flex-grow: 1;
-    font-size: 2em;
-    min-width: 300px;
-    padding: 50px;
-    text-align: center;
-    text-decoration: none;
-
-    &.correct {
-      background: #0F0;
-    }
-    &.skip {
-      background: #F00;
-    }
-    &.start {
-      background: #00F;
-    }
-  }
 }
 
 .debug {

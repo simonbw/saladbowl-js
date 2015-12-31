@@ -1,5 +1,4 @@
-var Util = require('../Util');
-
+var shortid = require('shortid');
 
 /**
  * Provides helper middleware.
@@ -16,7 +15,7 @@ module.exports = {
       req.user = req.cookies.user;
       console.log('Returning user', req.user);
     } else {
-      req.user = Util.uniqueId();
+      req.user = shortid.generate();
       res.cookie('user', req.user);
       console.log('New user');
     }

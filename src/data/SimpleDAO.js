@@ -79,8 +79,16 @@ SimpleDAO.prototype.fromIds = function (ids) {
  * Return all objects.
  */
 SimpleDAO.prototype.all = function () {
+  return this.find();
+};
+
+/**
+ * Return matching objects.
+ */
+SimpleDAO.prototype.find = function (query) {
   // TODO: Transform promise
-  return this.collection.find({}).toArray();
+  query = query || {};
+  return this.collection.find(query).toArray();
 };
 
 /**

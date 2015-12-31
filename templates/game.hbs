@@ -1,43 +1,43 @@
-{{#if autorefresh}}
-  <meta http-equiv="refresh" content="2">
-{{/if}}
+<div id="game-page">
+  {{#if (greaterThan game.currentPhase 0)}}
+    {{#if (and (equal player.id currentPlayer.id) )}}
+      <h1>{{phase.name}}</h1>
 
-{{#if (and (equal player.id currentPlayer.id) (greaterThan game.currentPhase 0))}}
-  <h1>Your Turn</h1>
-{{/if}}
-
-<h1>{{phase.name}}</h1>
-<p>{{phase.instructions}}</p>
-
-<hr>
-
-{{#if (and (equal player.id currentPlayer.id) (greaterThan game.currentPhase 0))}}
-  {{#if ../game.started}}
-    <div id="timer"></div>
-    <div class="current-word">
-      {{game.currentWord}}
-    </div>
-    <div class="round-actions">
-      <a class="correct" href="/game/{{game._id}}/correct-word">CORRECT</a>
-      <a class="skip" href="/game/{{game._id}}/skip-word">SKIP</a>
-    </div>
+      <p class="phase-instructions">{{phase.instructions}}</p>
+    {{else if (and (equal game.currentTeam player.team) (greaterThan game.currentPhase 0))}}
+      <h1>Guess It</h1>
+    {{else}}
+      <h1>Wait...</h1>
+    {{/if}}
   {{else}}
-    <div class="round-actions">
-      <a class="start" href="/game/{{game._id}}/start-round">START</a>
-    </div>
+    <p class="phase-instructions">{{phase.instructions}}</p>
   {{/if}}
-{{/if}}
 
-{{> team_list}}
+  {{#if game.started}}
+    <div id="timer">{{formatClock (timeRemaining game)}}</div>
+  {{/if}}
 
-<hr>
+  {{#if (and (equal player.id currentPlayer.id) (greaterThan game.currentPhase 0))}}
+    {{#if ../game.started}}
+      <div class="current-word">
+        {{game.currentWord}}
+      </div>
+      <a class="button correct" href="/game/{{game._id}}/correct-word">Correct</a>
+      <a class="button skip" href="/game/{{game._id}}/skip-word">Skip</a>
+    {{else}}
+      <a class="button start" href="/game/{{game._id}}/start-round">Ready</a>
+      {{> team_list}}
+    {{/if}}
 
-{{#if (equal game.currentPhase 0)}}
-  <a class="button" href="/game/{{game._id}}/next-phase">Start Game</a>
-  <hr>
-{{/if}}
+  {{else}}
+    {{> team_list}}
+  {{/if}}
 
-{{!--{{> debug_panel}}--}}
+  {{#if (readyToStart game)}}
+    <a class="button" href="/game/{{game._id}}/next-phase">Start Game</a>
+  {{/if}}
 
+  {{!--{{> debug_panel}}--}}
 
-<a href="/game/{{game._id}}/delete">Delete Game</a>
+  {{!--<a href="/game/{{game._id}}/delete">Delete Game</a>--}}
+</div>

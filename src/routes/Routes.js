@@ -2,7 +2,6 @@ var express = require('express');
 
 var apiRoutes = require('./api/ApiRoutes');
 var gameDao = require('../data/GameDAO').instance;
-var GameUtil = require('../data/GameUtil');
 var RouteHelpers = require('./RouteHelpers');
 var router = express.Router();
 
@@ -12,7 +11,7 @@ router.use(RouteHelpers.attachUser);
 router.use('/api', apiRoutes);
 
 
-// TODO: Split up routes
+// TODO: Split up routes into more files
 
 /**
  * Home Page
@@ -20,14 +19,26 @@ router.use('/api', apiRoutes);
 router.get('/', function (req, res, next) {
   console.log(req.user);
 
-  gameDao.all()
+  gameDao.recent()
     .then(function (games) {
-      res.render('index', {
+      var data = {
         user: req.user,
         games: games
-      });
+      };
+      if (req.xhr) {
+        res.send(data);
+      } else {
+        res.render('index', data);
+      }
     }, next)
     .catch(next);
+});
+
+/**
+ * Show the instructions.
+ */
+router.get('/how-to-play', function (req, res, next) {
+  res.render('how-to-play');
 });
 
 /**
@@ -68,19 +79,19 @@ router.get('/game/:gameId', function (req, res, next) {
           res.redirect('/game/' + gameId + '/add-word');
         } else {
           console.log('rendering game');
-          var autorefresh = true;
-          if (game.started && game.getCurrentPlayer().id == player.id) {
-            autorefresh = false;
-          }
-          res.render('game', {
+          var data = {
             user: req.user,
             game: game,
             phase: game.phases[game.currentPhase],
             teams: game.getTeams(true),
             currentPlayer: game.getCurrentPlayer(),
-            player: player,
-            autorefresh: autorefresh
-          });
+            player: player
+          };
+          if (req.xhr) {
+            res.send(data);
+          } else {
+            res.render('game', data);
+          }
         }
       } else {
         console.log('redirecting to join', player);
@@ -107,6 +118,27 @@ router.get('/game/:gameId/join', function (req, res, next) {
     }, next)
     .catch(next);
 });
+/**
+ *
+ */
+router.post('/game/:gameId/join', function (req, res, next) {
+  var gameId = req.params['gameId'];
+  gameDao.addPlayer(gameId, req.user, req.body.playerName)
+    .then(function (game) {
+      res.redirect('/game/' + gameId);
+    }, function (error) {
+      if (error.name == 'JoinError') {
+        if (error.message === 'ALREADY JOINED') {
+          res.redirect('/game/' + gameId);
+        } else if (error.message === 'ALREADY JOINED') {
+          // TODO: ?
+        }
+      } else {
+        throw error;
+      }
+    })
+    .catch(next);
+});
 
 /**
  *
@@ -127,28 +159,6 @@ router.get('/game/:gameId/delete', function (req, res, next) {
     .then(function (game) {
       res.redirect('/');
     }, next)
-    .catch(next);
-});
-
-/**
- *
- */
-router.post('/game/:gameId/join', function (req, res, next) {
-  var gameId = req.params['gameId'];
-  gameDao.addPlayer(gameId, req.user, req.body.playerName)
-    .then(function (game) {
-      res.redirect('/game/' + gameId);
-    }, function (error) {
-      if (error.name == 'JoinError') {
-        if (error.message === 'ALREADY JOINED') {
-          res.redirect('/game/' + gameId);
-        } else if (error.message === 'ALREADY JOINED') {
-          // TODO: ?
-        }
-      } else {
-        next();
-      }
-    })
     .catch(next);
 });
 
@@ -186,11 +196,16 @@ router.get('/game/:gameId/add-word', function (req, res, next) {
  */
 router.post('/game/:gameId/add-word', function (req, res, next) {
   var gameId = req.params['gameId'];
-  gameDao.addWord(gameId, req.user, req.body.word)
-    .then(function (game) {
-      res.redirect('/game/' + gameId);
-    }, next)
-    .catch(next);
+  var word = req.body.word;
+  if (word) {
+    gameDao.addWord(gameId, req.user, word)
+      .then(function (game) {
+        res.redirect('/game/' + gameId);
+      }, next)
+      .catch(next);
+  } else {
+    res.redirect('/game/' + gameId + '/add-word');
+  }
 });
 
 /**

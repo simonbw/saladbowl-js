@@ -17,8 +17,10 @@
       </h1>
       <ol>
         {{#each this.players}}
-          <li {{#if (equal this.id ../../currentPlayer.id)}}class="current"{{/if}}>
-            {{this.name}}
+          <li class="{{#if (equal this.id ../../currentPlayer.id)}}current{{/if}}
+            {{#if (lessThan (length this.words) ../../game.wordsPerPlayer)}}waiting{{/if}}"
+              data-player-id="{{this.id}}">
+            {{this.name}}{{#if (equal this.id ../../player.id)}} (you){{/if}}
           </li>
         {{/each}}
       </ol>
@@ -26,9 +28,8 @@
   {{/each}}
 
   {{#if (equal game.currentPhase 0)}}
-    <form action="/game/{{game._id}}/join-team" method="POST">
-      <input type="hidden" name="team" value="{{length teams}}">
-      <button type="submit">New Team</button>
-    </form>
+    <div class="team joinable new-team" data-team-id="{{length teams}}">
+      <h1>Create New Team...</h1>
+    </div>
   {{/if}}
 </div>

@@ -6,16 +6,17 @@ var r = Math.random;
 var Random = {
 
   /**
+   * Return a random number between min and max.
    *
    * @param min
    * @param max
    * @returns {*}
    */
   uniform: function (min, max) {
-    if (min == null) {
+    if (min == undefined) {
       return r();
     }
-    if (max == null) {
+    if (max == undefined) {
       max = min;
       min = 0;
     }
@@ -23,6 +24,7 @@ var Random = {
   },
 
   /**
+   * Return a random integer between min and max.
    *
    * @param min
    * @param max

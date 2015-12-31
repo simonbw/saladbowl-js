@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta name=viewport content='width=400'>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 
   <title>{{title}}</title>
   <link rel="stylesheet" href="/css/main.css"/>
@@ -10,17 +10,27 @@
   <script src="/vendor/jquery/dist/jquery.js"></script>
   <script src="/js/main.js"></script>
 
-  {{#if game}}
-    <script>
-      window.game = {{{json game}}};
-    </script>
-  {{/if}}
+  <script>
+    SALADBOWL = {};
+    SALADBOWL.game = {{{jsObject game}}};
+    SALADBOWL.player = {{{jsObject player}}};
+    SALADBOWL.currentPlayer = {{{jsObject currentPlayer}}};
+  </script>
 </head>
 <body>
 <main>
-  {{{body}}}
+  <div id="main-content">
+    {{{body}}}
+  </div>
   <hr>
-  <a class="github" href="https://github.com/simonbw/saladbowl-js">https://github.com/simonbw/saladbowl-js</a>
+  <footer>
+    <a href="/">Home</a>
+    <a href="/how-to-play">How To Play</a>
+
+    <div>
+      <a href="https://github.com/simonbw/saladbowl-js">https://github.com/simonbw/saladbowl-js</a>
+    </div>
+  </footer>
 </main>
 </body>
 </html>

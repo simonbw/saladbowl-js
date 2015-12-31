@@ -1,63 +1,46 @@
-require('./templates');
-
-var helpers = require('../shared/helpers');
-
-helpers.registerAll(Handlebars);
-
-// Make all templates available as partials
-for (var templateName in Handlebars.templates) {
-  if (Handlebars.templates.hasOwnProperty(templateName)) {
-    Handlebars.registerPartial(templateName, Handlebars.templates[templateName]);
-  }
-}
+var Game = require('../shared/Game');
+var Timer = require('./Timer');
+var misc = require('./misc');
+var refresh = require('./Refresh');
 
 
-// make the timer work
+var REFRESH_DELAY = 1500;
+
 $(function () {
-  /**
-   * Return the number of milliseconds remaining in the round.
-   *
-   * @returns {number}
-   */
-  function getTimeRemaining(game) {
-    var duration = game.phases[game.currentPhase].duration;
-    var timeSinceStart = (Date.now() - game.startedAt);
-    var timeout = duration - timeSinceStart;
-    return timeout > 0 ? timeout : 0;
+  var game = Game.transformGame(SALADBOWL.game);
+  var player = SALADBOWL.player;
+  misc.setupHandlebars();
+
+  if ($('#index-page').length) {
+    refresh('index');
   }
-
-  /**
-   * Format milliseconds to look good.
-   *
-   * @param milliseconds
-   */
-  function formatClock(milliseconds) {
-    var seconds = milliseconds / 1000;
-    var whole = Math.floor(seconds);
-    var part = seconds - whole;
-    part = Math.floor(part * 100);
-    return whole + ':' + part;
+  if ($('#game-page').length) {
+    refresh('game', onGamePage, {'game': game, 'player': player});
   }
-
-  if (window.game && game.started) {
-    setTimeout(function () {
-      alert('TIME UP!');
-      $.get('/game/' + game._id + '/next-team', function () {
-        location.reload();
-      });
-    }, getTimeRemaining(window.game));
-
-    setInterval(function () {
-      $('#timer').html(formatClock(getTimeRemaining(game)));
-    }, 1 / 60);
+  if ($('#new-game-page').length) {
+    console.log('new game page');
   }
+  if ($('#join-page').length) {
+    console.log('join page');
+  }
+  if ($('#add-word-page').length) {
+    console.log('add word page');
+  }
+});
 
-  // Join Teams
-  $('.team.joinable').click(function (team) {
+/**
+ * Called when the game page is rendered.
+ *
+ * @param data
+ */
+function onGamePage(data) {
+  var game = data.game;
+  Timer.start(game, game.getCurrentPlayer().id == data.player.id);
+  $('.team.joinable').click(function () {
     var team = $(this).data('team-id');
     $.post('/game/' + game._id + '/join-team', {'team': team}, function (data) {
-      location.reload();
+      refreshGamePage();
     });
     console.log('Joining Team', team);
   });
-});
+}

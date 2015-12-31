@@ -24,6 +24,7 @@
     "node-sass": "^3.4.2",
     "node-sass-middleware": "^0.9.7",
     "promised-mongo": "^1.2.0",
-    "serve-favicon": "~2.3.0"
+    "serve-favicon": "~2.3.0",
+    "shortid": "^2.2.4"
   }
 }

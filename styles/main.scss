@@ -18,15 +18,18 @@ body {
 }
 
 main {
-  margin: 15% auto 0;
+  margin: 5% auto 0;
   max-width: 600px;
   padding: 40px;
 }
 
 p {
   font-size: 1.1em;
-  margin: auto;
+  margin: 10px auto;
   max-width: 400px;
+  text-align: left;
+  text-indent: 20px;
+  line-height: 1.5;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -36,6 +39,10 @@ h1, h2, h3, h4, h5, h6 {
 
 h1 {
   font-size: 36px;
+}
+
+h2 {
+  font-size: 24px;
 }
 
 hr {
@@ -48,6 +55,7 @@ a {
   color: #666;
 }
 
-.github {
+footer a {
   font-size: 12px;
+  display: inline-block;
 }

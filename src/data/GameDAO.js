@@ -1,6 +1,6 @@
 var inherits = require('util').inherits;
 
-var GameUtil = require('./GameUtil');
+var Game = require('../../shared/Game');
 var Random = require('../../shared/Random');
 var SimpleDAO = require('./SimpleDAO');
 
@@ -36,22 +36,16 @@ inherits(GameDAO, SimpleDAO);
 
 GameDAO.instance = new GameDAO();
 
+GameDAO.prototype.transform = Game.transformGame;
 
 /**
- * Transforms the raw data to a model.
+ * Create a new game. Add default parameters.
  *
  * @param game
+ * @returns {Promise}
  */
-GameDAO.prototype.transform = function (game) {
-  if (!game) {
-    return game;
-  }
-  // TODO: set prototype
-  game.getCurrentPlayer = GameUtil.getCurrentPlayer.bind(GameUtil, game);
-  game.getPlayer = GameUtil.getPlayer.bind(GameUtil, game);
-  game.getPoints = GameUtil.getPoints.bind(GameUtil, game);
-  game.getTeams = GameUtil.getTeams.bind(GameUtil, game);
-  game.getWords = GameUtil.getWords.bind(GameUtil, game);
+GameDAO.prototype.create = function (game) {
+  game = game || {};
 
   game.currentPhase = game.currentPhase || 0;
   game.currentPlayerIndex = game.currentPlayerIndex || 0;
@@ -62,7 +56,14 @@ GameDAO.prototype.transform = function (game) {
   game.wordsInBowl = game.wordsInBowl || [];
   game.wordsPerPlayer = game.wordsPerPlayer || DEFAULT_WORDS_PER_PLAYER;
 
-  return game;
+  return SimpleDAO.prototype.create.call(this, game);
+};
+
+/**
+ *
+ */
+GameDAO.prototype.recent = function () {
+  return this.find({'currentPhase': {'$eq': 0}})
 };
 
 /**
@@ -91,8 +92,7 @@ GameDAO.prototype.addPlayer = function (gameId, userId, name) {
           throw error;
         }
       });
-      var teams = game.getTeams();
-      var team = teams.length;
+      var team = Random.integer(0, game.getTeams().length + 1);
       const player = {
         'id': userId,
         'name': name,
@@ -179,10 +179,15 @@ GameDAO.prototype.nextTeam = function (gameId) {
       var wordsInBowl = game.wordsInBowl;
       wordsInBowl.push(game.currentWord);
       var currentWord = Random.take(game.wordsInBowl);
+      var currentPlayerIndex = game.currentPlayerIndex;
+      if (team == 0) {
+        currentPlayerIndex = game.currentPlayerIndex + 1;
+      }
       return this.update(gameId, {
         '$set': {
           'currentTeam': team,
           'currentWord': currentWord,
+          'currentPlayerIndex': currentPlayerIndex,
           'wordsInBowl': wordsInBowl,
           'started': false
         }

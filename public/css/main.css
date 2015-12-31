@@ -5,9 +5,10 @@ input {
   display: block;
   font-size: 14px;
   margin: 20px auto;
+  max-width: 400px;
   padding: 10px;
-  width: 100%;
-  max-width: 400px; }
+  text-align: center;
+  width: 100%; }
   input:focus {
     border-color: #666;
     outline: none; }
@@ -32,12 +33,14 @@ button, .button {
     border-color: #000;
     color: #000; }
 
-.recent-games a {
-  background: #FAFAFA;
-  display: block;
-  max-width: 400px;
-  margin: 5px auto;
-  padding: 5px; }
+.recent-games {
+  margin: 20px auto;
+  max-width: 400px; }
+  .recent-games a {
+    background: #FAFAFA;
+    display: block;
+    margin: 5px auto;
+    padding: 5px; }
 
 #team-list {
   margin: 20px auto;
@@ -72,30 +75,19 @@ button, .button {
       padding: 10px 20px; }
       #team-list .team ol li.current {
         font-weight: 600; }
+      #team-list .team ol li.waiting {
+        color: #CCC; }
+
+#timer {
+  font-size: 2em; }
+
+.phase-instructions {
+  text-align: center; }
 
 .current-word {
   text-align: center;
   font-size: 4em;
   padding: 20px; }
-
-.round-actions {
-  display: flex;
-  flex-flow: row wrap; }
-  .round-actions a {
-    color: #FFF;
-    flex-basis: 0;
-    flex-grow: 1;
-    font-size: 2em;
-    min-width: 300px;
-    padding: 50px;
-    text-align: center;
-    text-decoration: none; }
-    .round-actions a.correct {
-      background: #0F0; }
-    .round-actions a.skip {
-      background: #F00; }
-    .round-actions a.start {
-      background: #00F; }
 
 .debug {
   background: #FAFAFA;
@@ -112,14 +104,17 @@ body {
   text-align: center; }
 
 main {
-  margin: 15% auto 0;
+  margin: 5% auto 0;
   max-width: 600px;
   padding: 40px; }
 
 p {
   font-size: 1.1em;
-  margin: auto;
-  max-width: 400px; }
+  margin: 10px auto;
+  max-width: 400px;
+  text-align: left;
+  text-indent: 20px;
+  line-height: 1.5; }
 
 h1, h2, h3, h4, h5, h6 {
   font-weight: 200;
@@ -127,6 +122,9 @@ h1, h2, h3, h4, h5, h6 {
 
 h1 {
   font-size: 36px; }
+
+h2 {
+  font-size: 24px; }
 
 hr {
   border-top: 1px solid #CCC;
@@ -136,7 +134,8 @@ hr {
 a {
   color: #666; }
 
-.github {
-  font-size: 12px; }
+footer a {
+  font-size: 12px;
+  display: inline-block; }
 
 /*# sourceMappingURL=main.css.map */
