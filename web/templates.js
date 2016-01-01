@@ -80,9 +80,9 @@ templates['game'] = template({"1":function(depth0,helpers,partials,data) {
 },"16":function(depth0,helpers,partials,data) {
     var stack1;
 
-  return "      <a class=\"button start\" href=\""
-    + this.escapeExpression((helpers.call || (depth0 && depth0.call) || helpers.helperMissing).call(depth0,((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1.getUrl : stack1),(depth0 != null ? depth0.game : depth0),"start-round",{"name":"call","hash":{},"data":data}))
-    + "\">Ready</a>\n"
+  return "      <a class=\"button start\" href=\"/game/"
+    + this.escapeExpression(this.lambda(((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1._id : stack1), depth0))
+    + "/start-round\">Ready</a>\n"
     + ((stack1 = this.invokePartial(partials.team_list,depth0,{"name":"team_list","data":data,"indent":"      ","helpers":helpers,"partials":partials})) != null ? stack1 : "");
 },"18":function(depth0,helpers,partials,data) {
     var stack1;
@@ -94,9 +94,9 @@ templates['game'] = template({"1":function(depth0,helpers,partials,data) {
 },"20":function(depth0,helpers,partials,data) {
     var stack1;
 
-  return "    <a class=\"button\" href=\""
-    + this.escapeExpression((helpers.call || (depth0 && depth0.call) || helpers.helperMissing).call(depth0,((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1.getUrl : stack1),"start-game",{"name":"call","hash":{},"data":data}))
-    + "\">Start Game</a>\n";
+  return "    <a class=\"button\" href=\"/game/"
+    + this.escapeExpression(this.lambda(((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1._id : stack1), depth0))
+    + "/start-game\">Start Game</a>\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data,blockParams,depths) {
     var stack1, alias1=helpers.helperMissing;
 
