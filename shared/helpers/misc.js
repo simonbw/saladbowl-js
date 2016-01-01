@@ -42,8 +42,18 @@ helpers.get = function (object, key, options) {
 };
 
 
-helpers.call = function (object, key) {
-  return object[key]();
+/**
+ * Call a function
+ *
+ * @param func
+ * @returns {*}
+ */
+helpers.call = function (func, t) {
+  var args = [];
+  for (var i = 2; i < arguments.length; i++) {
+    args.push(arguments[i]);
+  }
+  return func.apply(t, args);
 };
 
 /**

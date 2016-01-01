@@ -66,8 +66,7 @@ templates['game'] = template({"1":function(depth0,helpers,partials,data) {
 },"13":function(depth0,helpers,partials,data,blockParams,depths) {
     var stack1;
 
-  return ((stack1 = helpers['if'].call(depth0,((stack1 = (depths[1] != null ? depths[1].game : depths[1])) != null ? stack1.started : stack1),{"name":"if","hash":{},"fn":this.program(14, data, 0, blockParams, depths),"inverse":this.program(16, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
-    + "\n";
+  return ((stack1 = helpers['if'].call(depth0,((stack1 = (depths[1] != null ? depths[1].game : depths[1])) != null ? stack1.started : stack1),{"name":"if","hash":{},"fn":this.program(14, data, 0, blockParams, depths),"inverse":this.program(16, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "");
 },"14":function(depth0,helpers,partials,data) {
     var stack1, alias1=this.lambda, alias2=this.escapeExpression;
 
@@ -81,20 +80,23 @@ templates['game'] = template({"1":function(depth0,helpers,partials,data) {
 },"16":function(depth0,helpers,partials,data) {
     var stack1;
 
-  return "      <a class=\"button start\" href=\"/game/"
-    + this.escapeExpression(this.lambda(((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1._id : stack1), depth0))
-    + "/start-round\">Ready</a>\n"
+  return "      <a class=\"button start\" href=\""
+    + this.escapeExpression((helpers.call || (depth0 && depth0.call) || helpers.helperMissing).call(depth0,((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1.getUrl : stack1),(depth0 != null ? depth0.game : depth0),"start-round",{"name":"call","hash":{},"data":data}))
+    + "\">Ready</a>\n"
     + ((stack1 = this.invokePartial(partials.team_list,depth0,{"name":"team_list","data":data,"indent":"      ","helpers":helpers,"partials":partials})) != null ? stack1 : "");
 },"18":function(depth0,helpers,partials,data) {
     var stack1;
 
-  return ((stack1 = this.invokePartial(partials.team_list,depth0,{"name":"team_list","data":data,"indent":"    ","helpers":helpers,"partials":partials})) != null ? stack1 : "");
+  return "    <div>\n      "
+    + this.escapeExpression((helpers.length || (depth0 && depth0.length) || helpers.helperMissing).call(depth0,((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1.wordsInBowl : stack1),{"name":"length","hash":{},"data":data}))
+    + " words in bowl\n    </div>\n"
+    + ((stack1 = this.invokePartial(partials.team_list,depth0,{"name":"team_list","data":data,"indent":"    ","helpers":helpers,"partials":partials})) != null ? stack1 : "");
 },"20":function(depth0,helpers,partials,data) {
     var stack1;
 
-  return "    <a class=\"button\" href=\"/game/"
-    + this.escapeExpression(this.lambda(((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1._id : stack1), depth0))
-    + "/next-phase\">Start Game</a>\n";
+  return "    <a class=\"button\" href=\""
+    + this.escapeExpression((helpers.call || (depth0 && depth0.call) || helpers.helperMissing).call(depth0,((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1.getUrl : stack1),"start-game",{"name":"call","hash":{},"data":data}))
+    + "\">Start Game</a>\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data,blockParams,depths) {
     var stack1, alias1=helpers.helperMissing;
 

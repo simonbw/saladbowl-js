@@ -211,9 +211,9 @@ router.post('/game/:gameId/add-word', function (req, res, next) {
 /**
  *
  */
-router.get('/game/:gameId/next-phase', function (req, res, next) {
+router.get('/game/:gameId/start-game', function (req, res, next) {
   var gameId = req.params['gameId'];
-  gameDao.nextPhase(gameId)
+  gameDao.startGame(gameId)
     .then(function (game) {
       res.redirect('/game/' + gameId);
     }, next)

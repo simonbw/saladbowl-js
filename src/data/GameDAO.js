@@ -196,17 +196,17 @@ GameDAO.prototype.nextTeam = function (gameId) {
 };
 
 /**
- * Go to the next phase.
+ * Go to the first phase.
  *
  * @param gameId
  * @returns {Promise}
  */
-GameDAO.prototype.nextPhase = function (gameId) {
+GameDAO.prototype.startGame = function (gameId) {
   return this.fromId(gameId)
     .then(function (game) {
       var wordsInBowl = game.getWords();
       var currentWord = Random.take(wordsInBowl);
-      var currentPhase = game.currentPhase + 1;
+      var currentPhase = 1;
       var update = {
         '$set': {
           'currentPhase': currentPhase,

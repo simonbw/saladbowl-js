@@ -25,16 +25,18 @@
       <a class="button correct" href="/game/{{game._id}}/correct-word">Correct</a>
       <a class="button skip" href="/game/{{game._id}}/skip-word">Skip</a>
     {{else}}
-      <a class="button start" href="/game/{{game._id}}/start-round">Ready</a>
+      <a class="button start" href="{{call game.getUrl game 'start-round'}}">Ready</a>
       {{> team_list}}
     {{/if}}
-
   {{else}}
+    <div>
+      {{length game.wordsInBowl}} words in bowl
+    </div>
     {{> team_list}}
   {{/if}}
 
   {{#if (readyToStart game)}}
-    <a class="button" href="/game/{{game._id}}/next-phase">Start Game</a>
+    <a class="button" href="{{call game.getUrl 'start-game'}}">Start Game</a>
   {{/if}}
 
   {{!--{{> debug_panel}}--}}

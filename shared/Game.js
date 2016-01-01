@@ -105,11 +105,15 @@ Game.prototype.getCurrentPlayer = function () {
 };
 
 /**
- * Returns the current player.
+ * Returns a url for the game.
  *
+ * @param action {=String}
  * @returns {*}
  */
-Game.prototype.getUrl = function () {
+Game.prototype.getUrl = function (action) {
+  if (action) {
+    return '/game/' + this._id + '/' + action;
+  }
   return '/game/' + this._id;
 };
 

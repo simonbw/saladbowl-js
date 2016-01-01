@@ -1,10 +1,8 @@
 var Game = require('../shared/Game');
 var Timer = require('./Timer');
 var misc = require('./misc');
-var refresh = require('./Refresh');
+var Refresh = require('./Refresh');
 
-
-var REFRESH_DELAY = 1500;
 
 $(function () {
   var game = Game.transformGame(SALADBOWL.game);
@@ -12,10 +10,10 @@ $(function () {
   misc.setupHandlebars();
 
   if ($('#index-page').length) {
-    refresh('index');
+    Refresh.auto('index');
   }
   if ($('#game-page').length) {
-    refresh('game', onGamePage, {'game': game, 'player': player});
+    Refresh.auto('game', onGamePage, {'game': game, 'player': player});
   }
   if ($('#new-game-page').length) {
     console.log('new game page');
@@ -38,9 +36,10 @@ function onGamePage(data) {
   Timer.start(game, game.getCurrentPlayer().id == data.player.id);
   $('.team.joinable').click(function () {
     var team = $(this).data('team-id');
-    $.post('/game/' + game._id + '/join-team', {'team': team}, function (data) {
-      refreshGamePage();
-    });
+    $.post('/game/' + game._id + '/join-team', {'team': team})
+      .done(function (data) {
+        Refresh.refresh('game', onGamePage);
+      });
     console.log('Joining Team', team);
   });
 }
