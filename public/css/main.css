@@ -95,11 +95,7 @@ button, .button {
   padding: 20px; }
 
 * {
-  box-sizing: border-box;
-  user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none; }
+  box-sizing: border-box; }
 
 body {
   font: 14px "Raleway", Helvetica, Arial, sans-serif;
