@@ -9,6 +9,10 @@ $(function () {
   var player = SALADBOWL.player;
   misc.setupHandlebars();
 
+  if (SALADBOWL.serverTime) {
+    Timer.updateServerTime(SALADBOWL.serverTime);
+  }
+
   if ($('#index-page').length) {
     Refresh.auto('index');
   }

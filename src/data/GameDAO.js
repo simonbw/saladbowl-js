@@ -189,7 +189,8 @@ GameDAO.prototype.nextTeam = function (gameId) {
           'currentWord': currentWord,
           'currentPlayerIndex': currentPlayerIndex,
           'wordsInBowl': wordsInBowl,
-          'started': false
+          'started': false,
+          'startedAt': null
         }
       });
     }.bind(this));

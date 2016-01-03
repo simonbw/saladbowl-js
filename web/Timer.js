@@ -11,8 +11,8 @@ var serverTimes = [];
  * @param time
  */
 Timer.updateServerTime = function (time) {
-  serverTimes.push([Date.now(), time]);
-
+  var now = Date.now();
+  serverTimes.push([now, time]);
   // Keep it recent
   if (serverTimes.length > MAX_SERVER_TIMES) {
     serverTimes.shift();
@@ -36,6 +36,7 @@ Timer.getServerTime = function () {
  * Return the number of milliseconds remaining in the round.
  * Returns null if the clock is not running.
  *
+ * @param game
  * @returns {number|null}
  */
 Timer.getTimeRemaining = function (game) {
@@ -52,7 +53,8 @@ Timer.getTimeRemaining = function (game) {
 /**
  * Format milliseconds to look good.
  *
- * @param milliseconds
+ * @param milliseconds {number}
+ * @returns {string}
  */
 var formatClock = function (milliseconds) {
   return (milliseconds / 1000).toFixed(1);

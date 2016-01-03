@@ -154,6 +154,8 @@ templates['layout'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function
     + ((stack1 = (helpers.jsObject || (depth0 && depth0.jsObject) || alias1).call(depth0,(depth0 != null ? depth0.player : depth0),{"name":"jsObject","hash":{},"data":data})) != null ? stack1 : "")
     + ";\n    SALADBOWL.currentPlayer = "
     + ((stack1 = (helpers.jsObject || (depth0 && depth0.jsObject) || alias1).call(depth0,(depth0 != null ? depth0.currentPlayer : depth0),{"name":"jsObject","hash":{},"data":data})) != null ? stack1 : "")
+    + ";\n    SALADBOWL.serverTime = "
+    + ((stack1 = (helpers.jsObject || (depth0 && depth0.jsObject) || alias1).call(depth0,(depth0 != null ? depth0.serverTime : depth0),{"name":"jsObject","hash":{},"data":data})) != null ? stack1 : "")
     + ";\n  </script>\n</head>\n<body>\n<main>\n  <div id=\"main-content\">\n    "
     + ((stack1 = ((helper = (helper = helpers.body || (depth0 != null ? depth0.body : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"body","hash":{},"data":data}) : helper))) != null ? stack1 : "")
     + "\n  </div>\n  <hr>\n  <footer>\n    <a href=\"/\">Home</a>\n    <a href=\"/how-to-play\">How To Play</a>\n\n    <div>\n      <a href=\"https://github.com/simonbw/saladbowl-js\">https://github.com/simonbw/saladbowl-js</a>\n    </div>\n  </footer>\n</main>\n</body>\n</html>";
