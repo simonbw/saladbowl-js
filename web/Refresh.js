@@ -1,4 +1,5 @@
 var Game = require('../shared/Game');
+var Timer = require('./Timer');
 
 var REFRESH_DELAY = 1500;
 
@@ -56,6 +57,9 @@ function processResponse(data) {
   }
   if (data.games) {
     data.games = data.games.map(Game.transformGame);
+  }
+  if (data.serverTime) {
+    Timer.updateServerTime(data.serverTime);
   }
   return data;
 }

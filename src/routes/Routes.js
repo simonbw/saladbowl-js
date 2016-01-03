@@ -85,7 +85,8 @@ router.get('/game/:gameId', function (req, res, next) {
             phase: game.phases[game.currentPhase],
             teams: game.getTeams(true),
             currentPlayer: game.getCurrentPlayer(),
-            player: player
+            player: player,
+            serverTime: Date.now()
           };
           if (req.xhr) {
             res.send(data);

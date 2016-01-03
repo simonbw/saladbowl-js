@@ -1,7 +1,36 @@
 var Timer = {};
 
+var MAX_SERVER_TIMES = 5;
+
 var timerInterval = null;
 var timerTimeout = null;
+var serverTimes = [];
+
+/**
+ *
+ * @param time
+ */
+Timer.updateServerTime = function (time) {
+  serverTimes.push([Date.now(), time]);
+
+  // Keep it recent
+  if (serverTimes.length > MAX_SERVER_TIMES) {
+    serverTimes.shift();
+  }
+};
+
+/**
+ * Gets an estimate of what the time on the server is.
+ *
+ * @returns {number}
+ */
+Timer.getServerTime = function () {
+  var offset = 0;
+  serverTimes.forEach(function (timePair) {
+    offset += (timePair[1] - timePair[0]) / serverTimes.length;
+  });
+  return Date.now() + offset;
+};
 
 /**
  * Return the number of milliseconds remaining in the round.
@@ -14,10 +43,11 @@ Timer.getTimeRemaining = function (game) {
     return null;
   }
   var duration = game.phases[game.currentPhase].duration;
-  var timeSinceStart = (Date.now() - game.startedAt);
+  var timeSinceStart = (Timer.getServerTime() - game.startedAt);
   var timeout = duration - timeSinceStart;
   return timeout > 0 ? timeout : 0;
 };
+
 
 /**
  * Format milliseconds to look good.
@@ -25,11 +55,7 @@ Timer.getTimeRemaining = function (game) {
  * @param milliseconds
  */
 var formatClock = function (milliseconds) {
-  var seconds = milliseconds / 1000;
-  var whole = Math.floor(seconds);
-  var part = seconds - whole;
-  part = Math.floor(part * (seconds > 10 ? 10 : 100));
-  return whole + ':' + part;
+  return (milliseconds / 1000).toFixed(1);
 };
 
 /**
