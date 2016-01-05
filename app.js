@@ -1,7 +1,7 @@
 var bodyParser = require('body-parser');
 var browserify = require('browserify-middleware');
 var cookieParser = require('cookie-parser');
-var express = require('express.io');
+var express = require('express');
 var favicon = require('serve-favicon');
 var hbs = require('hbs');
 var logger = require('morgan');
@@ -14,13 +14,6 @@ var routes = require('./src/routes/Routes');
 
 
 var app = express();
-app.http().io();
-
-// attach database to request (because that makes sense?)
-app.use(function (req, res, next) {
-  req.db = db;
-  next();
-});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'templates'));
@@ -37,7 +30,7 @@ app.use(sass({
 }));
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.png')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
