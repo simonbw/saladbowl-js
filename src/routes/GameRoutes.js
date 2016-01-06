@@ -180,9 +180,6 @@ router.get('/add-word', function (req, res, next) {
 router.post('/add-word', function (req, res, next) {
   var game = req.game;
   var player = game.getPlayer(req.user);
-  if (player.words.length < game.wordsPerPlayer) {
-    res.redirect(game.getUrl('add-word'));
-  }
   var word = req.body.word;
   if (word) {
     gameDao.addWord(game, req.user, word)
