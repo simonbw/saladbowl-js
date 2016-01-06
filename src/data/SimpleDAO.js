@@ -31,7 +31,10 @@ SimpleDAO.prototype.transform = function (object) {
 SimpleDAO.prototype.transformPromise = function (promise) {
   return promise
     .then(function (object) {
-      return this.transform(object); // TODO: Transform on arrays
+      if (object instanceof Array) {
+        return object.map(this.transform);
+      }
+      return this.transform(object);
     }.bind(this));
 };
 
@@ -72,14 +75,14 @@ SimpleDAO.prototype.fromIds = function (ids) {
   if (!this.useShortId) {
     ids = ids.map(ObjectID);
   }
-  return this.collection.find({_id: {$in: ids}});
+  return this.transformPromise(this.collection.find({_id: {$in: ids}}));
 };
 
 /**
  * Return all objects.
  */
 SimpleDAO.prototype.all = function () {
-  return this.find();
+  return this.transformPromise(this.find());
 };
 
 /**
@@ -88,24 +91,37 @@ SimpleDAO.prototype.all = function () {
 SimpleDAO.prototype.find = function (query) {
   // TODO: Transform promise
   query = query || {};
-  return this.collection.find(query).toArray();
+  return this.transformPromise(this.collection.find(query).toArray());
 };
 
 /**
  * Update and return a model.
- * @param id
- * @param data
+ * @param id {string|object}
+ * @param update {object}
  * @returns {Promise}
  */
-SimpleDAO.prototype.update = function (id, data) {
-  if (!this.useShortId) {
-    id = ObjectID(id);
+SimpleDAO.prototype.update = function (id, update) {
+  var query;
+  if (id instanceof Object && !(id instanceof ObjectID)) {
+    query = id;
+  } else {
+    if (!this.useShortId) {
+      id = ObjectID(id);
+    }
+    query = {'_id': id};
   }
-  return this.transformPromise(this.collection.findAndModify({
-    'query': {'_id': id},
-    'update': data,
-    'new': true
-  }));
+  return this.transformPromise(
+    this.collection.findAndModify({
+      'query': query,
+      'update': update,
+      'new': true
+    }).then(function (result) {
+      if (result.ok) {
+        return result.value;
+      } else {
+        throw new Error('Error Modifying Document');
+      }
+    }));
 };
 
 /**

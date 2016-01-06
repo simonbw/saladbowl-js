@@ -112,9 +112,9 @@ Game.prototype.getCurrentPlayer = function () {
  */
 Game.prototype.getUrl = function (action) {
   if (action) {
-    return '/game/' + this._id + '/' + action;
+    return '/' + this._id + '/' + action;
   }
-  return '/game/' + this._id;
+  return '/' + this._id;
 };
 
 /**

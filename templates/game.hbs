@@ -1,10 +1,10 @@
 <div id="game-page">
-  {{#if (greaterThan game.currentPhase 0)}}
+  {{#if (and game.gameStarted (not game.gameEnded)) }}
     {{#if (and (equal player.id currentPlayer.id) )}}
       <h1>{{phase.name}}</h1>
 
       <p class="phase-instructions">{{phase.instructions}}</p>
-    {{else if (and (equal game.currentTeam player.team) (greaterThan game.currentPhase 0))}}
+    {{else if (and (equal game.currentTeam player.team) game.gameStarted)}}
       <h1>Guess It</h1>
     {{else}}
       <h1>Wait...</h1>
@@ -13,19 +13,19 @@
     <p class="phase-instructions">{{phase.instructions}}</p>
   {{/if}}
 
-  {{#if game.started}}
+  {{#if game.roundStarted}}
     <div id="timer">{{formatClock (timeRemaining game)}}</div>
   {{/if}}
 
   {{#if (and (equal player.id currentPlayer.id) (greaterThan game.currentPhase 0))}}
-    {{#if ../game.started}}
+    {{#if ../game.roundStarted}}
       <div class="current-word">
         {{game.currentWord}}
       </div>
-      <a class="button correct" href="/game/{{game._id}}/correct-word">Correct</a>
-      <a class="button skip" href="/game/{{game._id}}/skip-word">Skip</a>
+      <a class="button correct">Correct</a>
+      <a class="button skip">Skip</a>
     {{else}}
-      <a class="button start" href="/game/{{game._id}}/start-round">Ready</a>
+      <a class="button start-round">Ready</a>
       {{> team_list}}
     {{/if}}
   {{else}}
@@ -35,11 +35,10 @@
     {{> team_list}}
   {{/if}}
 
-  {{#if (readyToStart game)}}
-    <a class="button" href="/game/{{game._id}}/start-game">Start Game</a>
+  {{#if (equal game.currentPhase 0)}}
+    <a id="start-game-button" class="button{{#if (not (readyToStart game))}} disabled{{/if}}">Start Game</a>
   {{/if}}
 
   {{!--{{> debug_panel}}--}}
 
-  {{!--<a href="/game/{{game._id}}/delete">Delete Game</a>--}}
 </div>

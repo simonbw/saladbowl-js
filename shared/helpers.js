@@ -2,13 +2,17 @@
  * All the handlebar helpers in one place.
  */
 
-var comparison = require('./helpers/comparison');
-var logic = require('./helpers/logic');
-var math = require('./helpers/math');
-var misc = require('./helpers/misc');
+// All the modules containing helpers to load
+var subModules = [
+  require('./helpers/comparisonHelpers'),
+  require('./helpers/gameHelpers'),
+  require('./helpers/logicHelpers'),
+  require('./helpers/mathHelpers'),
+  require('./helpers/miscHelpers')
+];
 
 var helpers = {};
-[comparison, logic, math, misc].forEach(function (submodule) {
+subModules.forEach(function (submodule) {
   for (var helper in submodule) {
     if (submodule.hasOwnProperty(helper)) {
       helpers[helper] = submodule[helper];

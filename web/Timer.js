@@ -40,11 +40,11 @@ Timer.getServerTime = function () {
  * @returns {number|null}
  */
 Timer.getTimeRemaining = function (game) {
-  if (!game.started) {
+  if (!game.roundStarted || !game.roundStarted) {
     return null;
   }
   var duration = game.phases[game.currentPhase].duration;
-  var timeSinceStart = (Timer.getServerTime() - game.startedAt);
+  var timeSinceStart = (Timer.getServerTime() - game.roundStartedAt);
   var timeout = duration - timeSinceStart;
   return timeout > 0 ? timeout : 0;
 };
@@ -91,8 +91,8 @@ Timer.start = function (game, isCurrentPlayer) {
     }
     if (isCurrentPlayer) {
       timerTimeout = setTimeout(function () {
-        $.get('/game/' + game._id + '/next-team', function () {
-          //location.reload(); // TODO: Stop refreshing the page
+        $.get(game.getUrl('next-team'), function () {
+          // TODO: refresh
         });
       }, timeRemaining);
     }

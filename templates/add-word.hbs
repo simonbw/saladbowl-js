@@ -3,6 +3,6 @@
   <hr>
   <form method="POST">
     <input name="word" placeholder="Person, Place, Thing, etc." autofocus>
-    <button type="submit">{{subtract game.wordsPerPlayer (length player.words)}} remaining</button>
+    <button type="submit">{{subtract game.wordsPerPlayer player.words.length}} remaining</button>
   </form>
 </div>

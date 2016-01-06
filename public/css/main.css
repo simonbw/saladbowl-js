@@ -14,24 +14,58 @@ input {
     outline: none; }
 
 button, .button {
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
   background: #FFF;
   border-radius: 5px;
   border: 1px solid #AAA;
   color: #666;
+  cursor: pointer;
   display: block;
   font-size: 14px;
   font-weight: 600;
   margin: 10px auto;
+  max-width: 400px;
   padding: 10px 20px;
   text-align: center;
   text-decoration: none;
   text-transform: uppercase;
-  width: 100%;
-  max-width: 400px;
-  flex-shrink: 1; }
-  button:hover, .button:hover {
+  width: 100%; }
+  button.disabled, .button.disabled {
+    border-color: #CCC;
+    color: #AAA;
+    cursor: default; }
+  button:not(.disabled):hover, .button:not(.disabled):hover {
     border-color: #000;
     color: #000; }
+
+#timer {
+  font-size: 2em; }
+
+.phase-instructions {
+  text-align: center; }
+
+.current-word {
+  text-align: center;
+  font-size: 4em;
+  padding: 20px; }
+
+.debug {
+  background: #FAFAFA;
+  margin-top: 50px;
+  padding: 20px; }
+
+.button.correct,
+.button.skip {
+  font-size: 2em; }
+
+.button.correct {
+  color: #0F0; }
+
+.button.skip {
+  color: #F00; }
 
 .recent-games {
   margin: 20px auto;
@@ -77,22 +111,6 @@ button, .button {
         font-weight: 600; }
       #team-list .team ol li.waiting {
         color: #CCC; }
-
-#timer {
-  font-size: 2em; }
-
-.phase-instructions {
-  text-align: center; }
-
-.current-word {
-  text-align: center;
-  font-size: 4em;
-  padding: 20px; }
-
-.debug {
-  background: #FAFAFA;
-  margin-top: 50px;
-  padding: 20px; }
 
 * {
   box-sizing: border-box; }

@@ -1,7 +1,7 @@
 var Game = require('../shared/Game');
 var Timer = require('./Timer');
 
-var REFRESH_DELAY = 1500;
+var REFRESH_DELAY = 1000;
 
 var Refresh = {};
 
@@ -12,16 +12,18 @@ var oldDatas = {};
 /**
  * Setup auto refreshing.
  *
+ * @param url
  * @param template
  * @param handler
  * @param data
+ * @param delay
  */
-Refresh.auto = function (template, handler, data, delay) {
+Refresh.auto = function (url, template, handler, data, delay) {
   delay = delay || REFRESH_DELAY;
   if (handler) {
     handler(data);
   }
-  setInterval(Refresh.refresh.bind(this, template, handler), delay);
+  setInterval(Refresh.refresh.bind(this, url, template, handler), delay);
 };
 
 /**
@@ -30,8 +32,8 @@ Refresh.auto = function (template, handler, data, delay) {
  * @param template
  * @param handler
  */
-Refresh.refresh = function (template, handler) {
-  $.get('').done(function (data) {
+Refresh.refresh = function (url, template, handler) {
+  jQuery.get(url).done(function (data) {
     data = processResponse(data);
     var oldData = oldDatas[template];
     oldDatas[template] = data;
@@ -42,7 +44,7 @@ Refresh.refresh = function (template, handler) {
       handler(data);
     }
   }).fail(function (error) {
-    console.log('ERROR:', error);
+    console.error(error);
   });
 };
 

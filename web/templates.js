@@ -1,10 +1,10 @@
 (function() {
   var template = Handlebars.template, templates = Handlebars.templates = Handlebars.templates || {};
 templates['add-word'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-    var stack1, alias1=helpers.helperMissing;
+    var stack1;
 
   return "<div id=\"add-word-page\">\n  <h1>Add A Word</h1>\n  <hr>\n  <form method=\"POST\">\n    <input name=\"word\" placeholder=\"Person, Place, Thing, etc.\" autofocus>\n    <button type=\"submit\">"
-    + this.escapeExpression((helpers.subtract || (depth0 && depth0.subtract) || alias1).call(depth0,((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1.wordsPerPlayer : stack1),(helpers.length || (depth0 && depth0.length) || alias1).call(depth0,((stack1 = (depth0 != null ? depth0.player : depth0)) != null ? stack1.words : stack1),{"name":"length","hash":{},"data":data}),{"name":"subtract","hash":{},"data":data}))
+    + this.escapeExpression((helpers.subtract || (depth0 && depth0.subtract) || helpers.helperMissing).call(depth0,((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1.wordsPerPlayer : stack1),((stack1 = ((stack1 = (depth0 != null ? depth0.player : depth0)) != null ? stack1.words : stack1)) != null ? stack1.length : stack1),{"name":"subtract","hash":{},"data":data}))
     + " remaining</button>\n  </form>\n</div>\n";
 },"useData":true});
 templates['debug_panel'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
@@ -31,6 +31,11 @@ templates['error'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(
     + alias1(alias2(((stack1 = (depth0 != null ? depth0.error : depth0)) != null ? stack1.stack : stack1), depth0))
     + "</pre>\n";
 },"useData":true});
+templates['game-end'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+    return "<a href=\""
+    + this.escapeExpression((helpers.getUrl || (depth0 && depth0.getUrl) || helpers.helperMissing).call(depth0,(depth0 != null ? depth0.game : depth0),"delete",{"name":"getUrl","hash":{},"data":data}))
+    + "\">Delete Game</a>\n";
+},"useData":true});
 templates['game'] = template({"1":function(depth0,helpers,partials,data) {
     var stack1, alias1=helpers.helperMissing;
 
@@ -46,7 +51,7 @@ templates['game'] = template({"1":function(depth0,helpers,partials,data) {
 },"4":function(depth0,helpers,partials,data) {
     var stack1, alias1=helpers.helperMissing;
 
-  return ((stack1 = helpers['if'].call(depth0,(helpers.and || (depth0 && depth0.and) || alias1).call(depth0,(helpers.equal || (depth0 && depth0.equal) || alias1).call(depth0,((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1.currentTeam : stack1),((stack1 = (depth0 != null ? depth0.player : depth0)) != null ? stack1.team : stack1),{"name":"equal","hash":{},"data":data}),(helpers.greaterThan || (depth0 && depth0.greaterThan) || alias1).call(depth0,((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1.currentPhase : stack1),0,{"name":"greaterThan","hash":{},"data":data}),{"name":"and","hash":{},"data":data}),{"name":"if","hash":{},"fn":this.program(5, data, 0),"inverse":this.program(7, data, 0),"data":data})) != null ? stack1 : "");
+  return ((stack1 = helpers['if'].call(depth0,(helpers.and || (depth0 && depth0.and) || alias1).call(depth0,(helpers.equal || (depth0 && depth0.equal) || alias1).call(depth0,((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1.currentTeam : stack1),((stack1 = (depth0 != null ? depth0.player : depth0)) != null ? stack1.team : stack1),{"name":"equal","hash":{},"data":data}),((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1.gameStarted : stack1),{"name":"and","hash":{},"data":data}),{"name":"if","hash":{},"fn":this.program(5, data, 0),"inverse":this.program(7, data, 0),"data":data})) != null ? stack1 : "");
 },"5":function(depth0,helpers,partials,data) {
     return "      <h1>Guess It</h1>\n";
 },"7":function(depth0,helpers,partials,data) {
@@ -66,23 +71,17 @@ templates['game'] = template({"1":function(depth0,helpers,partials,data) {
 },"13":function(depth0,helpers,partials,data,blockParams,depths) {
     var stack1;
 
-  return ((stack1 = helpers['if'].call(depth0,((stack1 = (depths[1] != null ? depths[1].game : depths[1])) != null ? stack1.started : stack1),{"name":"if","hash":{},"fn":this.program(14, data, 0, blockParams, depths),"inverse":this.program(16, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "");
+  return ((stack1 = helpers['if'].call(depth0,((stack1 = (depths[1] != null ? depths[1].game : depths[1])) != null ? stack1.roundStarted : stack1),{"name":"if","hash":{},"fn":this.program(14, data, 0, blockParams, depths),"inverse":this.program(16, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "");
 },"14":function(depth0,helpers,partials,data) {
-    var stack1, alias1=this.lambda, alias2=this.escapeExpression;
+    var stack1;
 
   return "      <div class=\"current-word\">\n        "
-    + alias2(alias1(((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1.currentWord : stack1), depth0))
-    + "\n      </div>\n      <a class=\"button correct\" href=\"/game/"
-    + alias2(alias1(((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1._id : stack1), depth0))
-    + "/correct-word\">Correct</a>\n      <a class=\"button skip\" href=\"/game/"
-    + alias2(alias1(((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1._id : stack1), depth0))
-    + "/skip-word\">Skip</a>\n";
+    + this.escapeExpression(this.lambda(((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1.currentWord : stack1), depth0))
+    + "\n      </div>\n      <a class=\"button correct\">Correct</a>\n      <a class=\"button skip\">Skip</a>\n";
 },"16":function(depth0,helpers,partials,data) {
     var stack1;
 
-  return "      <a class=\"button start\" href=\"/game/"
-    + this.escapeExpression(this.lambda(((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1._id : stack1), depth0))
-    + "/start-round\">Ready</a>\n"
+  return "      <a class=\"button start-round\">Ready</a>\n"
     + ((stack1 = this.invokePartial(partials.team_list,depth0,{"name":"team_list","data":data,"indent":"      ","helpers":helpers,"partials":partials})) != null ? stack1 : "");
 },"18":function(depth0,helpers,partials,data) {
     var stack1;
@@ -92,22 +91,24 @@ templates['game'] = template({"1":function(depth0,helpers,partials,data) {
     + " words in bowl\n    </div>\n"
     + ((stack1 = this.invokePartial(partials.team_list,depth0,{"name":"team_list","data":data,"indent":"    ","helpers":helpers,"partials":partials})) != null ? stack1 : "");
 },"20":function(depth0,helpers,partials,data) {
-    var stack1;
+    var stack1, alias1=helpers.helperMissing;
 
-  return "    <a class=\"button\" href=\"/game/"
-    + this.escapeExpression(this.lambda(((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1._id : stack1), depth0))
-    + "/start-game\">Start Game</a>\n";
+  return "    <a id=\"start-game-button\" class=\"button"
+    + ((stack1 = helpers['if'].call(depth0,(helpers.not || (depth0 && depth0.not) || alias1).call(depth0,(helpers.readyToStart || (depth0 && depth0.readyToStart) || alias1).call(depth0,(depth0 != null ? depth0.game : depth0),{"name":"readyToStart","hash":{},"data":data}),{"name":"not","hash":{},"data":data}),{"name":"if","hash":{},"fn":this.program(21, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+    + "\">Start Game</a>\n";
+},"21":function(depth0,helpers,partials,data) {
+    return " disabled";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data,blockParams,depths) {
     var stack1, alias1=helpers.helperMissing;
 
   return "<div id=\"game-page\">\n"
-    + ((stack1 = helpers['if'].call(depth0,(helpers.greaterThan || (depth0 && depth0.greaterThan) || alias1).call(depth0,((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1.currentPhase : stack1),0,{"name":"greaterThan","hash":{},"data":data}),{"name":"if","hash":{},"fn":this.program(1, data, 0, blockParams, depths),"inverse":this.program(9, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers['if'].call(depth0,(helpers.and || (depth0 && depth0.and) || alias1).call(depth0,((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1.gameStarted : stack1),(helpers.not || (depth0 && depth0.not) || alias1).call(depth0,((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1.gameEnded : stack1),{"name":"not","hash":{},"data":data}),{"name":"and","hash":{},"data":data}),{"name":"if","hash":{},"fn":this.program(1, data, 0, blockParams, depths),"inverse":this.program(9, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
     + "\n"
-    + ((stack1 = helpers['if'].call(depth0,((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1.started : stack1),{"name":"if","hash":{},"fn":this.program(11, data, 0, blockParams, depths),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers['if'].call(depth0,((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1.roundStarted : stack1),{"name":"if","hash":{},"fn":this.program(11, data, 0, blockParams, depths),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "\n"
     + ((stack1 = helpers['if'].call(depth0,(helpers.and || (depth0 && depth0.and) || alias1).call(depth0,(helpers.equal || (depth0 && depth0.equal) || alias1).call(depth0,((stack1 = (depth0 != null ? depth0.player : depth0)) != null ? stack1.id : stack1),((stack1 = (depth0 != null ? depth0.currentPlayer : depth0)) != null ? stack1.id : stack1),{"name":"equal","hash":{},"data":data}),(helpers.greaterThan || (depth0 && depth0.greaterThan) || alias1).call(depth0,((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1.currentPhase : stack1),0,{"name":"greaterThan","hash":{},"data":data}),{"name":"and","hash":{},"data":data}),{"name":"if","hash":{},"fn":this.program(13, data, 0, blockParams, depths),"inverse":this.program(18, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
     + "\n"
-    + ((stack1 = helpers['if'].call(depth0,(helpers.readyToStart || (depth0 && depth0.readyToStart) || alias1).call(depth0,(depth0 != null ? depth0.game : depth0),{"name":"readyToStart","hash":{},"data":data}),{"name":"if","hash":{},"fn":this.program(20, data, 0, blockParams, depths),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers['if'].call(depth0,(helpers.equal || (depth0 && depth0.equal) || alias1).call(depth0,((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1.currentPhase : stack1),0,{"name":"equal","hash":{},"data":data}),{"name":"if","hash":{},"fn":this.program(20, data, 0, blockParams, depths),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "\n\n</div>";
 },"usePartial":true,"useData":true,"useDepths":true});
 templates['how-to-play'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
@@ -120,12 +121,12 @@ templates['index'] = template({"1":function(depth0,helpers,partials,data) {
     + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.games : depth0),{"name":"each","hash":{},"fn":this.program(2, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "    </div>\n";
 },"2":function(depth0,helpers,partials,data) {
-    var alias1=this.escapeExpression;
+    var alias1=helpers.helperMissing, alias2=this.escapeExpression;
 
-  return "        <div>\n          <a href=\"/game/"
-    + alias1(this.lambda((depth0 != null ? depth0._id : depth0), depth0))
+  return "        <div>\n          <a href=\""
+    + alias2((helpers.getUrl || (depth0 && depth0.getUrl) || alias1).call(depth0,depth0,{"name":"getUrl","hash":{},"data":data}))
     + "\">"
-    + alias1((helpers.or || (depth0 && depth0.or) || helpers.helperMissing).call(depth0,(depth0 != null ? depth0.name : depth0),(depth0 != null ? depth0._id : depth0),{"name":"or","hash":{},"data":data}))
+    + alias2((helpers.or || (depth0 && depth0.or) || alias1).call(depth0,(depth0 != null ? depth0.name : depth0),(depth0 != null ? depth0._id : depth0),{"name":"or","hash":{},"data":data}))
     + "</a>\n        </div>\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1;
@@ -137,7 +138,7 @@ templates['index'] = template({"1":function(depth0,helpers,partials,data) {
 templates['join'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1, alias1=this.lambda, alias2=this.escapeExpression;
 
-  return "<div id=\"join-page\">\n  <h1>Joining Game &mdash; "
+  return "<div id=\"join-page\">\n  <h1>Joining Game &ndash; "
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1.name : stack1), depth0))
     + "</h1>\n  <h4>"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1._id : stack1), depth0))

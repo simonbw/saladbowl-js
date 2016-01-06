@@ -9,7 +9,6 @@ var path = require('path');
 var sass = require('node-sass-middleware');
 
 var helpers = require('./shared/helpers');
-var db = require('./src/db');
 var routes = require('./src/routes/Routes');
 
 
@@ -50,7 +49,7 @@ if (app.get('env') === 'development') {
     res.status(err.status || 500);
     console.error(err.stack);
     if (req.xhr) {
-      res.send(err)
+      res.send(err);
     } else {
       res.render('error', {
         message: err.message,
@@ -64,10 +63,14 @@ if (app.get('env') === 'development') {
 // no stacktraces leaked to user
 app.use(function (err, req, res, next) {
   res.status(err.status || 500);
-  res.render('error', {
-    message: err.message,
-    error: {}
-  });
+  if (req.xhr) {
+    res.send({message: err.message});
+  } else {
+    res.render('error', {
+      message: err.message,
+      error: {}
+    });
+  }
 });
 
 

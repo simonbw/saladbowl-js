@@ -6,7 +6,7 @@
     <div class="recent-games">
       {{#each games}}
         <div>
-          <a href="/game/{{this._id}}">{{or this.name this._id}}</a>
+          <a href="{{getUrl this}}">{{or this.name this._id}}</a>
         </div>
       {{/each}}
     </div>

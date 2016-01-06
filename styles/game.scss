@@ -18,3 +18,16 @@
   margin-top: 50px;
   padding: 20px;
 }
+
+.button.correct,
+.button.skip {
+  font-size: 2em;
+}
+
+.button.correct {
+  color: #0F0;
+}
+
+.button.skip {
+  color: #F00;
+}

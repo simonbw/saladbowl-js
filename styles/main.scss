@@ -1,17 +1,14 @@
-@import 'fonts';
-@import 'form';
-@import 'index';
-@import 'new-game';
-@import 'add-word';
-@import 'team-list';
-@import 'game';
+@import "add-word";
+@import "fonts";
+@import "form";
+@import "game";
+@import "index";
+@import "new-game";
+@import "team-list";
+@import "util";
 
 * {
   box-sizing: border-box;
-  //user-select: none;
-  //-webkit-user-select: none;
-  //-moz-user-select: none;
-  //-ms-user-select: n;
 }
 
 body {

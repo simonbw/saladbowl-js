@@ -3,7 +3,6 @@ var Timer = require('./Timer');
 var misc = require('./misc');
 var Refresh = require('./Refresh');
 
-
 $(function () {
   var game = Game.transformGame(SALADBOWL.game);
   var player = SALADBOWL.player;
@@ -14,19 +13,16 @@ $(function () {
   }
 
   if ($('#index-page').length) {
-    Refresh.auto('index');
+    Refresh.auto('/recent-games', 'index');
   }
   if ($('#game-page').length) {
-    Refresh.auto('game', onGamePage, {'game': game, 'player': player});
+    Refresh.auto(game.getUrl('json'), 'game', onGamePage, {'game': game, 'player': player});
   }
   if ($('#new-game-page').length) {
-    console.log('new game page');
   }
   if ($('#join-page').length) {
-    console.log('join page');
   }
   if ($('#add-word-page').length) {
-    console.log('add word page');
   }
 });
 
@@ -37,13 +33,40 @@ $(function () {
  */
 function onGamePage(data) {
   var game = data.game;
-  Timer.start(game, game.getCurrentPlayer().id == data.player.id);
+  var currentPlayer = game.getCurrentPlayer();
+  var isCurrentPlayer = currentPlayer && (currentPlayer.id == data.player.id);
+  Timer.start(game, isCurrentPlayer);
+  $('.button.correct').click(function () {
+    $.get(game.getUrl('correct-word'))
+      .done(function () {
+        Refresh.refresh(game.getUrl('json'), 'game', onGamePage);
+      });
+    // TODO: Don't allow double clicks
+  });
+  $('.button.skip').click(function () {
+    $.get(game.getUrl('skip-word'))
+      .done(function () {
+        Refresh.refresh(game.getUrl('json'), 'game', onGamePage);
+      });
+    // TODO: Don't allow double clicks
+  });
+  $('.button.start-round').click(function () {
+    $.get(game.getUrl('start-round'))
+      .done(function () {
+        Refresh.refresh(game.getUrl('json'), 'game', onGamePage);
+      });
+  });
+  $('#start-game-button:not(.disabled)').click(function () {
+    $.get(game.getUrl('start-game'))
+      .done(function () {
+        Refresh.refresh(game.getUrl('json'), 'game', onGamePage);
+      });
+  });
   $('.team.joinable').click(function () {
     var team = $(this).data('team-id');
-    $.post('/game/' + game._id + '/join-team', {'team': team})
-      .done(function (data) {
-        Refresh.refresh('game', onGamePage);
+    $.post(game.getUrl('join-team'), {'team': team})
+      .done(function () {
+        Refresh.refresh(game.getUrl('json'), 'game', onGamePage);
       });
-    console.log('Joining Team', team);
   });
 }
