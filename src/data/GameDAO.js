@@ -256,12 +256,14 @@ GameDAO.prototype.correctWord = function (gameId) {
       }
       var currentWord = Random.take(wordsInBowl);
       var gameEnded = currentPhase >= game.phases.length;
+      var roundStarted = game.roundStarted && !gameEnded;
       var update = {
         '$set': {
           'currentPhase': currentPhase,
           'currentWord': currentWord,
           'wordsInBowl': wordsInBowl,
-          'gameEnded': gameEnded
+          'gameEnded': gameEnded,
+          'roundStarted': roundStarted
         }, '$push': {
           'points': {
             'word': game.currentWord,

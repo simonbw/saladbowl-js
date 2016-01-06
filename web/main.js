@@ -35,7 +35,10 @@ function onGamePage(data) {
   var game = data.game;
   var currentPlayer = game.getCurrentPlayer();
   var isCurrentPlayer = currentPlayer && (currentPlayer.id == data.player.id);
-  Timer.start(game, isCurrentPlayer);
+  if (game.gameStarted && !game.gameEnded) {
+    Timer.start(game, isCurrentPlayer);
+  }
+
   $('.button.correct').click(function () {
     $.get(game.getUrl('correct-word'))
       .done(function () {

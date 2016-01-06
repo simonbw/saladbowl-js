@@ -13,12 +13,12 @@
     <p class="phase-instructions">{{phase.instructions}}</p>
   {{/if}}
 
-  {{#if game.roundStarted}}
+  {{#if (and game.roundStarted (not game.gameEnded))}}
     <div id="timer">{{formatClock (timeRemaining game)}}</div>
   {{/if}}
 
-  {{#if (and (equal player.id currentPlayer.id) (greaterThan game.currentPhase 0))}}
-    {{#if ../game.roundStarted}}
+  {{#if (and (equal player.id currentPlayer.id) game.gameStarted)}}
+    {{#if game.roundStarted}}
       <div class="current-word">
         {{game.currentWord}}
       </div>
