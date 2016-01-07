@@ -17,6 +17,19 @@
   background: #FAFAFA;
   margin-top: 50px;
   padding: 20px;
+  text-align: left;
+
+  h4 {
+    font-family: monospace;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+  }
+  pre {
+    white-space: pre-wrap;
+    font-family: monospace;
+  }
 }
 
 .button.correct,

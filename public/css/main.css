@@ -55,7 +55,17 @@ button, .button {
 .debug {
   background: #FAFAFA;
   margin-top: 50px;
-  padding: 20px; }
+  padding: 20px;
+  text-align: left; }
+  .debug h4 {
+    font-family: monospace;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+    text-align: left; }
+  .debug pre {
+    white-space: pre-wrap;
+    font-family: monospace; }
 
 .button.correct,
 .button.skip {

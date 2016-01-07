@@ -11,6 +11,7 @@ var router = express.Router();
  * Guarantee user.
  */
 router.use(function (req, res, next) {
+  req.username = req.cookies.username;
   if (req.cookies.user) {
     req.user = req.cookies.user;
   } else {

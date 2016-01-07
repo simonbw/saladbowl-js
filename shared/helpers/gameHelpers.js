@@ -17,15 +17,6 @@ helpers.getUrl = function (game) {
 };
 
 /**
- *
- * @param team
- * @param game
- */
-helpers.isCurrentTeam = function (team, game) {
-  return (team == game.currentTeam) && (game.currentPhase > 0);
-};
-
-/**
  * Return the number of milliseconds remaining in the round.
  * Returns null if the clock is not running.
  *

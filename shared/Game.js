@@ -40,14 +40,23 @@ Game.prototype.getTeams = function (includePoints) {
     teams[player.team].players.push(player);
   });
 
-  // guarantees stuff
   for (var j = 0; j < max; j++) {
     teams[j] = teams[j] || {players: []};
+    teams[j].index = j;
+    teams[j].name = this.getTeamName(j);
   }
 
   return teams;
 };
 
+/**
+ * Return an interesting name for a team.
+ *
+ * @param team
+ */
+Game.prototype.getTeamName = function (team) {
+  return "Team " + team;
+};
 
 /**
  * Get a list of points.
@@ -62,22 +71,21 @@ Game.prototype.getPoints = function () {
   this.points.forEach(function (point) {
     points[point.team] += 1;
   });
-
   return points;
 };
 
 /**
- * Get a list of all words in a game.
- *
- * @returns {*}
+ * List of all words in the game.
  */
-Game.prototype.getWords = function () {
-  var words = [];
-  this.players.forEach(function (player) {
-    words.push.apply(words, player.words);
-  });
-  return words;
-};
+Object.defineProperty(Game.prototype, 'words', {
+  'get': function () {
+    var words = [];
+    this.players.forEach(function (player) {
+      words.push.apply(words, player.words);
+    });
+    return words;
+  }
+});
 
 /**
  * Get a player from a game and an id.
@@ -95,14 +103,14 @@ Game.prototype.getPlayer = function (playerId) {
 };
 
 /**
- * Returns the current player.
- *
- * @returns {*}
+ * Easy access to current player.
  */
-Game.prototype.getCurrentPlayer = function () {
-  var team = this.getTeams()[this.currentTeam];
-  return team.players[this.currentPlayerIndex % team.players.length];
-};
+Object.defineProperty(Game.prototype, 'currentPlayer', {
+  'get': function () {
+    var team = this.getTeams()[this.currentTeam];
+    return team.players[this.currentPlayerIndex % team.players.length];
+  }
+});
 
 /**
  * Returns a url for the game.

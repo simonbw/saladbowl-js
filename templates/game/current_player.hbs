@@ -1,0 +1,12 @@
+<h1>{{phase.name}}</h1>
+<p class="phase-instructions">{{phase.instructions}}</p>
+
+{{> game/timer}}
+
+{{#if game.roundStarted}}
+  <div class="current-word">{{game.currentWord}}</div>
+  <a class="button correct">Correct</a>
+  <a class="button skip">Skip</a>
+{{else}}
+  <a class="button start-round">Ready</a>
+{{/if}}

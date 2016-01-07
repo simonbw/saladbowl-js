@@ -54,8 +54,15 @@ Refresh.refresh = function (url, template, handler) {
  * @param data
  */
 function processResponse(data) {
+  if (data.redirect) {
+    location.assign(data.redirect);
+  }
   if (data.game) {
     data.game = Game.transformGame(data.game);
+    data.currentPlayer = data.game.currentPlayer;
+    data.phase = data.game.phases[data.game.currentPhase];
+    data.player = data.game.getPlayer(data.user);
+    data.teams = data.game.getTeams(true);
   }
   if (data.games) {
     data.games = data.games.map(Game.transformGame);
