@@ -22,7 +22,7 @@ templates['game/current_player'] = template({"1":function(depth0,helpers,partial
     var stack1;
 
   return "  <div id=\"current-word\">"
-    + this.escapeExpression(this.lambda(((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1.currentWord : stack1), depth0))
+    + this.escapeExpression(this.lambda(((stack1 = ((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1.currentWord : stack1)) != null ? stack1.word : stack1), depth0))
     + "</div>\n  <a class=\"button correct\">Correct</a>\n  <a class=\"button skip\">Skip</a>\n";
 },"3":function(depth0,helpers,partials,data) {
     var stack1;
@@ -31,12 +31,12 @@ templates['game/current_player'] = template({"1":function(depth0,helpers,partial
     + this.escapeExpression(this.lambda(((stack1 = (depth0 != null ? depth0.phase : depth0)) != null ? stack1.instructions : stack1), depth0))
     + "</p>\n  <a class=\"button start-round\">Ready</a>\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-    var stack1, alias1=this.escapeExpression;
+    var stack1, alias1=this.lambda, alias2=this.escapeExpression;
 
   return "<h1>"
-    + alias1(this.lambda(((stack1 = (depth0 != null ? depth0.phase : depth0)) != null ? stack1.name : stack1), depth0))
+    + alias2(alias1(((stack1 = (depth0 != null ? depth0.phase : depth0)) != null ? stack1.name : stack1), depth0))
     + "</h1>\n<div class=\"words-remaining\">"
-    + alias1((helpers.add || (depth0 && depth0.add) || helpers.helperMissing).call(depth0,1,((stack1 = ((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1.wordsInBowl : stack1)) != null ? stack1.length : stack1),{"name":"add","hash":{},"data":data}))
+    + alias2(alias1(((stack1 = ((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1.wordsInBowl : stack1)) != null ? stack1.length : stack1), depth0))
     + " words remaining.</div>\n"
     + ((stack1 = this.invokePartial(partials['game/timer'],depth0,{"name":"game/timer","data":data,"helpers":helpers,"partials":partials})) != null ? stack1 : "")
     + "\n"
@@ -56,12 +56,12 @@ templates['game/debug_panel'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main
     + "</pre>\n</div>";
 },"useData":true});
 templates['game/guessing_player'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-    var stack1, alias1=this.escapeExpression;
+    var stack1, alias1=this.lambda, alias2=this.escapeExpression;
 
   return "<h1>Guess</h1>\n<div>\n  <span class=\"player-name\">"
-    + alias1(this.lambda(((stack1 = ((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1.currentPlayer : stack1)) != null ? stack1.name : stack1), depth0))
+    + alias2(alias1(((stack1 = ((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1.currentPlayer : stack1)) != null ? stack1.name : stack1), depth0))
     + "</span> is up.\n</div>\n<div class=\"words-remaining\">"
-    + alias1((helpers.add || (depth0 && depth0.add) || helpers.helperMissing).call(depth0,1,((stack1 = ((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1.wordsInBowl : stack1)) != null ? stack1.length : stack1),{"name":"add","hash":{},"data":data}))
+    + alias2(alias1(((stack1 = ((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1.wordsInBowl : stack1)) != null ? stack1.length : stack1), depth0))
     + " words remaining.</div>\n\n"
     + ((stack1 = this.invokePartial(partials['game/last_correct_word'],depth0,{"name":"game/last_correct_word","data":data,"helpers":helpers,"partials":partials})) != null ? stack1 : "")
     + ((stack1 = this.invokePartial(partials['game/timer'],depth0,{"name":"game/timer","data":data,"helpers":helpers,"partials":partials})) != null ? stack1 : "")
@@ -216,7 +216,7 @@ templates['game/waiting_player'] = template({"compiler":[6,">= 2.0.0-beta.1"],"m
     var stack1;
 
   return "<h1>Wait...</h1>\n<div class=\"words-remaining\">"
-    + this.escapeExpression((helpers.add || (depth0 && depth0.add) || helpers.helperMissing).call(depth0,1,((stack1 = ((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1.wordsInBowl : stack1)) != null ? stack1.length : stack1),{"name":"add","hash":{},"data":data}))
+    + this.escapeExpression(this.lambda(((stack1 = ((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1.wordsInBowl : stack1)) != null ? stack1.length : stack1), depth0))
     + " words remaining.</div>\n\n"
     + ((stack1 = this.invokePartial(partials['game/timer'],depth0,{"name":"game/timer","data":data,"helpers":helpers,"partials":partials})) != null ? stack1 : "")
     + ((stack1 = this.invokePartial(partials['game/team_list'],depth0,{"name":"game/team_list","data":data,"helpers":helpers,"partials":partials})) != null ? stack1 : "");

@@ -98,6 +98,7 @@ SimpleDAO.prototype.find = function (query) {
  * Update and return a model.
  * @param id {string|object}
  * @param update {object}
+ * @param multi {=boolean}
  * @returns {Promise}
  */
 SimpleDAO.prototype.update = function (id, update) {
@@ -112,13 +113,14 @@ SimpleDAO.prototype.update = function (id, update) {
   }
   return this.transformPromise(
     this.collection.findAndModify({
+      'new': true,
       'query': query,
-      'update': update,
-      'new': true
+      'update': update
     }).then(function (result) {
       if (result.ok) {
         return result.value;
       } else {
+        console('ERROR MODIFYING DOCUMENT', result);
         throw new Error('Error Modifying Document');
       }
     }));
@@ -133,7 +135,7 @@ SimpleDAO.prototype.remove = function (id) {
   if (!this.useShortId) {
     id = ObjectID(id);
   }
-  return this.transformPromise(this.collection.remove({'_id': id}));
+  return this.collection.remove({'_id': id});
 };
 
 

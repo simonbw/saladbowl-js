@@ -6,6 +6,7 @@ var SimpleDAO = require('./SimpleDAO');
 
 // TODO: More efficient queries.
 // TODO: Remove race conditions.
+// TODO: Shorten keys
 
 //
 var DEFAULT_PHASES = [{
@@ -25,7 +26,6 @@ var DEFAULT_PHASES = [{
   'duration': 60000
 }];
 
-//
 var DEFAULT_WORDS_PER_PLAYER = 5;
 
 
@@ -54,6 +54,7 @@ GameDAO.prototype.create = function (game) {
   game.currentPhaseIndex = game.currentPhaseIndex || 0;
   game.currentPlayerIndex = game.currentPlayerIndex || 0;
   game.currentTeamIndex = game.currentTeamIndex || 0;
+  game.currentWordIndex = game.currentWordIndex || 0;
   game.gameEnded = game.gameEnded || false;
   game.gameStarted = game.gameStarted || false;
   game.lastUpdatedAt = game.lastUpdatedAt || game.createdAt;
@@ -61,7 +62,7 @@ GameDAO.prototype.create = function (game) {
   game.players = game.players || [];
   game.points = game.points || [];
   game.skips = game.skips || [];
-  game.wordsInBowl = game.wordsInBowl || [];
+  game.words = game.words || [];
   game.wordsPerPlayer = game.wordsPerPlayer || DEFAULT_WORDS_PER_PLAYER;
 
   return SimpleDAO.prototype.create.call(this, game);
@@ -71,7 +72,7 @@ GameDAO.prototype.create = function (game) {
  * Return an array of recently started games to join.
  */
 GameDAO.prototype.recent = function () {
-  return this.find({"currentPhaseIndex": {'$eq': 0}})
+  return this.find({'currentPhaseIndex': {'$eq': 0}})
 };
 
 /**
@@ -103,13 +104,13 @@ GameDAO.prototype.addPlayer = function (game, userId, name) {
       game.players.forEach(function (player) {
         var error;
         if (player.id == userId) {
-          error = Error("ALREADY JOINED");
+          error = Error('ALREADY JOINED');
           error.name = 'JoinError';
           throw error;
         }
         // TODO: There is a race condition here
         if (player.name == name) {
-          error = Error("NAME TAKEN");
+          error = Error('NAME TAKEN');
           error.name = 'JoinError';
           throw error;
         }
@@ -118,8 +119,7 @@ GameDAO.prototype.addPlayer = function (game, userId, name) {
       const player = {
         'id': userId,
         'name': name,
-        'team': team,
-        'words': []
+        'team': team
       };
       return self.update(game._id, {
         '$push': {'players': player},
@@ -132,12 +132,12 @@ GameDAO.prototype.addPlayer = function (game, userId, name) {
  * Remove a player from a game.
  *
  * @param gameId
- * @param userId
+ * @param playerId
  * @returns {Promise}
  */
-GameDAO.prototype.removePlayer = function (gameId, userId) {
+GameDAO.prototype.removePlayer = function (gameId, playerId) {
   return this.update(gameId, {
-    '$pull': {'players': {'id': userId}},
+    '$pull': {'players': {'id': playerId}},
     '$set': {'lastUpdatedAt': Date.now()}
   });
 };
@@ -161,7 +161,7 @@ GameDAO.prototype.setTeam = function (gameId, playerId, team) {
   };
   var update = {
     '$set': {
-      'players.$.team': team,
+      'players.$.team': parseInt(team),
       'lastUpdatedAt': Date.now()
     }
 
@@ -178,19 +178,22 @@ GameDAO.prototype.setTeam = function (gameId, playerId, team) {
  * @returns {Promise}
  */
 GameDAO.prototype.addWord = function (gameId, playerId, word) {
-  // TODO: Validation
   if (gameId instanceof Game) {
     gameId = gameId._id;
   }
-  var query = {
-    '_id': gameId,
-    'players.id': playerId
-  };
   var update = {
-    '$push': {'players.$.words': word},
+    '$push': {
+      'words': {
+        'inBowl': true,
+        'playerId': playerId,
+        'skips': 0,
+        'timeSpent': 0,
+        'word': word
+      }
+    },
     '$set': {'lastUpdatedAt': Date.now()}
   };
-  return this.update(query, update);
+  return this.update(gameId, update);
 };
 
 
@@ -203,26 +206,31 @@ GameDAO.prototype.addWord = function (gameId, playerId, word) {
 GameDAO.prototype.nextTeam = function (gameId) {
   return this.fromIdOrGame(gameId)
     .then(function (game) {
+      // Next team
       var currentTeamIndex = (game.currentTeamIndex + 1) % (game.getTeams().length);
-      var wordsInBowl = game.wordsInBowl;
-      wordsInBowl.push(game.currentWord);
-      var currentWord = Random.take(game.wordsInBowl);
+
+      // Choose a new word
+      var currentWordIndex = Random.choose(game.wordsInBowl).index;
+
+      // Advance player count if necessary
       var currentPlayerIndex = game.currentPlayerIndex;
       if (currentTeamIndex == 0) {
         currentPlayerIndex = game.currentPlayerIndex + 1;
       }
-      return this.update(game._id, {
+
+      var update = {
         '$set': {
           'currentPlayerIndex': currentPlayerIndex,
           'currentTeamIndex': currentTeamIndex,
-          'currentWord': currentWord,
+          'currentWordIndex': currentWordIndex,
           'lastCorrectWord': null,
           'lastUpdatedAt': Date.now(),
           'roundStarted': false,
-          'roundStartedAt': null,
-          'wordsInBowl': wordsInBowl
+          'roundStartedAt': null
         }
-      });
+      };
+
+      return this.update(game._id, update);
     }.bind(this));
 };
 
@@ -235,21 +243,27 @@ GameDAO.prototype.nextTeam = function (gameId) {
 GameDAO.prototype.startGame = function (gameId) {
   return this.fromIdOrGame(gameId)
     .then(function (game) {
-      if (game.currentPhaseIndex != 0) {
+      // Only work if game hasn't started
+      if (game.currentPhaseIndex != 0 || game.gameStarted) {
         return game;
       }
-      var wordsInBowl = game.words;
-      var currentWord = Random.take(wordsInBowl);
-      var now = Date.now();
+
+      // Give each word an index
+      game.words.forEach(function (word, index) {
+        word.index = index;
+      });
+
+      var currentWordIndex = Random.integer(game.words.length);
       var currentPhaseIndex = 1;
+      var now = Date.now();
       var update = {
         '$set': {
-          "currentPhaseIndex": currentPhaseIndex,
-          'currentWord': currentWord,
+          'currentPhaseIndex': currentPhaseIndex,
+          'currentWordIndex': currentWordIndex,
           'gameStarted': true,
           'gameStartedAt': now,
           'lastUpdatedAt': now,
-          'wordsInBowl': wordsInBowl
+          'words': game.words
         }
       };
       return this.update(game._id, update);
@@ -265,21 +279,17 @@ GameDAO.prototype.startGame = function (gameId) {
 GameDAO.prototype.correctWord = function (gameId) {
   return this.fromIdOrGame(gameId)
     .then(function (game) {
-      var wordsInBowl = game.wordsInBowl;
-      var shouldAdvancePhase = wordsInBowl.length == 0;
-      if (shouldAdvancePhase) {
-        wordsInBowl = game.words;
-      }
-      var currentWord = Random.take(wordsInBowl);
+      var correctWordIndex = game.currentWordIndex;
+      game.currentWord.inBowl = false;
+
       var now = Date.now();
-      var timeSpent = now - game.lastWordAt;
+      var timeSpent = now - (game.lastWordAt || game.roundStartedAt);
+
       var update = {
         '$set': {
-          'currentWord': currentWord,
-          'lastCorrectWord': game.currentWord,
+          'lastCorrectWord': correctWordIndex,
           'lastUpdatedAt': now,
-          'lastWordAt': now,
-          'wordsInBowl': wordsInBowl
+          'lastWordAt': now
         }, '$push': {
           'points': {
             'guessedAt': now,
@@ -287,18 +297,30 @@ GameDAO.prototype.correctWord = function (gameId) {
             'player': game.currentPlayer.id,
             'team': game.currentTeamIndex,
             'timeSpent': timeSpent,
-            'word': game.currentWord
+            'wordIndex': correctWordIndex
           }
         }
       };
-      if (shouldAdvancePhase) {
+      if (game.wordsInBowl.length == 0) {
         var currentPhaseIndex = update['$set']['currentPhaseIndex'] = game.currentPhaseIndex + 1;
 
+        // Put all words back in bowl
+        game.words.forEach(function (word) {
+          word.inBowl = true;
+        });
+        update['$set']['words'] = game.words;
+        update['$set']['currentWordIndex'] = Random.integer(game.words.length);
+
+        // Game is over
         if (currentPhaseIndex >= game.phases.length) {
           update['$set']['gameEnded'] = true;
           update['$set']['gameEndedAt'] = Date.now();
           update['$set']['roundStarted'] = false;
         }
+      } else {
+        update['$set']['words.' + correctWordIndex + '.inBowl'] = false;
+        // Choose a new word
+        update['$set']['currentWordIndex'] = Random.choose(game.wordsInBowl).index;
       }
       return this.update(game._id, update);
     }.bind(this));
@@ -313,28 +335,19 @@ GameDAO.prototype.correctWord = function (gameId) {
 GameDAO.prototype.skipWord = function (gameId) {
   return this.fromIdOrGame(gameId)
     .then(function (game) {
-      var skippedWord = game.currentWord;
-      var wordsInBowl = game.wordsInBowl;
-      wordsInBowl.push(skippedWord);
-      var currentWord = Random.take(wordsInBowl);
+      //var skippedWordIndex = game.currentWordIndex;
+      var currentWordIndex = Random.choose(game.wordsInBowl).index;
+
       var now = Date.now();
       var timeSpent = now - game.lastWordAt;
+
+      // TODO: Keep track of skip information
+
       return this.update(game._id, {
         '$set': {
-          'currentWord': currentWord,
+          'currentWordIndex': currentWordIndex,
           'lastUpdatedAt': now,
-          'lastWordAt': now,
-          'wordsInBowl': wordsInBowl
-        },
-        '$push': {
-          'skips': {
-            'skippedAt': now,
-            'phase': game.currentPhaseIndex,
-            'player': game.currentPlayer.id,
-            'team': game.currentTeamIndex,
-            'timeSpent': timeSpent,
-            'word': skippedWord
-          }
+          'lastWordAt': now
         }
       });
     }.bind(this));

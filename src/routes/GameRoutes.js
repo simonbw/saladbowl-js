@@ -9,24 +9,8 @@ var router = express.Router({mergeParams: true});
 // TODO: REST?
 // TODO: More ajax
 
-/**
- * Attach game to request. 404 if game not found.
- *
- * @param req
- * @param res
- * @param next
- */
-var attachGame = function (req, res, next) {
-  gameDao.fromId(req.params['gameId'])
-    .then(
-      function (game) {
-        if (!game) {
-          throw new RequestError('Could not find game: ' + req.params['gameId'], 404);
-        }
-        req.game = game;
-        next();
-      }, next).catch(next);
-};
+
+// HELPERS
 
 /**
  * Attaches the player to the request.
@@ -53,6 +37,26 @@ var attachPlayer = function (req, res, next) {
 };
 
 /**
+ * Attach game to request. 404 if game not found.
+ *
+ * @param req
+ * @param res
+ * @param next
+ */
+router.use('/', function (req, res, next) {
+  gameDao.fromId(req.params['gameId'])
+    .then(
+      function (game) {
+        if (!game) {
+          throw new RequestError('Could not find game: ' + req.params['gameId'], 404);
+        }
+        req.game = game;
+        next();
+      }, next)
+    .catch(next);
+});
+
+/**
  * Attach a new function to response.
  */
 router.use('/', function (req, res, next) {
@@ -66,7 +70,7 @@ router.use('/', function (req, res, next) {
   next();
 });
 
-router.use('/', attachGame);
+// ROUTES
 
 /**
  *
@@ -100,17 +104,23 @@ router.get('/', attachPlayer, function (req, res, next) {
  * @type {number}
  */
 var POLL_DELAY = 100;
+var TIMEOUT = 60 * 1000; // one minute
 
 /**
  * Get json of the game.
  * If req.query.lastUpdate is set, will wait to send game until a newer one is found.
  */
 router.get('/json', function (req, res, next) {
+  var startedAt = Date.now();
   var lastUpdate = parseInt(req.query['lastUpdatedAt']) || 0;
   if (req.game.lastUpdatedAt > lastUpdate) {
     res.sendGame(req.game);
   } else {
     var waitAndSend = function () {
+      if (Date.now() - startedAt > TIMEOUT) {
+        res.status(200);
+        res.end();
+      }
       gameDao.fromId(req.params['gameId'])
         .then(function (game) {
           if (game.lastUpdatedAt > lastUpdate) {
@@ -235,8 +245,9 @@ router.post('/start-game', attachPlayer, function (req, res, next) {
  *
  */
 router.post('/correct-word', attachPlayer, function (req, res, next) {
-  if (req.body.word !== req.game.currentWord) {
+  if (req.body.wordIndex != req.game.currentWord.index) {
     res.sendGame(req.game);
+    console.log('Bad correct sent');
   } else {
     gameDao.correctWord(req.game)
       .then(function (game) {
@@ -250,8 +261,9 @@ router.post('/correct-word', attachPlayer, function (req, res, next) {
  *
  */
 router.post('/skip-word', attachPlayer, function (req, res, next) {
-  if (req.body.word !== req.game.currentWord) {
+  if (req.body.wordIndex != req.game.currentWord.index) {
     res.sendGame(req.game);
+    console.log('Bad skip sent');
   } else {
     gameDao.skipWord(req.game)
       .then(function (game) {

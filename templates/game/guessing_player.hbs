@@ -2,7 +2,7 @@
 <div>
   <span class="player-name">{{game.currentPlayer.name}}</span> is up.
 </div>
-<div class="words-remaining">{{add 1 game.wordsInBowl.length}} words remaining.</div>
+<div class="words-remaining">{{game.wordsInBowl.length}} words remaining.</div>
 
 {{> game/last_correct_word}}
 {{> game/timer}}

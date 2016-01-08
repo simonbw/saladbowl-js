@@ -2,8 +2,8 @@
  * Utility functions for dealing with games.
  */
 
+var Player = require('./Player');
 var TeamNames = require('./TeamNames');
-
 
 /**
  *
@@ -16,7 +16,61 @@ function Game(game) {
       this[key] = game[key];
     }
   }
+  if (!this.players) {
+    console.log('game has no players', this);
+  }
+  this.players = this.players.map(function (player) {
+    return new Player(game, player);
+  });
 }
+
+/**
+ * List of all words in the game.
+ */
+Object.defineProperty(Game.prototype, 'currentWord', {
+  'get': function () {
+    return this.words[this.currentWordIndex];
+  }
+});
+
+/**
+ * Easy access to current player.
+ */
+Object.defineProperty(Game.prototype, 'currentPlayer', {
+  'get': function () {
+    var team = this.getTeams()[this.currentTeamIndex];
+    return team.players[this.currentPlayerIndex % team.players.length];
+  }
+});
+
+/**
+ * Easy access to current team.
+ */
+Object.defineProperty(Game.prototype, 'currentTeam', {
+  'get': function () {
+    return this.getTeams()[this.currentTeamIndex];
+  }
+});
+
+/**
+ * Easy access to current phase.
+ */
+Object.defineProperty(Game.prototype, 'currentPhase', {
+  'get': function () {
+    return this.phases[this.currentPhaseIndex];
+  }
+});
+
+/**
+ * List of all words in the game.
+ */
+Object.defineProperty(Game.prototype, 'wordsInBowl', {
+  'get': function () {
+    return this.words.filter(function (word) {
+      return word.inBowl;
+    });
+  }
+});
 
 /**
  * Get a list of lists of players.
@@ -68,19 +122,6 @@ Game.prototype.getPoints = function () {
 };
 
 /**
- * List of all words in the game.
- */
-Object.defineProperty(Game.prototype, 'words', {
-  'get': function () {
-    var words = [];
-    this.players.forEach(function (player) {
-      words.push.apply(words, player.words);
-    });
-    return words;
-  }
-});
-
-/**
  * Get a player from a game and an id.
  *
  * @param playerId
@@ -94,34 +135,6 @@ Game.prototype.getPlayer = function (playerId) {
   }
   return undefined;
 };
-
-/**
- * Easy access to current player.
- */
-Object.defineProperty(Game.prototype, 'currentPlayer', {
-  'get': function () {
-    var team = this.getTeams()[this.currentTeamIndex];
-    return team.players[this.currentPlayerIndex % team.players.length];
-  }
-});
-
-/**
- * Easy access to current team.
- */
-Object.defineProperty(Game.prototype, 'currentTeam', {
-  'get': function () {
-    return this.getTeams()[this.currentTeamIndex];
-  }
-});
-
-/**
- * Easy access to current phase.
- */
-Object.defineProperty(Game.prototype, 'currentPhase', {
-  'get': function () {
-    return this.phases[this.currentPhaseIndex];
-  }
-});
 
 /**
  * Returns a url for the game.
@@ -145,8 +158,7 @@ Game.transformGame = function (game) {
   if (!game) {
     return game;
   }
-  var result = new Game(game);
-  return result;
+  return new Game(game);
 };
 
 module.exports = Game;
