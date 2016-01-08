@@ -1,4 +1,4 @@
-@import url(https://fonts.googleapis.com/css?family=Raleway:600,400,200);
+@import url(https://fonts.googleapis.com/css?family=Share+Tech+Mono|Raleway:400,200,600);
 input {
   border-radius: 5px;
   border: 1px solid #AAA;
@@ -42,15 +42,50 @@ button, .button {
     color: #000; }
 
 #timer {
-  font-size: 2em; }
+  font-family: Courier, 'Courier New', monospace;
+  font-size: 2em;
+  margin: 10px; }
+
+span.player-name {
+  font-weight: 600; }
+
+span.game-id {
+  font-family: Courier, 'Courier New', monospace;
+  font-size: 1.1em; }
+
+.last-correct-word {
+  font-weight: bold; }
 
 .phase-instructions {
   text-align: center; }
 
-.current-word {
-  text-align: center;
+#current-word {
   font-size: 4em;
-  padding: 20px; }
+  padding: 20px;
+  text-align: center; }
+
+.button.correct,
+.button.skip {
+  font-size: 2em; }
+  .button.correct:not(.disabled):hover,
+  .button.skip:not(.disabled):hover {
+    border-color: #000; }
+
+.button.correct {
+  color: #0F0; }
+  .button.correct.disabled {
+    color: #696; }
+  .button.correct:not(.disabled):hover {
+    background: #EFE;
+    color: #0F0; }
+
+.button.skip {
+  color: #F00; }
+  .button.skip.disabled {
+    color: #966; }
+  .button.skip:not(.disabled):hover {
+    background: #FEE;
+    color: #F00; }
 
 .debug {
   background: #FAFAFA;
@@ -64,18 +99,8 @@ button, .button {
     padding: 0;
     text-align: left; }
   .debug pre {
-    white-space: pre-wrap;
-    font-family: monospace; }
-
-.button.correct,
-.button.skip {
-  font-size: 2em; }
-
-.button.correct {
-  color: #0F0; }
-
-.button.skip {
-  color: #F00; }
+    font-family: monospace;
+    white-space: pre-wrap; }
 
 .recent-games {
   margin: 20px auto;

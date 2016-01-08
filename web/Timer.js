@@ -1,36 +1,10 @@
-var Timer = {};
+var ServerTime = require('./ServerTime');
 
-var MAX_SERVER_TIMES = 5;
+var Timer = module.exports;
 
+var REDRAW_DELAY = 1 / 30;
 var timerInterval = null;
 var timerTimeout = null;
-var serverTimes = [];
-
-/**
- *
- * @param time
- */
-Timer.updateServerTime = function (time) {
-  var now = Date.now();
-  serverTimes.push([now, time]);
-  // Keep it recent
-  if (serverTimes.length > MAX_SERVER_TIMES) {
-    serverTimes.shift();
-  }
-};
-
-/**
- * Gets an estimate of what the time on the server is.
- *
- * @returns {number}
- */
-Timer.getServerTime = function () {
-  var offset = 0;
-  serverTimes.forEach(function (timePair) {
-    offset += (timePair[1] - timePair[0]) / serverTimes.length;
-  });
-  return Date.now() + offset;
-};
 
 /**
  * Return the number of milliseconds remaining in the round.
@@ -43,8 +17,8 @@ Timer.getTimeRemaining = function (game) {
   if (!game.roundStarted || !game.roundStarted) {
     return null;
   }
-  var duration = game.phases[game.currentPhase].duration;
-  var timeSinceStart = (Timer.getServerTime() - game.roundStartedAt);
+  var duration = game.phases[game.currentPhaseIndex].duration;
+  var timeSinceStart = (ServerTime.get() - game.roundStartedAt);
   var timeout = duration - timeSinceStart;
   return timeout > 0 ? timeout : 0;
 };
@@ -57,6 +31,9 @@ Timer.getTimeRemaining = function (game) {
  * @returns {string}
  */
 var formatClock = function (milliseconds) {
+  if (milliseconds < 10000) {
+    return (milliseconds / 1000).toFixed(2);
+  }
   return (milliseconds / 1000).toFixed(1);
 };
 
@@ -76,31 +53,26 @@ Timer.redraw = function (game) {
  * Setup the timer.
  *
  * @param game
- * @param isCurrentPlayer {boolean}
+ * @param player
  */
-Timer.start = function (game, isCurrentPlayer) {
-  var timeRemaining = Timer.getTimeRemaining(game);
-  if (timeRemaining != null) {
-    if (timerInterval) {
-      clearInterval(timerInterval);
-    }
-    timerInterval = setInterval(Timer.redraw.bind(this, game), 1 / 30);
+Timer.start = function (game, player) {
+  var isCurrentPlayer = game.currentPlayer && (game.currentPlayer.id == player.id);
+  if (game.gameStarted && !game.gameEnded) {
+    var timeRemaining = Timer.getTimeRemaining(game);
+    if (timeRemaining != null) {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+      }
+      timerInterval = setInterval(Timer.redraw.bind(this, game), REDRAW_DELAY);
 
-    if (timerTimeout) {
-      clearTimeout(timerTimeout);
-    }
-    if (isCurrentPlayer) {
-      timerTimeout = setTimeout(function () {
-        $.get(game.getUrl('next-team'), function () {
-          // TODO: refresh
-        });
-      }, timeRemaining);
+      if (timerTimeout) {
+        clearTimeout(timerTimeout);
+      }
+      if (isCurrentPlayer) {
+        timerTimeout = setTimeout(function () {
+          $.get(game.getUrl('next-team')); // TODO: Refresh here?
+        }, timeRemaining);
+      }
     }
   }
 };
-
-
-/**
- *
- */
-module.exports = Timer;

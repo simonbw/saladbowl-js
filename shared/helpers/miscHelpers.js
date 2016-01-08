@@ -1,8 +1,8 @@
 var marked = require('marked');
 
 
-var helpers = {};
-module.exports = helpers;
+var helpers = module.exports;
+
 
 /**
  * Capitalize the first letter of a string.
@@ -102,12 +102,8 @@ helpers.debug = function () {
  * @param milliseconds {number}
  */
 helpers.formatClock = function (milliseconds) {
-  if (milliseconds == null) {
-    return '';
+  if (milliseconds < 10000) {
+    return (milliseconds / 1000).toFixed(2);
   }
-  var seconds = milliseconds / 1000;
-  var whole = Math.floor(seconds);
-  var part = seconds - whole;
-  part = Math.floor(part * 100);
-  return whole + ':' + part;
+  return (milliseconds / 1000).toFixed(1);
 };

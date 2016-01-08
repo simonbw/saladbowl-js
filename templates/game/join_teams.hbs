@@ -1,4 +1,6 @@
 <h1>Join Teams</h1>
+Game ID: <span class="game-id">{{game._id}}</span>
+
 {{> game/team_list}}
 
-<a id="start-game-button" class="button{{#if (not (readyToStart game))}} disabled{{/if}}">Start Game</a>
+<div id="start-game-button" class="button{{#if (not (readyToStart game))}} disabled{{/if}}">Start Game</div>

@@ -1,5 +1,4 @@
-var helpers = {};
-module.exports = helpers;
+var helpers = module.exports;
 
 /**
  * @param a

@@ -1,12 +1,13 @@
 var express = require('express');
 
 var gameDao = require('../data/GameDAO').instance;
+var RequestError = require('../RequestError');
+
 var router = express.Router({mergeParams: true});
 
 // TODO: Validation / Remove race conditions
 // TODO: REST?
 // TODO: More ajax
-
 
 /**
  * Attach game to request. 404 if game not found.
@@ -20,9 +21,7 @@ var attachGame = function (req, res, next) {
     .then(
       function (game) {
         if (!game) {
-          var error = new Error('Could not find game: ' + req.gameId);
-          error.status = 404;
-          throw error;
+          throw new RequestError('Could not find game: ' + req.params['gameId'], 404);
         }
         req.game = game;
         next();
@@ -44,12 +43,28 @@ var attachPlayer = function (req, res, next) {
     next();
   } else {
     if (req.xhr) {
-      res.send({'redirect': req.game.getUrl()});
+      var error = new Error('You must join the game to complete that action.');
+      error.status = 403;
+      throw error;
     } else {
       res.redirect(req.game.getUrl('join'));
     }
   }
 };
+
+/**
+ * Attach a new function to response.
+ */
+router.use('/', function (req, res, next) {
+  res.sendGame = function (game) {
+    res.send({
+      'game': game,
+      'serverTime': Date.now(),
+      'user': req.user
+    });
+  };
+  next();
+});
 
 router.use('/', attachGame);
 
@@ -66,7 +81,7 @@ router.get('/', attachPlayer, function (req, res, next) {
       var data = {
         currentPlayer: game.currentPlayer,
         game: game,
-        phase: game.phases[game.currentPhase],
+        phase: game.phases[game.currentPhaseIndex],
         player: player,
         serverTime: Date.now(),
         teams: game.getTeams(true),
@@ -79,16 +94,37 @@ router.get('/', attachPlayer, function (req, res, next) {
   }
 });
 
+
 /**
- *
+ * Time waiting between polling database.
+ * @type {number}
+ */
+var POLL_DELAY = 100;
+
+/**
+ * Get json of the game.
+ * If req.query.lastUpdate is set, will wait to send game until a newer one is found.
  */
 router.get('/json', function (req, res, next) {
-  var data = {
-    game: req.game,
-    serverTime: Date.now(),
-    user: req.user
-  };
-  res.send(data);
+  var lastUpdate = parseInt(req.query['lastUpdatedAt']) || 0;
+  if (req.game.lastUpdatedAt > lastUpdate) {
+    res.sendGame(req.game);
+  } else {
+    var waitAndSend = function () {
+      gameDao.fromId(req.params['gameId'])
+        .then(function (game) {
+          if (game.lastUpdatedAt > lastUpdate) {
+            setTimeout(function () {
+              res.sendGame(game);
+            }, 1);
+          } else {
+            setTimeout(waitAndSend, POLL_DELAY);
+          }
+        }, next)
+        .catch(next);
+    };
+    setTimeout(waitAndSend, POLL_DELAY);
+  }
 });
 
 /**
@@ -138,7 +174,7 @@ router.get('/leave', function (req, res, next) {
 /**
  *
  */
-router.get('/delete', function (req, res, next) {
+router.get('/delete', attachPlayer, function (req, res, next) {
   gameDao.remove(req.game._id)
     .then(function () {
       res.redirect('/');
@@ -152,7 +188,7 @@ router.get('/delete', function (req, res, next) {
 router.post('/join-team', attachPlayer, function (req, res, next) {
   gameDao.setTeam(req.game, req.user, req.body.team)
     .then(function (game) {
-      res.redirect(game.getUrl());
+      res.sendGame(game);
     }, next)
     .catch(next);
 });
@@ -186,54 +222,71 @@ router.post('/add-word', attachPlayer, function (req, res, next) {
 /**
  *
  */
-router.get('/start-game', attachPlayer, function (req, res, next) {
+router.post('/start-game', attachPlayer, function (req, res, next) {
   gameDao.startGame(req.game)
     .then(function (game) {
-      res.redirect(game.getUrl());
+      res.sendGame(game);
     }, next)
     .catch(next);
 });
 
+
 /**
  *
+ */
+router.post('/correct-word', attachPlayer, function (req, res, next) {
+  if (req.body.word !== req.game.currentWord) {
+    res.sendGame(req.game);
+  } else {
+    gameDao.correctWord(req.game)
+      .then(function (game) {
+        res.sendGame(game);
+      }, next)
+      .catch(next);
+  }
+});
+
+/**
+ *
+ */
+router.post('/skip-word', attachPlayer, function (req, res, next) {
+  if (req.body.word !== req.game.currentWord) {
+    res.sendGame(req.game);
+  } else {
+    gameDao.skipWord(req.game)
+      .then(function (game) {
+        res.sendGame(game);
+      }, next)
+      .catch(next);
+  }
+});
+
+/**
+ *
+ */
+router.post('/start-round', attachPlayer, function (req, res, next) {
+  if (req.user != req.player.id) {
+    res.sendGame(req.game);
+  } else {
+    gameDao.startRound(req.game)
+      .then(function (game) {
+        res.sendGame(game);
+      }, next)
+      .catch(next);
+  }
+});
+
+
+/**
  */
 router.get('/next-team', attachPlayer, function (req, res, next) {
   gameDao.nextTeam(req.game)
     .then(function (game) {
-      res.redirect(game.getUrl());
-    }, next)
-    .catch(next);
-});
-
-/**
- *
- */
-router.get('/correct-word', attachPlayer, function (req, res, next) {
-  gameDao.correctWord(req.game)
-    .then(function (game) {
-      res.redirect(game.getUrl());
-    }, next)
-    .catch(next);
-});
-
-/**
- *
- */
-router.get('/skip-word', attachPlayer, function (req, res, next) {
-  gameDao.skipWord(req.game)
-    .then(function (game) {
-      res.redirect(game.getUrl());
-    }, next)
-    .catch(next);
-});
-
-/**
- *
- */
-router.get('/start-round', attachPlayer, function (req, res, next) {
-  gameDao.startRound(req.game)
-    .then(function (game) {
-      res.redirect(game.getUrl());
+      if (req.xhr) {
+        res.sendGame(game);
+      } else {
+        res.redirect(game.getUrl());
+      }
     }, next)
     .catch(next);
 });

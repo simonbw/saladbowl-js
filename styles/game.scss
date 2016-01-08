@@ -1,16 +1,62 @@
 
 #timer {
+  font-family: Courier, 'Courier New', monospace;
   font-size: 2em;
+  margin: 10px;
+}
+
+span.player-name {
+  font-weight: 600;
+}
+
+span.game-id {
+  font-family: Courier, 'Courier New', monospace;
+  font-size: 1.1em;
+}
+
+.last-correct-word {
+  font-weight: bold;
 }
 
 .phase-instructions {
   text-align: center;
 }
 
-.current-word {
-  text-align: center;
+#current-word {
   font-size: 4em;
   padding: 20px;
+  text-align: center;
+}
+
+.button.correct,
+.button.skip {
+  font-size: 2em;
+
+  &:not(.disabled):hover {
+    border-color: #000;
+  }
+}
+
+.button.correct {
+  color: #0F0;
+  &.disabled {
+    color: #696;
+  }
+  &:not(.disabled):hover {
+    background: #EFE;
+    color: #0F0;
+  }
+}
+
+.button.skip {
+  color: #F00;
+  &.disabled {
+    color: #966;
+  }
+  &:not(.disabled):hover {
+    background: #FEE;
+    color: #F00;
+  }
 }
 
 .debug {
@@ -27,20 +73,7 @@
     text-align: left;
   }
   pre {
-    white-space: pre-wrap;
     font-family: monospace;
+    white-space: pre-wrap;
   }
-}
-
-.button.correct,
-.button.skip {
-  font-size: 2em;
-}
-
-.button.correct {
-  color: #0F0;
-}
-
-.button.skip {
-  color: #F00;
 }

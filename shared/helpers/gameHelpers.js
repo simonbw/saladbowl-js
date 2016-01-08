@@ -1,6 +1,4 @@
-var helpers = {};
-module.exports = helpers;
-
+var helpers = module.exports;
 
 /**
  * Get the url for a game.
@@ -26,7 +24,7 @@ helpers.timeRemaining = function (game) {
   if (!game.roundStarted || !game.roundStarted) {
     return null;
   }
-  var duration = game.phases[game.currentPhase].duration;
+  var duration = game.currentPhase.duration;
   var timeSinceStart = (Date.now() - game.roundStartedAt);
   var timeout = duration - timeSinceStart;
   return timeout > 0 ? timeout : 0;
@@ -40,7 +38,7 @@ helpers.timeRemaining = function (game) {
  */
 helpers.readyToStart = function (game) {
   // Need to not have started
-  if (game.currentPhase != 0) {
+  if (game.currentPhaseIndex != 0) {
     return false;
   }
   // Need all words in

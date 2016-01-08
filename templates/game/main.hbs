@@ -6,7 +6,7 @@
   {{else}} {{!--Middle of game--}}
     {{#if (equal player.id currentPlayer.id)}}
       {{> game/current_player}}
-    {{else if (equal game.currentTeam player.team)}}
+    {{else if (equal game.currentTeamIndex player.team)}}
       {{> game/guessing_player}}
     {{else}}
       {{> game/waiting_player}}

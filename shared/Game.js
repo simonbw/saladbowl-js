@@ -2,6 +2,8 @@
  * Utility functions for dealing with games.
  */
 
+var TeamNames = require('./TeamNames');
+
 
 /**
  *
@@ -40,22 +42,13 @@ Game.prototype.getTeams = function (includePoints) {
     teams[player.team].players.push(player);
   });
 
-  for (var j = 0; j < max; j++) {
+  for (var j = 0; j <= max; j++) {
     teams[j] = teams[j] || {players: []};
     teams[j].index = j;
-    teams[j].name = this.getTeamName(j);
+    teams[j].name = TeamNames.get(this, j);
   }
 
   return teams;
-};
-
-/**
- * Return an interesting name for a team.
- *
- * @param team
- */
-Game.prototype.getTeamName = function (team) {
-  return "Team " + team;
 };
 
 /**
@@ -107,8 +100,26 @@ Game.prototype.getPlayer = function (playerId) {
  */
 Object.defineProperty(Game.prototype, 'currentPlayer', {
   'get': function () {
-    var team = this.getTeams()[this.currentTeam];
+    var team = this.getTeams()[this.currentTeamIndex];
     return team.players[this.currentPlayerIndex % team.players.length];
+  }
+});
+
+/**
+ * Easy access to current team.
+ */
+Object.defineProperty(Game.prototype, 'currentTeam', {
+  'get': function () {
+    return this.getTeams()[this.currentTeamIndex];
+  }
+});
+
+/**
+ * Easy access to current phase.
+ */
+Object.defineProperty(Game.prototype, 'currentPhase', {
+  'get': function () {
+    return this.phases[this.currentPhaseIndex];
   }
 });
 

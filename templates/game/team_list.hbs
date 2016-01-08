@@ -2,7 +2,7 @@
   {{#each teams}}
     <div
         class="team
-          {{#if (and (not @root.game.gameEnded) (equal this.index @root.game.currentTeam))}}current{{/if}}
+          {{#if (and (not @root.game.gameEnded) (equal this.index @root.game.currentTeamIndex))}}current{{/if}}
           {{#if (not @root.game.gameStarted)}}joinable{{/if}}"
         data-team-id="{{@index}}">
       <h1>

@@ -16,7 +16,8 @@ router.use(function (req, res, next) {
     req.user = req.cookies.user;
   } else {
     req.user = shortid.generate();
-    res.cookie('user', req.user);
+    var maxAge = 24 * 60 * 60 * 1000; // one day
+    res.cookie('user', req.user, {maxAge: maxAge});
   }
   next();
 });
@@ -31,11 +32,7 @@ router.get('/', function (req, res, next) {
         user: req.user,
         games: games
       };
-      if (req.xhr) {
-        res.send(data);
-      } else {
-        res.render('index', data);
-      }
+      res.render('index', data);
     }, next)
     .catch(next);
 });

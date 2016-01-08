@@ -34,6 +34,4 @@ function registerAll(Handlebars) {
 }
 
 
-module.exports = {
-  registerAll: registerAll
-};
+module.exports.registerAll = registerAll;
