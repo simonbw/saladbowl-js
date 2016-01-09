@@ -47,14 +47,17 @@ button, .button {
   margin: 10px; }
 
 span.player-name {
-  font-weight: 600; }
+  font-style: italic; }
 
 span.game-id {
   font-family: Courier, 'Courier New', monospace;
   font-size: 1.1em; }
 
-.last-correct-word {
-  font-weight: bold; }
+.word:before {
+  content: open-quote; }
+
+.word:after {
+  content: close-quote; }
 
 .phase-instructions {
   text-align: center; }
@@ -86,6 +89,26 @@ span.game-id {
   .button.skip:not(.disabled):hover {
     background: #FEE;
     color: #F00; }
+
+.game-over-stats {
+  line-height: 1.4; }
+  .game-over-stats .category {
+    display: flex;
+    flex-flow: row nowrap; }
+  .game-over-stats .category-title,
+  .game-over-stats .category-content {
+    flex-basis: 0;
+    padding: 10px 5px; }
+  .game-over-stats .category-title {
+    flex-grow: 1;
+    text-align: right;
+    font-weight: 600; }
+  .game-over-stats .category-content {
+    flex-grow: 2;
+    text-align: left; }
+
+.delete-button {
+  margin-top: 50px; }
 
 .debug {
   background: #FAFAFA;

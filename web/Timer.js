@@ -1,4 +1,5 @@
 var ServerTime = require('./ServerTime');
+var Sounds = require('./Sounds');
 
 var Timer = module.exports;
 
@@ -70,6 +71,7 @@ Timer.start = function (game, player) {
       }
       if (isCurrentPlayer) {
         timerTimeout = setTimeout(function () {
+          Sounds.timeUp.play();
           $.get(game.getUrl('next-team')); // TODO: Refresh here?
         }, timeRemaining);
       }

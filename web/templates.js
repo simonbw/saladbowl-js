@@ -83,8 +83,8 @@ templates['game/join_teams'] = template({"1":function(depth0,helpers,partials,da
 templates['game/last_correct_word'] = template({"1":function(depth0,helpers,partials,data) {
     var stack1;
 
-  return "  <div>Last correct word <span class=\"last-correct-word\">\""
-    + this.escapeExpression(this.lambda(((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1.lastCorrectWord : stack1), depth0))
+  return "  <div>Last correct word <span class=\"word last-correct-word\">\""
+    + this.escapeExpression(this.lambda(((stack1 = ((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1.lastCorrectWord : stack1)) != null ? stack1.word : stack1), depth0))
     + "\"</span></div>\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1;
@@ -134,12 +134,46 @@ templates['game/main'] = template({"1":function(depth0,helpers,partials,data) {
     + ((stack1 = helpers['if'].call(depth0,((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1.gameEnded : stack1),{"name":"if","hash":{},"fn":this.program(1, data, 0),"inverse":this.program(3, data, 0),"data":data})) != null ? stack1 : "")
     + "</div>";
 },"usePartial":true,"useData":true});
-templates['game/scores'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+templates['game/scores'] = template({"1":function(depth0,helpers,partials,data) {
+    var stack1, helper, alias1=helpers.helperMissing, alias2="function", alias3=this.escapeExpression;
+
+  return "    <div class=\"category\">\n      <div class=\"category-title\">\n        Most Skipped\n      </div>\n      <div class=\"category-content\">\n        <span class=\"word\">"
+    + alias3(((helper = (helper = helpers.word || (depth0 != null ? depth0.word : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"word","hash":{},"data":data}) : helper)))
+    + "</span>\n        by\n        <span class=\"player-name\">"
+    + alias3(this.lambda(((stack1 = (depth0 != null ? depth0.player : depth0)) != null ? stack1.name : stack1), depth0))
+    + "</span>\n        with "
+    + alias3(((helper = (helper = helpers.skips || (depth0 != null ? depth0.skips : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"skips","hash":{},"data":data}) : helper)))
+    + " skips.\n      </div>\n    </div>\n";
+},"3":function(depth0,helpers,partials,data) {
+    var stack1, helper, alias1=helpers.helperMissing, alias2=this.escapeExpression;
+
+  return "    <div class=\"category\">\n      <div class=\"category-title\">\n        Most Time Spent\n      </div>\n      <div class=\"category-content\">\n        <span class=\"word\">"
+    + alias2(((helper = (helper = helpers.word || (depth0 != null ? depth0.word : depth0)) != null ? helper : alias1),(typeof helper === "function" ? helper.call(depth0,{"name":"word","hash":{},"data":data}) : helper)))
+    + "</span>\n        by\n        <span class=\"player-name\">"
+    + alias2(this.lambda(((stack1 = (depth0 != null ? depth0.player : depth0)) != null ? stack1.name : stack1), depth0))
+    + "</span>\n        with "
+    + alias2((helpers.formatClock || (depth0 && depth0.formatClock) || alias1).call(depth0,(depth0 != null ? depth0.timeSpent : depth0),{"name":"formatClock","hash":{},"data":data}))
+    + " seconds.\n      </div>\n    </div>\n";
+},"5":function(depth0,helpers,partials,data) {
+    var stack1, helper, alias1=helpers.helperMissing, alias2=this.escapeExpression;
+
+  return "    <div class=\"category\">\n      <div class=\"category-title\">\n        Least Time Spent\n      </div>\n      <div class=\"category-content\">\n        <span class=\"word\">"
+    + alias2(((helper = (helper = helpers.word || (depth0 != null ? depth0.word : depth0)) != null ? helper : alias1),(typeof helper === "function" ? helper.call(depth0,{"name":"word","hash":{},"data":data}) : helper)))
+    + "</span>\n        by\n        <span class=\"player-name\">"
+    + alias2(this.lambda(((stack1 = (depth0 != null ? depth0.player : depth0)) != null ? stack1.name : stack1), depth0))
+    + "</span>\n        with "
+    + alias2((helpers.formatClock || (depth0 && depth0.formatClock) || alias1).call(depth0,(depth0 != null ? depth0.timeSpent : depth0),{"name":"formatClock","hash":{},"data":data}))
+    + " seconds.\n      </div>\n    </div>\n";
+},"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1;
 
-  return "<h1>Game Over</h1>\n"
+  return "<h1>Game Over</h1>\n<hr>\n\n"
     + ((stack1 = this.invokePartial(partials['game/team_list'],depth0,{"name":"game/team_list","data":data,"helpers":helpers,"partials":partials})) != null ? stack1 : "")
-    + "<a href=\""
+    + "\n<hr>\n\n<div class=\"game-over-stats\">\n"
+    + ((stack1 = helpers['with'].call(depth0,((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1.mostSkippedWord : stack1),{"name":"with","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers['with'].call(depth0,((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1.mostTimeSpentWord : stack1),{"name":"with","hash":{},"fn":this.program(3, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers['with'].call(depth0,((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1.leastTimeSpentWord : stack1),{"name":"with","hash":{},"fn":this.program(5, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+    + "</div>\n\n<a class=\"button delete-button\" href=\""
     + this.escapeExpression((helpers.getUrl || (depth0 && depth0.getUrl) || helpers.helperMissing).call(depth0,(depth0 != null ? depth0.game : depth0),"delete",{"name":"getUrl","hash":{},"data":data}))
     + "\">Delete Game</a>";
 },"usePartial":true,"useData":true});
@@ -164,10 +198,10 @@ templates['game/team_list'] = template({"1":function(depth0,helpers,partials,dat
 },"4":function(depth0,helpers,partials,data) {
     return "joinable";
 },"6":function(depth0,helpers,partials,data) {
-    var helper;
+    var stack1;
 
   return "          <div class=\"points\">\n            "
-    + this.escapeExpression(((helper = (helper = helpers.points || (depth0 != null ? depth0.points : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0,{"name":"points","hash":{},"data":data}) : helper)))
+    + this.escapeExpression(this.lambda(((stack1 = (depth0 != null ? depth0.points : depth0)) != null ? stack1.length : stack1), depth0))
     + " points\n          </div>\n";
 },"8":function(depth0,helpers,partials,data) {
     var stack1, helper, alias1=helpers.helperMissing, alias2=this.escapeExpression;
@@ -218,6 +252,7 @@ templates['game/waiting_player'] = template({"compiler":[6,">= 2.0.0-beta.1"],"m
   return "<h1>Wait...</h1>\n<div class=\"words-remaining\">"
     + this.escapeExpression(this.lambda(((stack1 = ((stack1 = (depth0 != null ? depth0.game : depth0)) != null ? stack1.wordsInBowl : stack1)) != null ? stack1.length : stack1), depth0))
     + " words remaining.</div>\n\n"
+    + ((stack1 = this.invokePartial(partials['game/last_correct_word'],depth0,{"name":"game/last_correct_word","data":data,"helpers":helpers,"partials":partials})) != null ? stack1 : "")
     + ((stack1 = this.invokePartial(partials['game/timer'],depth0,{"name":"game/timer","data":data,"helpers":helpers,"partials":partials})) != null ? stack1 : "")
     + ((stack1 = this.invokePartial(partials['game/team_list'],depth0,{"name":"game/team_list","data":data,"helpers":helpers,"partials":partials})) != null ? stack1 : "");
 },"usePartial":true,"useData":true});

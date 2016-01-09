@@ -10,7 +10,12 @@ function Player(game, player) {
       this[key] = player[key];
     }
   }
-  this.game = game;
+  // Invisible property
+  Object.defineProperty(this, 'game', {
+    'get': function () {
+      return game;
+    }
+  });
 }
 
 /**

@@ -118,8 +118,7 @@ router.get('/json', function (req, res, next) {
   } else {
     var waitAndSend = function () {
       if (Date.now() - startedAt > TIMEOUT) {
-        res.status(200);
-        res.end();
+        return res.status(200).end();
       }
       gameDao.fromId(req.params['gameId'])
         .then(function (game) {

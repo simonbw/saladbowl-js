@@ -18,11 +18,11 @@ var DEFAULT_PHASES = [{
   'duration': 60000
 }, {
   'name': 'Act It Out',
-  'instructions': 'No noises.',
+  'instructions': 'Do anything but make a noise.',
   'duration': 60000
 }, {
   'name': 'One Word Only',
-  'instructions': 'Say only one word. No gestures.',
+  'instructions': 'Say only one word. Say it as many times as you like. No gestures.',
   'duration': 60000
 }];
 
@@ -58,10 +58,10 @@ GameDAO.prototype.create = function (game) {
   game.gameEnded = game.gameEnded || false;
   game.gameStarted = game.gameStarted || false;
   game.lastUpdatedAt = game.lastUpdatedAt || game.createdAt;
+  game.lastWordAt = game.lastWordAt || game.createdAt;
   game.phases = game.phases || DEFAULT_PHASES;
   game.players = game.players || [];
   game.points = game.points || [];
-  game.skips = game.skips || [];
   game.words = game.words || [];
   game.wordsPerPlayer = game.wordsPerPlayer || DEFAULT_WORDS_PER_PLAYER;
 
@@ -72,7 +72,7 @@ GameDAO.prototype.create = function (game) {
  * Return an array of recently started games to join.
  */
 GameDAO.prototype.recent = function () {
-  return this.find({'currentPhaseIndex': {'$eq': 0}})
+  return this.find({'gameStarted': {'$eq': false}})
 };
 
 /**
@@ -218,18 +218,21 @@ GameDAO.prototype.nextTeam = function (gameId) {
         currentPlayerIndex = game.currentPlayerIndex + 1;
       }
 
+      var now = Date.now();
       var update = {
         '$set': {
           'currentPlayerIndex': currentPlayerIndex,
           'currentTeamIndex': currentTeamIndex,
           'currentWordIndex': currentWordIndex,
-          'lastCorrectWord': null,
-          'lastUpdatedAt': Date.now(),
+          'lastCorrectWordIndex': null,
+          'lastUpdatedAt': now,
           'roundStarted': false,
           'roundStartedAt': null
-        }
+        },
+        '$inc': {}
       };
-
+      var timeSpent = now - Math.max(game.lastWordAt, game.roundStartedAt);
+      update['$inc'][('words.' + game.currentWordIndex + '.timeSpent')] = timeSpent;
       return this.update(game._id, update);
     }.bind(this));
 };
@@ -283,11 +286,11 @@ GameDAO.prototype.correctWord = function (gameId) {
       game.currentWord.inBowl = false;
 
       var now = Date.now();
-      var timeSpent = now - (game.lastWordAt || game.roundStartedAt);
+      var timeSpent = now - Math.max(game.lastWordAt, game.roundStartedAt);
 
       var update = {
         '$set': {
-          'lastCorrectWord': correctWordIndex,
+          'lastCorrectWordIndex': correctWordIndex,
           'lastUpdatedAt': now,
           'lastWordAt': now
         }, '$push': {
@@ -308,6 +311,7 @@ GameDAO.prototype.correctWord = function (gameId) {
         game.words.forEach(function (word) {
           word.inBowl = true;
         });
+        game.words[correctWordIndex].timeSpent += timeSpent;
         update['$set']['words'] = game.words;
         update['$set']['currentWordIndex'] = Random.integer(game.words.length);
 
@@ -319,6 +323,7 @@ GameDAO.prototype.correctWord = function (gameId) {
         }
       } else {
         update['$set']['words.' + correctWordIndex + '.inBowl'] = false;
+        update['$set']['words.' + correctWordIndex + '.timeSpent'] = game.words[correctWordIndex].timeSpent + timeSpent;
         // Choose a new word
         update['$set']['currentWordIndex'] = Random.choose(game.wordsInBowl).index;
       }
@@ -335,20 +340,23 @@ GameDAO.prototype.correctWord = function (gameId) {
 GameDAO.prototype.skipWord = function (gameId) {
   return this.fromIdOrGame(gameId)
     .then(function (game) {
-      //var skippedWordIndex = game.currentWordIndex;
+      var skippedWordIndex = game.currentWordIndex;
       var currentWordIndex = Random.choose(game.wordsInBowl).index;
 
       var now = Date.now();
-      var timeSpent = now - game.lastWordAt;
+      var timeSpent = now - Math.max(game.lastWordAt, game.roundStartedAt);
 
-      // TODO: Keep track of skip information
+      var increment = {};
+      increment['words.' + skippedWordIndex + '.skips'] = 1;
+      increment['words.' + skippedWordIndex + '.timeSpend'] = timeSpent;
 
       return this.update(game._id, {
         '$set': {
           'currentWordIndex': currentWordIndex,
           'lastUpdatedAt': now,
           'lastWordAt': now
-        }
+        },
+        '$inc': increment
       });
     }.bind(this));
 };
