@@ -1,6 +1,7 @@
 var Game = require('../shared/Game');
-var Timer = require('./Timer');
 var processResponse = require('./processResponse');
+var Sounds = require('./Sounds.js');
+var Timer = require('./Timer');
 
 /**
  * Redraw the page.
@@ -26,16 +27,19 @@ function bindAll(game) {
   }
 
   $('.button.correct').click(function () {
+    Sounds.correctWord.play();
     $('.correct').addClass('disabled');
     $('.skip').addClass('disabled');
     $('#current-word').fadeTo(100, 0);
-    $.post(game.getUrl('correct-word'), {'word': game.currentWord}).done();
+    $.post(game.getUrl('correct-word'), {'wordIndex': game.currentWord.index}).done();
   });
   $('.button.skip').click(function () {
+    Sounds.skipWord.stop();
+    Sounds.skipWord.play();
     $('.correct').addClass('disabled');
     $('.skip').addClass('disabled');
     $('#current-word').fadeTo(100, 0);
-    $.post(game.getUrl('skip-word'), {'word': game.currentWord}).done();
+    $.post(game.getUrl('skip-word'), {'wordIndex': game.currentWord.index}).done();
   });
 
   //bindClick('.button.correct', 'correct-word', {'word': game.currentWord});
@@ -63,7 +67,7 @@ function getData(url, lastUpdatedAt) {
       getData(data.game.getUrl('json'), data.game.lastUpdatedAt);
     })
     .fail(function () {
-      getData(url, lastUpdatedAt);
+      setTimeout(getData.bind(null, url, lastUpdatedAt), 250); // wait a little bit on failure
     });
 }
 
