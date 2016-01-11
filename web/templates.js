@@ -77,7 +77,7 @@ templates['game/join_teams'] = template({"1":function(depth0,helpers,partials,da
     + "</span>\n\n"
     + ((stack1 = this.invokePartial(partials['game/team_list'],depth0,{"name":"game/team_list","data":data,"helpers":helpers,"partials":partials})) != null ? stack1 : "")
     + "\n<div id=\"start-game-button\" class=\"button"
-    + ((stack1 = helpers['if'].call(depth0,(helpers.not || (depth0 && depth0.not) || alias1).call(depth0,(helpers.readyToStart || (depth0 && depth0.readyToStart) || alias1).call(depth0,(depth0 != null ? depth0.game : depth0),{"name":"readyToStart","hash":{},"data":data}),{"name":"not","hash":{},"data":data}),{"name":"if","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers['if'].call(depth0,(helpers.not || (depth0 && depth0.not) || alias1).call(depth0,(helpers.readyToStart || (depth0 && depth0.readyToStart) || alias1).call(depth0,((stack1 = (data && data.root)) && stack1.game),{"name":"readyToStart","hash":{},"data":data}),{"name":"not","hash":{},"data":data}),{"name":"if","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "\">Start Game</div>";
 },"usePartial":true,"useData":true});
 templates['game/last_correct_word'] = template({"1":function(depth0,helpers,partials,data) {

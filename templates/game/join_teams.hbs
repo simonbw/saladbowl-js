@@ -3,4 +3,4 @@ Game ID: <span class="game-id">{{game._id}}</span>
 
 {{> game/team_list}}
 
-<div id="start-game-button" class="button{{#if (not (readyToStart game))}} disabled{{/if}}">Start Game</div>
+<div id="start-game-button" class="button{{#if (not (readyToStart @root.game))}} disabled{{/if}}">Start Game</div>
