@@ -64,7 +64,8 @@ router.use('/', function (req, res, next) {
     res.send({
       'game': game,
       'serverTime': Date.now(),
-      'user': req.user
+      'user': req.user,
+      'success': true
     });
   };
   next();
@@ -116,9 +117,9 @@ router.get('/json', function (req, res, next) {
   if (req.game.lastUpdatedAt > lastUpdate) {
     res.sendGame(req.game);
   } else {
-    var waitAndSend = function () {
+    var longPoll = function () {
       if (Date.now() - startedAt > TIMEOUT) {
-        return res.status(200).end();
+        return res.send({'timeout': true});
       }
       gameDao.fromId(req.params['gameId'])
         .then(function (game) {
@@ -127,12 +128,12 @@ router.get('/json', function (req, res, next) {
               res.sendGame(game);
             }, 1);
           } else {
-            setTimeout(waitAndSend, POLL_DELAY);
+            setTimeout(longPoll, POLL_DELAY);
           }
         }, next)
         .catch(next);
     };
-    setTimeout(waitAndSend, POLL_DELAY);
+    setTimeout(longPoll, POLL_DELAY);
   }
 });
 

@@ -27,19 +27,18 @@ function bindAll(game) {
   }
 
   $('.button.correct').click(function () {
-    Sounds.correctWord.play();
     $('.correct').addClass('disabled');
     $('.skip').addClass('disabled');
     $('#current-word').fadeTo(100, 0);
     $.post(game.getUrl('correct-word'), {'wordIndex': game.currentWord.index}).done();
+    Sounds.correctWord.play();
   });
   $('.button.skip').click(function () {
-    Sounds.skipWord.stop();
-    Sounds.skipWord.play();
     $('.correct').addClass('disabled');
     $('.skip').addClass('disabled');
     $('#current-word').fadeTo(100, 0);
     $.post(game.getUrl('skip-word'), {'wordIndex': game.currentWord.index}).done();
+    Sounds.skipWord.play();
   });
 
   //bindClick('.button.correct', 'correct-word', {'word': game.currentWord});
@@ -62,10 +61,19 @@ function bindAll(game) {
 function getData(url, lastUpdatedAt) {
   jQuery.get(url, {'lastUpdatedAt': lastUpdatedAt})
     .done(function (response) {
-      var data = processResponse(response);
-      redraw(data);
-      getData(data.game.getUrl('json'), data.game.lastUpdatedAt);
-    })
+        var data = processResponse(response);
+        if (data.success) {
+          try {
+            redraw(data);
+            return getData(data.game.getUrl('json'), data.game.lastUpdatedAt);
+          }
+          catch (e) {
+            console.error(e);
+          }
+          getData(url, lastUpdatedAt);
+        }
+      }
+    )
     .fail(function () {
       setTimeout(getData.bind(null, url, lastUpdatedAt), 250); // wait a little bit on failure
     });
