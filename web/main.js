@@ -1,30 +1,34 @@
-var FastClick = require('fastclick');
+require('setimmediate');
+window.Promise = window.Promise || require('promise-polyfill');
 
-var Game = require('../shared/Game');
-var GamePage = require('./gamePage');
-var IndexPage = require('./IndexPage');
-var misc = require('./misc');
-var ServerTime = require('./ServerTime');
-var Sounds = require('./Sounds');
+const Axios = require('axios');
+const Provider = require('react-redux').Provider;
+const React = require('react');
+const ReactDom = require('react-dom');
+const io = require('socket.io-client');
 
-$(function () {
-  FastClick(document.body);
-  misc.setupHandlebars();
-  Sounds.init();
+const gameStore = require('./stores/gameStore');
+const GameComponent = require('./components/GameComponent.jsx');
 
-  if (SALADBOWL.serverTime) {
-    ServerTime.update(SALADBOWL.serverTime);
+window.onload = function () {
+  if (document.getElementById('game-react')) {
+    console.log('game page');
+    render();
+    var socket = io();
+    socket.on('game.test', function (data) {
+      console.log(data);
+    });
+    socket.on('game.heartbeat', function (data) {
+      console.log('heartbeat');
+    });
   }
-  if ($('#index-page').length) {
-    IndexPage.init();
-  }
-  if ($('#game-page').length) {
-    GamePage.init(Game.transformGame(SALADBOWL.game), SALADBOWL.player);
-  }
-  if ($('#new-game-page').length) {
-  }
-  if ($('#join-page').length) {
-  }
-  if ($('#add-word-page').length) {
-  }
-});
+};
+
+function render() {
+  ReactDom.render(
+    <Provider store={gameStore}>
+      <GameComponent />
+    </Provider>,
+    document.getElementById('game-react')
+  );
+}

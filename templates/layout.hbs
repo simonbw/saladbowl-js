@@ -6,17 +6,6 @@
   <title>{{title}}</title>
   <link rel="stylesheet" href="/css/main.css"/>
   <script src="/vendor/socket.io-client/socket.io.js"></script>
-  <script src="/vendor/handlebars/handlebars.runtime.js"></script>
-  <script src="/vendor/jquery/dist/jquery.js"></script>
-  <script src="/js/main.js"></script>
-
-  <script>
-    SALADBOWL = {};
-    SALADBOWL.game = {{{jsObject game}}};
-    SALADBOWL.player = {{{jsObject player}}};
-    SALADBOWL.currentPlayer = {{{jsObject currentPlayer}}};
-    SALADBOWL.serverTime = {{{jsObject serverTime}}};
-  </script>
 </head>
 <body>
 <main>
@@ -32,6 +21,7 @@
       <a href="https://github.com/simonbw/saladbowl-js">https://github.com/simonbw/saladbowl-js</a>
     </div>
   </footer>
+  <script src="/js/main.js"></script>
 </main>
 </body>
 </html>

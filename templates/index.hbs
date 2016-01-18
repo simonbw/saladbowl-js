@@ -1,15 +1,5 @@
 <div id="index-page">
   <h1>Welcome to SaladBowl</h1>
   <hr>
-  <a class="button" href="/new-game">New Game</a>
-  {{#if games}}
-    <div class="recent-games">
-      {{#each games}}
-        <div>
-          <a href="{{getUrl this}}">{{or this.name this._id}}</a>
-        </div>
-      {{/each}}
-    </div>
-  {{/if}}
+  <a class="button" href="/game">New Game</a>
 </div>
-
