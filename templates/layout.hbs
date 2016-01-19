@@ -21,7 +21,11 @@
       <a href="https://github.com/simonbw/saladbowl-js">https://github.com/simonbw/saladbowl-js</a>
     </div>
   </footer>
-  <script src="/js/main.js"></script>
+  {{#if scripts}}
+    {{#each scripts}}
+      <script src="{{this}}"></script>
+    {{/each}}
+  {{/if}}
 </main>
 </body>
 </html>

@@ -5,12 +5,12 @@ var shortid = require('shortid');
  */
 module.exports = function (req, res, next) {
   req.username = req.cookies.username;
-  if (req.cookies.user) {
-    req.user = req.cookies.user;
+  if (req.cookies.userId) {
+    req.userId = req.cookies.userId;
   } else {
-    req.user = shortid.generate();
+    req.userId = shortid.generate();
     var maxAge = 24 * 60 * 60 * 1000; // one day
-    res.cookie('user', req.user, {maxAge: maxAge});
+    res.cookie('userId', req.userId, {maxAge: maxAge});
   }
   next();
 };

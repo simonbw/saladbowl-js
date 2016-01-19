@@ -3,15 +3,15 @@ const ReactRedux = require('react-redux');
 
 /**
  *
- * @param todos
  * @returns {XML}
  * @constructor
  */
-function GameComponent(todos) {
+function GameComponent(game) {
   return (
     <div>
       <h1>Game</h1>
-      <p>This is a paragraph</p>
+      <div>{game.words}</div>
+      <div>{game.players}</div>
     </div>
   );
 }
@@ -22,7 +22,10 @@ function GameComponent(todos) {
  * @returns {{state: *}}
  */
 function mapStateToProps(state) {
-  return {state};
+  return {
+    players: state.get('players'),
+    words: state.get('words')
+  };
 }
 
 module.exports = ReactRedux.connect(mapStateToProps)(GameComponent);
