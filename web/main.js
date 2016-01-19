@@ -21,6 +21,7 @@ window.onload = function () {
     socket.on('game.heartbeat', function (data) {
       console.log('heartbeat');
     });
+    socket.on(])
   }
 };
 
