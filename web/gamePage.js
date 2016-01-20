@@ -6,9 +6,10 @@ const Provider = require('react-redux').Provider;
 const React = require('react');
 const ReactDom = require('react-dom');
 
-const GameActions = require('./actions/GameActions.js');
 const GameComponent = require('./components/GameComponent.jsx');
-const gameStore = require('./stores/gameStore');
+const store = require('./store');
+const MessageTypes = require('../shared/MessageTypes.js');
+const UpdateGame = require('./UpdateGame.js');
 
 /**
  * Render the page and open the socket.
@@ -18,12 +19,20 @@ window.onload = function () {
   render();
 
   var socket = io('/', {query: 'gameId=' + gameId});
-  socket.on('redirect', function (data) {
+
+  socket.on(MessageTypes.REDIRECT, function (data) {
+    console.log('redirect received', data);
     window.location = data.url;
   });
-  socket.on('GAME', function (action) {
-    gameStore.dispatch(action);
+  socket.on(MessageTypes.ERROR, function (error) {
+    console.error(error);
   });
+  socket.on(MessageTypes.GAME, function (action) {
+    console.log('action received', action);
+    store.dispatch(action);
+  });
+
+  UpdateGame.init(socket);
 };
 
 /**
@@ -31,7 +40,7 @@ window.onload = function () {
  */
 function render() {
   ReactDom.render(
-    <Provider store={gameStore}>
+    <Provider store={store}>
       <GameComponent />
     </Provider>,
     document.getElementById('game-react')

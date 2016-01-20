@@ -1,6 +1,8 @@
 const React = require('react');
 const ReactRedux = require('react-redux');
 
+const UpdateGame = require('../UpdateGame');
+
 /**
  *
  * @returns {XML}
@@ -16,16 +18,37 @@ function GameComponent(game) {
   );
 }
 
+function AddWordPage(game) {
+  return (
+    <div>
+      Add Some Words
+    </div>
+  );
+}
+
+function JoinTeamsPage(game) {
+  return (
+    <div>
+      Join Some Teams
+    </div>
+  );
+}
+
+function GameOverPage(game) {
+  return (
+    <div>
+      Game Over
+    </div>
+  );
+}
+
 /**
  *
  * @param state
  * @returns {{state: *}}
  */
 function mapStateToProps(state) {
-  return {
-    players: state.get('players'),
-    words: state.get('words')
-  };
+  return state.toJS();
 }
 
 module.exports = ReactRedux.connect(mapStateToProps)(GameComponent);

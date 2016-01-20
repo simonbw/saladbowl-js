@@ -9,7 +9,7 @@ var path = require('path');
 var sass = require('node-sass-middleware');
 
 var errorHandler = require('./errorHandler');
-var gameSocket = require('./gameSocket');
+var GameSocket = require('./socket/GameSocket');
 var guaranteeUser = require('./guaranteeUser');
 var routes = require('./Routes');
 
@@ -34,7 +34,11 @@ hbs.registerPartials(templatesPath);
 app.set('view engine', 'hbs');
 
 // 3rd Party middleware
-app.use(logger('dev'));
+app.use(logger('dev', {
+  skip: function (req, res) {
+    return res.statusCode < 400;
+  }
+}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
@@ -55,7 +59,7 @@ app.initIo = function (io) {
   io.use(function (socket, next) {
     return ioCookieParser(socket.request, null, next);
   });
-  gameSocket(io);
+  GameSocket.init(io);
 };
 
 module.exports = app;

@@ -1,11 +1,8 @@
 const ActionTypes = require('../../shared/ActionTypes');
 const Immutable = require('immutable');
+const DefaultGame = require('../../shared/DefaultGame.js');
 
-const DEFAULT_STATE = Immutable.fromJS({
-  players: [],
-  words: [],
-  started: false
-});
+const DEFAULT_STATE = Immutable.fromJS(DefaultGame.get());
 
 const reducers = {};
 
@@ -15,7 +12,7 @@ const reducers = {};
  * @param action
  * @returns {*}
  */
-reducers[ActionTypes.ADD_PLAYER] = function (state, action) {
+reducers[ActionTypes.CLIENT.PLAYER_JOINED] = function (state, action) {
   return state.updateIn(['players'], function (players) {
     return players.push(Immutable.fromJS(action.player))
   });
@@ -27,7 +24,7 @@ reducers[ActionTypes.ADD_PLAYER] = function (state, action) {
  * @param action
  * @returns {*}
  */
-reducers[ActionTypes.ADD_WORD] = function (state, action) {
+reducers[ActionTypes.CLIENT.WORD_ADDED] = function (state, action) {
   return state.updateIn(['words'], function (words) {
     return words.push(Immutable.fromJS(action.word))
   });
@@ -39,8 +36,10 @@ reducers[ActionTypes.ADD_WORD] = function (state, action) {
  * @param action
  * @returns {*}
  */
-reducers[ActionTypes.WHOLE_GAME] = function (state, action) {
-  console.log('WHOLE_GAME', action.game);
+reducers[ActionTypes.CLIENT.REPLACE_GAME] = function (state, action) {
+  if (!action.game) {
+    throw Error('Replacement game action:' + JSON.stringify(action));
+  }
   return Immutable.fromJS(action.game);
 };
 

@@ -1,9 +1,19 @@
+/**
+ * Used for making interesting team names.
+ */
 var TeamNames = module.exports;
 
-TeamNames.get = function (game, team) {
-  return 'The ' + animals[team % animals.length];
+/**
+ * Get the name of the nth team for a game.
+ *
+ * @param gameId {string}
+ * @param team {number}
+ * @returns {string}
+ */
+TeamNames.get = function (gameId, team) {
+  var index = (StringUtils.hash(gameId) + team) % animals.length;
+  return 'The ' + animals[index];
 };
-
 
 var animals = [
   'Albatrosses',

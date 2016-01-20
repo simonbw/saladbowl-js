@@ -1,3 +1,6 @@
+/**
+ * Utility for doing things based on random numbers.
+ */
 var Random = module.exports;
 
 // just for shorthand
