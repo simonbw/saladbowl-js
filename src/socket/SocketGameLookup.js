@@ -1,4 +1,5 @@
 const GameStore = require('../GameStore.js');
+const ActionTypes = require('../../shared/ActionTypes.js');
 
 
 /**
@@ -7,18 +8,22 @@ const GameStore = require('../GameStore.js');
  * @param next
  */
 module.exports = function (socket, next) {
-  var gameId = socket.handshake.query.gameId;
-  GameStore.get(gameId)
+  socket.gameId = socket.handshake.query.gameId;
+  GameStore.get(socket.gameId)
     .then(function (game) {
       if (!game) {
         throw Error('Game not found');
       }
-      socket.game = game;
-      console.log('socket attached game', game);
-      socket.emitReplaceGame();
+
+      socket.join(socket.gameId);
+      socket.emitAction({
+        type: ActionTypes.CLIENT.REPLACE_GAME,
+        game: game
+      });
       next();
     })
     .catch(function (error) {
-      socket.emitError('Error retrieving game: ' + gameId);
+      console.error('SocketGameLookup Error:', error);
+      next(error);
     });
 };

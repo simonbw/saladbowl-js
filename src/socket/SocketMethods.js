@@ -7,6 +7,8 @@ const MessageTypes = require('../../shared/MessageTypes.js');
 
 const methods = {};
 
+// TODO: These might be stupid because they cannot be broadcast
+
 /**
  * Emit an error.
  * @param message
@@ -27,7 +29,7 @@ methods.emitAction = function (action) {
 
 /**
  * Emit an action.
- * @param action
+ * @param url
  */
 methods.emitRedirect = function (url) {
   this.emit(MessageTypes.REDIRECT, {
@@ -39,7 +41,7 @@ methods.emitRedirect = function (url) {
  * Emit a replace game action.
  */
 methods.emitReplaceGame = function () {
-  this.emit('GAME', {
+  this.emitAction({
     type: ActionTypes.CLIENT.REPLACE_GAME,
     game: this.game
   });
@@ -52,11 +54,6 @@ methods.emitReplaceGame = function () {
  * @param next
  */
 module.exports = function (socket, next) {
-  socket._emit = socket.emit;
-  socket.emit = function () {
-    console.log('socket emitting', arguments);
-    socket._emit.apply(socket, arguments);
-  };
   for (var methodName in methods) {
     if (methods.hasOwnProperty(methodName)) {
       socket[methodName] = methods[methodName].bind(socket);

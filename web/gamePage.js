@@ -20,12 +20,15 @@ window.onload = function () {
 
   var socket = io('/', {query: 'gameId=' + gameId});
 
+  socket.on(MessageTypes.ERROR, function (error) {
+    console.log('Error Received:', error);
+  });
   socket.on(MessageTypes.REDIRECT, function (data) {
     console.log('redirect received', data);
     window.location = data.url;
   });
-  socket.on(MessageTypes.ERROR, function (error) {
-    console.error(error);
+  socket.on(MessageTypes.RECEIVED, function () {
+    console.log('RECEIVED');
   });
   socket.on(MessageTypes.GAME, function (action) {
     console.log('action received', action);

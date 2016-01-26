@@ -1,16 +1,14 @@
-const SocketLogger = require('./SocketLogger');
-const SocketMethods = require('./SocketMethods');
-const SocketGameLookup = require('./SocketGameLookup');
-const SocketActionHandlers = require('./SocketActionHandlers');
-
-
 /**
  *
  * @param io
  */
 exports.init = function (io) {
-  io.use(SocketLogger);
-  io.use(SocketMethods);
-  io.use(SocketGameLookup);
-  io.use(SocketActionHandlers);
+  io.use(function (socket, next) {
+    socket.io = io;
+    next();
+  });
+  io.use(require('./SocketLogger'));
+  io.use(require('./SocketMethods'));
+  io.use(require('./SocketGameLookup'));
+  io.use(require('./SocketActionHandlers'));
 };

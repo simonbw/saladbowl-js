@@ -6,7 +6,7 @@
  * Sent to the client when an error occurs.
  * @type {string}
  */
-exports.ERROR = 'ERROR';
+exports.ERROR = 'error';
 
 /**
  * Sent to the client when a message is received.
@@ -25,3 +25,9 @@ exports.GAME = 'GAME';
  * @type {string}
  */
 exports.REDIRECT = 'REDIRECT';
+
+/**
+ * Sent a lot.
+ * @type {string}
+ */
+exports.HEARTBEAT = 'HEARTBEAT';

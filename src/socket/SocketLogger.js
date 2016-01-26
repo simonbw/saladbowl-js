@@ -8,5 +8,7 @@ module.exports = function (socket, next) {
   socket.on('disconnect', function () {
     console.log('User disconnected with id', userId);
   });
+  socket.emit('SALADBOWL_ERROR');
+  socket.emit('FAT');
   next();
 };

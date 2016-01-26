@@ -2,6 +2,7 @@ const React = require('react');
 const ReactRedux = require('react-redux');
 
 const UpdateGame = require('../UpdateGame');
+const Random = require('../../shared/Random');
 
 /**
  *
@@ -9,6 +10,7 @@ const UpdateGame = require('../UpdateGame');
  * @constructor
  */
 function GameComponent(game) {
+
   return (
     <div>
       <h1>Game</h1>
@@ -19,9 +21,14 @@ function GameComponent(game) {
 }
 
 function AddWordPage(game) {
+  var addRandomWord = function () {
+    console.log('adding random word');
+    UpdateGame.addWord('word' + Random.integer(1, 1000));
+  };
   return (
     <div>
       Add Some Words
+      <button onClick={addRandomWord}>Add Random Word</button>
     </div>
   );
 }
