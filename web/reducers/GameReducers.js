@@ -12,6 +12,16 @@ const reducers = {};
  * @param action
  * @returns {*}
  */
+reducers[ActionTypes.CLIENT.GAME_STARTED] = function (state, action) {
+  return state.set('started', true);
+};
+
+/**
+ * Returns a new state with the player added.
+ * @param state
+ * @param action
+ * @returns {*}
+ */
 reducers[ActionTypes.CLIENT.PLAYER_JOINED] = function (state, action) {
   return state.updateIn(['players'], function (players) {
     return players.push(Immutable.fromJS(action.player))
