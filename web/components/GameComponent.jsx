@@ -1,8 +1,8 @@
-const React = require('react');
-const ReactRedux = require('react-redux');
+var React = require('react');
+var ReactRedux = require('react-redux');
 
-const UpdateGame = require('../UpdateGame');
-const Random = require('../../shared/Random');
+var UpdateGame = require('../UpdateGame');
+var Random = require('../../shared/Random');
 
 /**
  *
@@ -10,7 +10,6 @@ const Random = require('../../shared/Random');
  * @constructor
  */
 function GameComponent(game) {
-
   return (
     <div>
       <h1>Game</h1>
@@ -41,6 +40,30 @@ function JoinTeamsPage(game) {
   );
 }
 
+function CurrentPlayerPage(game) {
+  return (
+    <div>
+      You Are Up
+    </div>
+  );
+}
+
+function GuessingPlayerPage(game) {
+  return (
+    <div>
+      You Are Guessing
+    </div>
+  );
+}
+
+function WaitingPlayerPage(game) {
+  return (
+    <div>
+      You Are Guessing
+    </div>
+  );
+}
+
 function GameOverPage(game) {
   return (
     <div>
@@ -55,7 +78,7 @@ function GameOverPage(game) {
  * @returns {{state: *}}
  */
 function mapStateToProps(state) {
-  return state.toJS();
+  return state;
 }
 
 module.exports = ReactRedux.connect(mapStateToProps)(GameComponent);

@@ -1,6 +1,6 @@
 var GameActions = require('../shared/ActionTypes.js');
 
-const UpdateGame = module.exports;
+var UpdateGame = module.exports;
 
 UpdateGame.init = function (socket) {
   this.socket = socket;

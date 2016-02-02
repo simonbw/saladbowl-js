@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
-const app = require('./src/app');
-const debug = require('debug')('saladbowl:server');
-const http = require('http');
-const socketIo = require('socket.io');
+var app = require('./src/app');
+var debug = require('debug')('saladbowl:server');
+var http = require('http');
+var socketIo = require('socket.io');
 
 
 // Get port from environment and store in Express.

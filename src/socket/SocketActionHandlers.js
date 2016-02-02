@@ -1,11 +1,11 @@
-const ActionTypes = require('../../shared/ActionTypes');
-const MessageTypes = require('../../shared/MessageTypes.js');
-const GameStore = require('../GameStore');
+var ActionTypes = require('../../shared/ActionTypes');
+var MessageTypes = require('../../shared/MessageTypes.js');
+var GameStore = require('../GameStore');
 
 /**
  * Map of all action handlers.
  */
-const handlers = {};
+var handlers = {};
 
 /**
  *

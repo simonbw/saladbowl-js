@@ -2,11 +2,11 @@
  * @file Manages storing, retrieving, and updating games.
  */
 
-const shortId = require('shortid');
+var shortId = require('shortid');
 
-const DefaultGame = require('../shared/DefaultGame.js');
+var DefaultGame = require('../shared/DefaultGame.js');
 
-const GameStore = module.exports;
+var GameStore = module.exports;
 
 // Temporary in memory store for games
 games = {};
@@ -21,7 +21,7 @@ GameStore.get = function (gameId) {
     if (!gameId) {
       throw new Error('Bad gameId:' + gameId);
     }
-    const game = games[gameId];
+    var game = games[gameId];
     if (typeof game != 'string') {
       throw new Error('Game Not Found');
     }

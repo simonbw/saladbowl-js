@@ -2,10 +2,10 @@
  * This file contains a bunch of methods that get attached to sockets.
  */
 
-const ActionTypes = require('../../shared/ActionTypes.js');
-const MessageTypes = require('../../shared/MessageTypes.js');
+var ActionTypes = require('../../shared/ActionTypes.js');
+var MessageTypes = require('../../shared/MessageTypes.js');
 
-const methods = {};
+var methods = {};
 
 // TODO: These might be stupid because they cannot be broadcast
 

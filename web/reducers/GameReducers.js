@@ -1,62 +1,17 @@
-const ActionTypes = require('../../shared/ActionTypes');
-const Immutable = require('immutable');
-const DefaultGame = require('../../shared/DefaultGame.js');
+var DefaultGame = require('../../shared/DefaultGame.js');
 
-const DEFAULT_STATE = Immutable.fromJS(DefaultGame.get());
+var DEFAULT_STATE = Immutable.fromJS(DefaultGame.get());
 
-const reducers = {};
+var reducers = Object.assign({},
+  require('./PreGameReducers'),
+  require('./MidGameReducers'),
+  require('./MiscGameReducers'));
 
-/**
- * Returns a new state with the player added.
- * @param state
- * @param action
- * @returns {*}
- */
-reducers[ActionTypes.CLIENT.GAME_STARTED] = function (state, action) {
-  return state.set('started', true);
-};
 
 /**
- * Returns a new state with the player added.
- * @param state
- * @param action
- * @returns {*}
- */
-reducers[ActionTypes.CLIENT.PLAYER_JOINED] = function (state, action) {
-  return state.updateIn(['players'], function (players) {
-    return players.push(Immutable.fromJS(action.player))
-  });
-};
-
-/**
- * Returns a new state with the word added.
- * @param state
- * @param action
- * @returns {*}
- */
-reducers[ActionTypes.CLIENT.WORD_ADDED] = function (state, action) {
-  return state.updateIn(['words'], function (words) {
-    return words.push(Immutable.fromJS(action.word))
-  });
-};
-
-/**
- * Returns a new state based off a new game.
- * @param state
- * @param action
- * @returns {*}
- */
-reducers[ActionTypes.CLIENT.REPLACE_GAME] = function (state, action) {
-  if (!action.game) {
-    throw Error('Replacement game action:' + JSON.stringify(action));
-  }
-  return Immutable.fromJS(action.game);
-};
-
-/**
- *
+ * Return a new state that is the result of completing an action.
  * @param state {Immutable.Map}
- * @param action {string}
+ * @param action {Object}
  * @returns {Immutable.Map}
  */
 module.exports = function (state, action) {
@@ -71,3 +26,6 @@ module.exports = function (state, action) {
   }
   return state;
 };
+
+
+

@@ -1,15 +1,15 @@
 window.Promise = window.Promise || require('promise-polyfill');
 require('setimmediate');
 
-const io = require('socket.io-client');
-const Provider = require('react-redux').Provider;
-const React = require('react');
-const ReactDom = require('react-dom');
+var io = require('socket.io-client');
+var Provider = require('react-redux').Provider;
+var React = require('react');
+var ReactDom = require('react-dom');
 
-const GameComponent = require('./components/GameComponent.jsx');
-const store = require('./store');
-const MessageTypes = require('../shared/MessageTypes.js');
-const UpdateGame = require('./UpdateGame.js');
+var GameComponent = require('./components/GameComponent.jsx');
+var store = require('./store');
+var MessageTypes = require('../shared/MessageTypes.js');
+var UpdateGame = require('./UpdateGame.js');
 
 /**
  * Render the page and open the socket.

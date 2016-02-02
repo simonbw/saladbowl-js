@@ -1,5 +1,5 @@
-const GameStore = require('../GameStore.js');
-const ActionTypes = require('../../shared/ActionTypes.js');
+var GameStore = require('../GameStore.js');
+var ActionTypes = require('../../shared/ActionTypes.js');
 
 
 /**

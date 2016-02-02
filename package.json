@@ -33,6 +33,7 @@
     "react-redux": "^4.0.6",
     "reactify": "^1.1.1",
     "redux": "^3.0.5",
+    "reselect": "^2.0.3",
     "serve-favicon": "~2.3.0",
     "setimmediate": "^1.0.4",
     "shortid": "^2.2.4",
