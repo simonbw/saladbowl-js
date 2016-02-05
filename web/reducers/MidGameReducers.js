@@ -1,7 +1,6 @@
 var ActionTypes = require('../../shared/ActionTypes');
-var Immutable = require('immutable');
-var DefaultGame = require('../../shared/DefaultGame.js');
 var MathUtil = require('../../shared/MathUtil');
+var GameHelpers = require('../GameHelpers.js');
 
 /**
  * Start the round.
@@ -43,7 +42,21 @@ exports[ActionTypes.CLIENT.ROUND_ENDED] = function (state, action) {
 exports[ActionTypes.CLIENT.WORD_CORRECT] = function (state, action) {
   // TODO: Verify word
   return state.withMutations(function (state) {
-    state.set('wordIndex', getNextWord(state));
+    // TODO: Update word's stats
+    state.set('words', state.get('words').withMutations(function (words) {
+      words.setIn([state.get('wordIndex'), 'inBowl'], false);
+
+      var bowlIsEmpty = words.every(function (word) {
+        return !word.get('inBowl')
+      });
+      if (bowlIsEmpty) {
+        words.map(function (word) {
+          return word.set('inBowl', true);
+        });
+        state.set();
+      }
+    }));
+    state.set('wordIndex', GameHelpers.getNextWord(state));
   });
 };
 
@@ -56,21 +69,8 @@ exports[ActionTypes.CLIENT.WORD_CORRECT] = function (state, action) {
  */
 exports[ActionTypes.CLIENT.WORD_SKIPPED] = function (state, action) {
   // TODO: Verify word
-  // TODO: Update word's stats
   return state.withMutations(function (state) {
-    state.set('wordIndex', getNextWord(state))
+    // TODO: Update word's stats
+    state.set('wordIndex', GameHelpers.getNextWord(state));
   });
 };
-
-
-function getNextWord(state) {
-  var words = state.get('words');
-  var h = state.hashCode();
-  for (var i = 0; i < words.length; i++) {
-    var index = MathUtil.mod(i + h, i);
-    if (words.get(index).get('inBowl')) {
-      return index;
-    }
-  }
-  return (state.get('wordIndex') + 1) % words.length;
-}

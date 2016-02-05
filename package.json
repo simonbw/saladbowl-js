@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "NODE_ENV=production; node ./www",
-    "dev": "nodemon ./www"
+    "dev": "nodemon ./www",
+    "test": "mocha --recursive"
   },
   "dependencies": {
     "axios": "^0.8.1",
@@ -41,6 +42,7 @@
     "socket.io-client": "^1.4.4"
   },
   "devDependencies": {
+    "expect": "^1.14.0",
     "redux-devtools": "^3.0.1"
   }
 }

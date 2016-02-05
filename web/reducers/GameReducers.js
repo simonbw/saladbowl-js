@@ -1,3 +1,4 @@
+var Immutable = require('immutable');
 var DefaultGame = require('../../shared/DefaultGame.js');
 
 var DEFAULT_STATE = Immutable.fromJS(DefaultGame.get());
@@ -16,15 +17,14 @@ var reducers = Object.assign({},
  */
 module.exports = function (state, action) {
   state = state || DEFAULT_STATE;
-  if (reducers.hasOwnProperty(action.type)) {
-    try {
-      return reducers[action.type](state, action);
-    } catch (e) {
-      console.error(e);
-      return state;
-    }
+  if (!action) {
+    return state;
   }
-  return state;
+  if (reducers.hasOwnProperty(action.type)) {
+    return reducers[action.type](state, action);
+  } else {
+    throw new Error('Unknown action:' + action);
+  }
 };
 
 
