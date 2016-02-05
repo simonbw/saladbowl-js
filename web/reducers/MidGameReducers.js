@@ -63,6 +63,11 @@ exports[ActionTypes.CLIENT.WORD_SKIPPED] = function (state, action) {
 };
 
 
+/**
+ * Return the index of the next word.
+ * @param state
+ * @returns {number}
+ */
 function getNextWord(state) {
   var words = state.get('words');
   var h = state.hashCode();

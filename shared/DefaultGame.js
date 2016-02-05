@@ -1,11 +1,11 @@
-// TODO: Immutable?
+var Immutable = require('immutable');
 
 /**
  * Returns a new default game object without an id.
  * @returns {{players: Array, started: boolean, words: Array, wordsPerPlayer: number}}
  */
 exports.get = function () {
-  return {
+  return Immutable.fromJS({
     phaseIndex: 0,
     playerIndex: 0,
     players: [],
@@ -15,5 +15,5 @@ exports.get = function () {
     wordIndex: 0,
     words: [],
     wordsPerPlayer: 5
-  }
+  });
 };
