@@ -69,6 +69,7 @@ exports[ActionTypes.CLIENT.WORD_CORRECT] = function (state, action) {
  */
 exports[ActionTypes.CLIENT.WORD_SKIPPED] = function (state, action) {
   // TODO: Verify word
+  // TODO: Update word's stats
   return state.withMutations(function (state) {
     // TODO: Update word's stats
     state.set('wordIndex', GameHelpers.getNextWord(state));

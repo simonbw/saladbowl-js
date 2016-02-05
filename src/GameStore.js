@@ -5,6 +5,7 @@
 var shortId = require('shortid');
 
 var DefaultGame = require('../shared/DefaultGame.js');
+var GameReducers = require('../web/reducers/GameReducers');
 
 var GameStore = module.exports;
 
@@ -22,22 +23,22 @@ GameStore.get = function (gameId) {
       throw new Error('Bad gameId:' + gameId);
     }
     var game = games[gameId];
-    if (typeof game != 'string') {
+    if (!game) {
       throw new Error('Game Not Found');
     }
-    return JSON.parse(game);
+    return game;
   });
 };
 
 /**
- * Update a game.
+ * Update a game. Must have an id.
  * @param game
  * @returns {Promise.<T>}
  */
 GameStore.save = function (game) {
-  games[game.id] = JSON.stringify(game);
-  console.log('saving game', games[game.id]);
-  return Promise.resolve(JSON.parse(games[game.id]));
+  games[game.get('id')] = game;
+  console.log('saving game', games[game.get('id')]);
+  return Promise.resolve(games[game.id]);
 };
 
 /**
@@ -47,7 +48,7 @@ GameStore.save = function (game) {
 GameStore.create = function () {
   var id = shortId.generate();
   var game = DefaultGame.get();
-  game.id = id;
+  game.set('id', id);
   return GameStore.save(game);
 };
 
@@ -69,6 +70,19 @@ GameStore.addWord = function (gameId, word) {
   GameStore.get(gameId)
     .then(function (game) {
       game.words.push(word);
+      return GameStore.save(game);
+    });
+};
+
+/**
+ * Update the game based on an action.
+ * @param gameId
+ * @param action
+ */
+GameStore.dispatch = function (gameId, action) {
+  GameStore.get(gameId)
+    .then(function (game) {
+      game = GameReducers(game, action);
       return GameStore.save(game);
     });
 };

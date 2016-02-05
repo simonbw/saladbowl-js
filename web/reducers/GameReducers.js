@@ -13,7 +13,7 @@ var reducers = Object.assign({},
  * Return a new state that is the result of completing an action.
  * @param state {Immutable.Map}
  * @param action {Object}
- * @returns {Immutable.Map}
+ * @returns {Immutable.Map} new state
  */
 module.exports = function (state, action) {
   state = state || DEFAULT_STATE;
@@ -26,6 +26,3 @@ module.exports = function (state, action) {
     throw new Error('Unknown action:' + action);
   }
 };
-
-
-

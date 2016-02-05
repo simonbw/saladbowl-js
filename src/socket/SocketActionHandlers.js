@@ -13,12 +13,14 @@ var handlers = {};
 handlers[ActionTypes.SERVER.ADD_WORD] = function (data, socket) {
   console.log('adding word');
   // TODO: Validation
-  GameStore.addWord(socket.gameId, data.word)
-    .then(function () {
-      socket.io.to(socket.gameId).emit(MessageTypes.GAME, {
-        type: ActionTypes.CLIENT.WORD_ADDED,
-        word: data.word
-      });
+  var action = {
+    type: ActionTypes.CLIENT.WORD_ADDED,
+    word: data.word,
+    playerId: socket.request.cookies.userId
+  };
+  GameStore.dispatch(socket.gameId, action)
+    .then(function (game) {
+      socket.io.to(socket.gameId).emit(MessageTypes.GAME, action);
     });
 };
 
@@ -27,6 +29,7 @@ handlers[ActionTypes.SERVER.ADD_WORD] = function (data, socket) {
  */
 handlers[ActionTypes.SERVER.JOIN_GAME] = function (data, socket) {
   console.log('joining game');
+  // TODO: Join Game
 };
 
 
@@ -39,6 +42,7 @@ module.exports = function (socket, next) {
   socket.on(MessageTypes.GAME, function (data) {
     console.log(data);
     if (handlers.hasOwnProperty(data.type)) {
+      // TODO: Error handling
       handlers[data.type](data, socket);
     } else {
       console.error('Unknown Action', data);
