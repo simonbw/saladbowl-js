@@ -18,7 +18,7 @@ module.exports = function (socket, next) {
       socket.join(socket.gameId);
       socket.emitAction({
         type: ActionTypes.CLIENT.REPLACE_GAME,
-        game: game
+        game: game.toJS()
       });
       next();
     })

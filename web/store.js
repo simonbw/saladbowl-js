@@ -2,6 +2,6 @@ var Redux = require('redux');
 var Immutable = require('immutable');
 
 var GameReducers = require('./reducers/GameReducers');
-var DefaultGame = require('../shared/DefaultGame.js');
+var defaultGame = require('../shared/defaultGame.js');
 
-module.exports = Redux.createStore(GameReducers, Immutable.fromJS(DefaultGame.get()));
+module.exports = Redux.createStore(GameReducers, defaultGame);

@@ -15,7 +15,7 @@ router.get('/new-game', function (req, res, next) {
 
 router.post('/new-game', function (req, res, next) {
   GameStore.create().then(function (game) {
-    res.redirect('/' + game.id);
+    res.redirect('/' + game.get('id'));
   });
 });
 

@@ -1,7 +1,5 @@
 var Immutable = require('immutable');
-var DefaultGame = require('../../shared/DefaultGame.js');
-
-var DEFAULT_STATE = Immutable.fromJS(DefaultGame.get());
+var defaultGame = require('../../shared/defaultGame.js');
 
 var reducers = Object.assign({},
   require('./PreGameReducers'),
@@ -16,7 +14,7 @@ var reducers = Object.assign({},
  * @returns {Immutable.Map} new state
  */
 module.exports = function (state, action) {
-  state = state || DEFAULT_STATE;
+  state = state || defaultGame;
   if (!action) {
     return state;
   }

@@ -4,7 +4,7 @@
 
 var shortId = require('shortid');
 
-var DefaultGame = require('../shared/DefaultGame.js');
+var defaultGame = require('../shared/defaultGame.js');
 var GameReducers = require('../web/reducers/GameReducers');
 
 var GameStore = module.exports;
@@ -36,6 +36,9 @@ GameStore.get = function (gameId) {
  * @returns {Promise.<T>}
  */
 GameStore.save = function (game) {
+  if (!game.get('id')) {
+    throw error;
+  }
   games[game.get('id')] = game;
   console.log('saving game', games[game.get('id')]);
   return Promise.resolve(games[game.id]);
@@ -47,8 +50,8 @@ GameStore.save = function (game) {
  */
 GameStore.create = function () {
   var id = shortId.generate();
-  var game = DefaultGame.get();
-  game.set('id', id);
+  var game = defaultGame
+    .set('id', id);
   return GameStore.save(game);
 };
 

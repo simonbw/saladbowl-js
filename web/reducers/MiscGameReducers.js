@@ -1,6 +1,6 @@
 var ActionTypes = require('../../shared/ActionTypes');
 var Immutable = require('immutable');
-var DefaultGame = require('../../shared/DefaultGame.js');
+var defaultGame = require('../../shared/defaultGame.js');
 
 
 /**
