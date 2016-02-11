@@ -3,12 +3,9 @@
  * @param next
  */
 module.exports = function (socket, next) {
-  var userId = socket.request.cookies.userId;
-  console.log('User connected with id', userId);
+  console.log('User connected with id', socket.user.id);
   socket.on('disconnect', function () {
-    console.log('User disconnected with id', userId);
+    console.log('User disconnected with id', socket.user.id);
   });
-  socket.emit('SALADBOWL_ERROR');
-  socket.emit('FAT');
   next();
 };

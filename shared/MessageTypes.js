@@ -9,12 +9,6 @@
 exports.ERROR = 'error';
 
 /**
- * Sent to the client when a message is received.
- * @type {string}
- */
-exports.RECEIVED = 'RECEIVED';
-
-/**
  * Sent to the client when the game state changes.
  * @type {string}
  */
@@ -25,9 +19,3 @@ exports.GAME = 'GAME';
  * @type {string}
  */
 exports.REDIRECT = 'REDIRECT';
-
-/**
- * Sent a lot.
- * @type {string}
- */
-exports.HEARTBEAT = 'HEARTBEAT';

@@ -42,10 +42,19 @@ app.use(logger('dev', {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
-app.use(express.static(staticAssetsPath));
-app.use(favicon(faviconPath));
 app.use(jsUrl, browserify(webSourcePath, {'transform': ['reactify']}));
-app.use(sass({src: scssSourcePath, dest: scssDestPath, prefix: cssUrl, debug: false, sourceMap: true}));
+app.use(sass({
+  src: scssSourcePath,
+  dest: scssDestPath,
+  prefix: cssUrl,
+  debug: false,
+  sourceMap: true,
+  error: function (error) {
+    console.error(error);
+  }
+}));
+app.use(favicon(faviconPath));
+app.use(express.static(staticAssetsPath));
 
 // My middleware
 app.use(guaranteeUser);

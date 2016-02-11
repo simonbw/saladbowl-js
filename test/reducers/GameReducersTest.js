@@ -6,102 +6,105 @@ var ActionTypes = require('../../shared/ActionTypes');
 describe('GameReducers', function () {
 
   it('should error on incorrect actions', function () {
-    var initialState = new Immutable.Map();
-    expect(reducer(initialState, null)).toEqual(initialState, 'null should return default state');
-
-    expect(function () {
-      reducer(initialState, {});
-    }).toThrow(Error, 'typeless action should throw error');
-
-    expect(function () {
-      reducer(initialState, {type: 'NOT_A_REAL_TYPE'});
-    }).toThrow(Error, 'bad type should throw error');
-
+    var state = new Immutable.Map();
+    expect(reducer(state, null)).toEqual(state, 'null should return default state');
+    expect(reducer(state, {})).toEqual(state, 'empty action should return default state');
+    expect(reducer(state, {type: 'NOT_A_REAL_TYPE'})).toEqual(state, 'unknown type should return default state');
   });
 
   it('should have initial state', function () {
     expect(reducer(null, null)).toExist();
   });
 
+  it('should add players and their words', function () {
+    var game = reducer(null, null)
+      .set('wordsPerPlayer', 4);
+    game = addPlayer(game, 1, 'p1');
+    expect(game.get('players').size).toEqual(1);
+    game = addPlayer(game, 2, 'p2');
+    expect(game.get('players').size).toEqual(2);
+    game = addPlayer(game, 3, 'p3');
+    expect(game.get('players').size).toEqual(3);
+    expect(game.get('words').size).toEqual(12, 'should add all player words'); // 3 players * 4 words / Player
+  });
+
+  it('should update words', function () {
+    var game = reducer(null, null);
+    game = addPlayer(game, 1, 'p1');
+    game = addPlayer(game, 2, 'p2');
+    game = updateWord(game, 'word2', 1, 2);
+    expect(game.get('words').get(2).get('word')).toEqual('word2');
+  });
+
   it('should play through a full game', function () {
-    var state = reducer(null, null);
-    state = addPlayers(state);
-    state = addWords(state);
-    state = startGame(state);
-    state = startRound(state);
-    state.get('words').forEach(function (word) {
-      expect(word.get('inBowl')).toEqual(true);
-    });
-    state = correctWord(state);
-    state = skipWord(state);
+    var game = reducer(null, null)
+      .set('wordsPerPlayer', 4);
+    for (var p = 0; p < 4; p++) {
+      game = addPlayer(game, p, 'p' + p);
+    }
+    expect(game.get('players').size).toEqual(4);
+    expect(game.get('words').size).toEqual(16);
+    for (var p = 0; p < 4; p++) {
+      for (var w = 0; w < 3; w++) {
+        var word = 'p' + p + 'w' + w;
+        game = updateWord(game, word, p, p * 4 + w);
+      }
+    }
+    expect(game.get('words').get(6).get('word')).toEqual('p1w2');
+
+    //game = startGame(game);
+    //game = startRound(game);
+    //game.get('words').forEach(function (word) {
+    //  expect(word.get('inBowl')).toEqual(true, 'All words should be in bowl');
+    //});
+    //game = correctWord(game);
+    //game = skipWord(game);
   });
 });
 
 
-function addPlayers(state) {
-  state = reducer(state, {
+function addPlayer(game, id, name) {
+  return reducer(game, {
     type: ActionTypes.CLIENT.PLAYER_JOINED,
-    player: {id: 1, name: 'Simon'}
+    player: {id: id, name: name}
   });
-  expect(state.get('players').size).toEqual(1);
-  state = reducer(state, {
-    type: ActionTypes.CLIENT.PLAYER_JOINED,
-    player: {id: 2, name: 'Lindsey'}
-  });
-  expect(state.get('players').size).toEqual(2);
-  return state;
 }
 
 
-function addWords(state) {
-  state = reducer(state, {
-    type: ActionTypes.CLIENT.WORD_ADDED,
-    playerId: 2,
-    word: 'LindseyWord',
-    index: 0
+function updateWord(game, word, playerId, wordIndex) {
+  return reducer(game, {
+    type: ActionTypes.CLIENT.WORD_UPDATED,
+    playerId: playerId,
+    word: word,
+    wordIndex: wordIndex
   });
-  expect(state.get('words').size).toEqual(1);
-  state = reducer(state, {
-    type: ActionTypes.CLIENT.WORD_ADDED,
-    playerId: 1,
-    word: 'SimonWord',
-    index: 1
-  });
-  expect(state.get('words').size).toEqual(2);
-  return state;
 }
 
 
-function startGame(state) {
-  state = reducer(state, {
+function startGame(game) {
+  return reducer(game, {
     type: ActionTypes.CLIENT.GAME_STARTED
   });
-  expect(state.get('started')).toEqual(true);
-  return state;
 }
 
 
-function startRound(state) {
-  state = reducer(state, {
+function startRound(game) {
+  return reducer(game, {
     type: ActionTypes.CLIENT.ROUND_STARTED
   });
-  expect(state.get('roundStarted')).toEqual(true);
-  return state;
 }
 
 
-function correctWord(state) {
-  state = reducer(state, {
+function correctWord(game) {
+  return reducer(game, {
     type: ActionTypes.CLIENT.WORD_CORRECT
   });
-  return state;
 }
 
 
-function skipWord(state) {
-  state = reducer(state, {
+function skipWord(game) {
+  return reducer(game, {
     type: ActionTypes.CLIENT.WORD_SKIPPED
   });
-  return state;
 }
 

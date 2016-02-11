@@ -4,7 +4,7 @@
 
 var shortId = require('shortid');
 
-var defaultGame = require('../shared/defaultGame.js');
+var defaultGame = require('../shared/defaultGame');
 var GameReducers = require('../web/reducers/GameReducers');
 
 var GameStore = module.exports;
@@ -20,13 +20,13 @@ games = {};
 GameStore.get = function (gameId) {
   return new Promise(function (resolve, reject) {
     if (!gameId) {
-      throw new Error('Bad gameId:' + gameId);
+      return reject(new Error('Bad gameId:' + gameId));
     }
     var game = games[gameId];
     if (!game) {
-      throw new Error('Game Not Found');
+      return reject(new Error('Game Not Found'));
     }
-    return game;
+    resolve(game);
   });
 };
 
@@ -36,12 +36,14 @@ GameStore.get = function (gameId) {
  * @returns {Promise.<T>}
  */
 GameStore.save = function (game) {
-  if (!game.get('id')) {
-    throw error;
-  }
-  games[game.get('id')] = game;
-  console.log('saving game', games[game.get('id')]);
-  return Promise.resolve(games[game.id]);
+  return new Promise(function (resolve, reject) {
+    var gameId = game.get('id');
+    if (!gameId) {
+      throw error;
+    }
+    games[gameId] = game;
+    resolve(games[gameId]);
+  });
 };
 
 /**
@@ -50,13 +52,12 @@ GameStore.save = function (game) {
  */
 GameStore.create = function () {
   var id = shortId.generate();
-  var game = defaultGame
-    .set('id', id);
+  var game = defaultGame.set('id', id);
   return GameStore.save(game);
 };
 
 /**
- * Create a new game.
+ * Deletes a game.
  * @returns {Promise.<T>}
  */
 GameStore.delete = function (gameId) {
@@ -65,17 +66,6 @@ GameStore.delete = function (gameId) {
   return Promise.resolve(game);
 };
 
-/**
- * @param gameId
- * @param word
- */
-GameStore.addWord = function (gameId, word) {
-  GameStore.get(gameId)
-    .then(function (game) {
-      game.words.push(word);
-      return GameStore.save(game);
-    });
-};
 
 /**
  * Update the game based on an action.
@@ -83,7 +73,7 @@ GameStore.addWord = function (gameId, word) {
  * @param action
  */
 GameStore.dispatch = function (gameId, action) {
-  GameStore.get(gameId)
+  return GameStore.get(gameId)
     .then(function (game) {
       game = GameReducers(game, action);
       return GameStore.save(game);

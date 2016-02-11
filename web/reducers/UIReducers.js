@@ -1,9 +1,20 @@
-var DEFAULT_STATE = require('../../shared/defaultGame');
+var Immutable = require('immutable');
 
-var reducers = Object.assign({},
-  require('./game/PreGameReducers'),
-  require('./game/MidGameReducers'),
-  require('./game/MiscGameReducers'));
+var ActionTypes = require('../../shared/ActionTypes');
+
+var DEFAULT_STATE = Immutable.fromJS({});
+
+var reducers = {};
+
+/**
+ * Set a field on the state.
+ * @param state
+ * @param action
+ * @returns {*}
+ */
+reducers[ActionTypes.UI.FIELD_CHANGED] = function (state, action) {
+  return state.set(action.field, action.value);
+};
 
 
 /**

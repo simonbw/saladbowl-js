@@ -1,6 +1,5 @@
 @import "util";
 
-//
 input {
   border-radius: 5px;
   border: 1px solid #AAA;
@@ -18,7 +17,6 @@ input {
   }
 }
 
-//
 button, .button {
   @include user-select(none);
   background: #FFF;
@@ -37,14 +35,14 @@ button, .button {
   text-transform: uppercase;
   width: 100%;
 
-  &.disabled {
+  &:hover {
+    border-color: #000;
+    color: #000;
+  }
+
+  &.disabled, &:disabled, &.disabled:hover, &:disabled:hover {
     border-color: #CCC;
     color: #AAA;
     cursor: default;
-  }
-
-  &:not(.disabled):hover {
-    border-color: #000;
-    color: #000;
   }
 }

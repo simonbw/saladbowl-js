@@ -1,51 +1,29 @@
-var ActionTypes = require('../../shared/ActionTypes');
-var MessageTypes = require('../../shared/MessageTypes.js');
-var GameStore = require('../GameStore');
+var MessageTypes = require('../../shared/MessageTypes');
 
 /**
  * Map of all action handlers.
  */
-var handlers = {};
-
-/**
- *
- */
-handlers[ActionTypes.SERVER.ADD_WORD] = function (data, socket) {
-  console.log('adding word');
-  // TODO: Validation
-  var action = {
-    type: ActionTypes.CLIENT.WORD_ADDED,
-    word: data.word,
-    playerId: socket.request.cookies.userId
-  };
-  GameStore.dispatch(socket.gameId, action)
-    .then(function (game) {
-      socket.io.to(socket.gameId).emit(MessageTypes.GAME, action);
-    });
-};
-
-/**
- *
- */
-handlers[ActionTypes.SERVER.JOIN_GAME] = function (data, socket) {
-  console.log('joining game');
-  // TODO: Join Game
-};
+var handlers = Object.assign({},
+  require('./handlers/PreGameHandlers'),
+  require('./handlers/MidGameHandlers'));
 
 
 /**
- *
+ * Bind all action handlers to socket events.
  * @param socket
  * @param next
  */
 module.exports = function (socket, next) {
-  socket.on(MessageTypes.GAME, function (data) {
-    console.log(data);
-    if (handlers.hasOwnProperty(data.type)) {
-      // TODO: Error handling
-      handlers[data.type](data, socket);
+  socket.on(MessageTypes.GAME, function (action) {
+    console.log('Game Action Received', action);
+    if (handlers.hasOwnProperty(action.type)) {
+      try {
+        handlers[action.type](action, socket);
+      } catch (e) {
+        console.error('error handling action' + action.type, error);
+      }
     } else {
-      console.error('Unknown Action', data);
+      console.error('Unknown Action', action);
     }
   });
   next();

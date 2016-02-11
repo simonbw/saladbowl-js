@@ -1,6 +1,7 @@
 var Immutable = require('immutable');
 
 module.exports = Immutable.fromJS({
+  ended: false,
   phaseIndex: 0,
   playerIndex: 0,
   players: [],

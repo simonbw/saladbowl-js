@@ -7,8 +7,9 @@ exports.init = function (io) {
     socket.io = io;
     next();
   });
+  io.use(require('./SocketPlayerAttacher'));
   io.use(require('./SocketLogger'));
-  io.use(require('./SocketMethods'));
   io.use(require('./SocketGameLookup'));
+  io.use(require('./SocketMethods'));
   io.use(require('./SocketActionHandlers'));
 };
