@@ -44,7 +44,11 @@ exports[ActionTypes.CLIENT.WORD_UPDATED] = function (game, action) {
   });
   var playerIndex = GameHelpers.getPlayerIndex(game, action.playerId);
   var wordIndex = playerIndex * game.get('wordsPerPlayer') + action.playerWordIndex;
-  return game.setIn(['words', wordIndex], game.get('words').get(wordIndex).merge(word));
+  var oldWord = game.get('words').get(wordIndex);
+  if (!oldWord) {
+    throw new Error('Cannot update word that doesn\'t exist. wordIndex:' + wordIndex + ' playerIndex:' + playerIndex + ' playerWordIndex:' + action.playerWordIndex);
+  }
+  return game.setIn(['words', wordIndex], oldWord.merge(word));
 };
 
 

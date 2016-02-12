@@ -47,7 +47,7 @@ describe('GameReducers', function () {
     for (var p = 0; p < 4; p++) {
       for (var w = 0; w < 3; w++) {
         var word = 'p' + p + 'w' + w;
-        game = updateWord(game, word, p, p * 4 + w);
+        game = updateWord(game, word, p, w);
       }
     }
     expect(game.get('words').get(6).get('word')).toEqual('p1w2');
@@ -71,12 +71,12 @@ function addPlayer(game, id, name) {
 }
 
 
-function updateWord(game, word, playerId, wordIndex) {
+function updateWord(game, word, playerId, playerWordIndex) {
   return reducer(game, {
     type: ActionTypes.CLIENT.WORD_UPDATED,
     playerId: playerId,
     word: word,
-    wordIndex: wordIndex
+    playerWordIndex: playerWordIndex
   });
 }
 

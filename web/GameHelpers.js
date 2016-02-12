@@ -147,11 +147,9 @@ GameHelpers.userWordsAreValid = function (game) {
  * @returns {number}
  */
 GameHelpers.getPlayerIndex = function (game, playerId) {
-  for (var i = 0; i < game.get('players').size; i++) {
-    if (game.get('players').get('id') == playerId) {
-      return i;
-    }
-  }
+  return game.get('players').findEntry(function (player) {
+    return player.get('id') == playerId;
+  })[0];
 };
 
 /**
