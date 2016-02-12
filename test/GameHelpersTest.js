@@ -1,7 +1,7 @@
 var expect = require('expect');
 var Immutable = require('immutable');
 
-var defaultGame = require('../shared/DefaultGame');
+var defaultGame = require('../shared/defaultGame');
 var GameHelpers = require('../web/GameHelpers');
 
 
