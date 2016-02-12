@@ -51,6 +51,10 @@ router.get('/:gameId', function (req, res, next) {
       });
     })
     .catch(function (error) {
-      next(error);
+      if (error.status == 404) {
+        res.render();
+      } else {
+        next(error);
+      }
     });
 });

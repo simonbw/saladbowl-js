@@ -6,6 +6,7 @@ var shortId = require('shortid');
 
 var defaultGame = require('../shared/defaultGame');
 var GameReducers = require('../web/reducers/GameReducers');
+var RequestError = require('./RequestError');
 
 var GameStore = module.exports;
 
@@ -20,11 +21,11 @@ games = {};
 GameStore.get = function (gameId) {
   return new Promise(function (resolve, reject) {
     if (!gameId) {
-      return reject(new Error('Bad gameId:' + gameId));
+      return reject(new RequestError('Bad gameId:' + gameId, 400));
     }
     var game = games[gameId];
     if (!game) {
-      return reject(new Error('Game Not Found'));
+      return reject(new RequestError('Game Not Found', 404));
     }
     resolve(game);
   });

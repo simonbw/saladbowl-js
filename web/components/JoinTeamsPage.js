@@ -1,9 +1,16 @@
 var React = require('react');
+var Immutable = require('immutable');
+
 var GameHelpers = require('../GameHelpers');
 
 module.exports = function (props) {
   var game = props.game;
   var teams = GameHelpers.getTeams(game);
+  teams.push(Immutable.fromJS({
+    name: 'New Team',
+    index: teams.size,
+    players: []
+  }));
   return (
     <div>
       <h1>Join Teams</h1>
@@ -11,6 +18,7 @@ module.exports = function (props) {
         {teams.map(function (team, i) {
           return (<Team team={team} key={i}/>);
         }).toArray()}
+        <Team team={}/>
       </div>
       <button>Start Game</button>
     </div>
@@ -28,5 +36,5 @@ function Team(props) {
         }).toArray()}
       </ol>
     </div>
-  )
+  );
 }
