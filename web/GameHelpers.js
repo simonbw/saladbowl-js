@@ -49,11 +49,11 @@ GameHelpers.userIsJoined = function (game) {
  * @returns {Immutable.List}
  */
 GameHelpers.getTeams = function (game) {
-  var teams = {};
+  var teams = [];
   game.get('players').forEach(function (player) {
     var team = player.get('team');
-    teams[team] = teams[team] || [];
-    teams[team].push(player);
+    teams[team] = teams[team] || {players: [], index: team};
+    teams[team].players.push(player);
   });
   return Immutable.fromJS(teams);
 };

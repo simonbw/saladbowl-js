@@ -61,3 +61,14 @@ exports[ActionTypes.CLIENT.WORD_UPDATED] = function (game, action) {
 exports[ActionTypes.CLIENT.GAME_STARTED] = function (game, action) {
   return game.set('started', true);
 };
+
+/**
+ * Start the game.
+ * @param game
+ * @param action
+ * @returns {*}
+ */
+exports[ActionTypes.CLIENT.TEAM_JOINED] = function (game, action) {
+  var playerIndex = GameHelpers.getPlayerIndex(game, action.playerId);
+  return game.setIn(['players', playerIndex, 'team'], action.team);
+};

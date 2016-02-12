@@ -51,9 +51,14 @@ describe('GameHelpers', function () {
     var game = defaultGame;
     var player1 = Immutable.fromJS({id: 'player1', team: 0});
     var player2 = Immutable.fromJS({id: 'player2', team: 0});
-    var player3 = Immutable.fromJS({id: 'player3', team: 1});
-    game = game.set('players', game.get('players').push(player1, player2, player3));
-    expect(GameHelpers.getTeams(game).size).toEqual(2);
+    var player3 = Immutable.fromJS({id: 'player3', team: 0});
+    var player4 = Immutable.fromJS({id: 'player4', team: 0});
+    var player5 = Immutable.fromJS({id: 'player5', team: 1});
+    var player6 = Immutable.fromJS({id: 'player6', team: 1});
+    game = game.set('players', game.get('players').push(player1, player2, player3, player4, player5, player6));
+    expect(GameHelpers.getTeams(game).size).toEqual(2, 'There should be 2 teams');
+    expect(GameHelpers.getTeams(game).get(0).get('players').size).toEqual(4, 'Team one should have 4 players');
+    expect(GameHelpers.getTeams(game).get(1).get('players').size).toEqual(2, 'Team two should have 4 players');
   });
 
   it('getCurrentPlayer should work');

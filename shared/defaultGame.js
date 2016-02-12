@@ -10,5 +10,5 @@ module.exports = Immutable.fromJS({
   teamIndex: 0,
   wordIndex: 0,
   words: [],
-  wordsPerPlayer: 5
+  wordsPerPlayer: 2
 });
