@@ -52,7 +52,7 @@ router.get('/:gameId', function (req, res, next) {
     })
     .catch(function (error) {
       if (error.status == 404) {
-        res.render();
+        res.render('game-not-found');
       } else {
         next(error);
       }

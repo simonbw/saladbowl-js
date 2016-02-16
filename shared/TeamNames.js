@@ -1,3 +1,4 @@
+var StringUtil = require('./StringUtil');
 /**
  * Used for making interesting team names.
  */
@@ -11,7 +12,7 @@ var TeamNames = module.exports;
  * @returns {string}
  */
 TeamNames.get = function (gameId, team) {
-  var index = (StringUtils.hash(gameId) + team) % animals.length;
+  var index = (StringUtil.hash(gameId) + team) % animals.length;
   return 'The ' + animals[index];
 };
 

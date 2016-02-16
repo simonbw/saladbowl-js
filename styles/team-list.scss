@@ -12,6 +12,8 @@
 
     &.joinable {
       cursor: pointer;
+      border-left-color: #EEE;
+      border-right-color: #EEE;
 
       &:hover {
         border-left-color: #AAA;

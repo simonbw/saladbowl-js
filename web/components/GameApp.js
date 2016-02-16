@@ -53,6 +53,7 @@ function GameComponent(props) {
   return (
     <div>
       {page}
+      <DebugPane state={state}/>
     </div>
   );
 }

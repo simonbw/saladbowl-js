@@ -2,6 +2,7 @@ var Immutable = require('immutable');
 
 var MathUtil = require('../shared/MathUtil');
 var Validation = require('../shared/Validation.js');
+var TeamNames = require('../shared/TeamNames');
 
 var GameHelpers = module.exports;
 
@@ -50,9 +51,18 @@ GameHelpers.userIsJoined = function (game) {
  */
 GameHelpers.getTeams = function (game) {
   var teams = [];
+  var lastTeam = game.get('players').reduce(function (largest, player) {
+    return Math.max(largest, player.get('team'));
+  }, 0);
+  for (var i = 0; i <= lastTeam; i++) {
+    teams[i] = {
+      index: i,
+      name: TeamNames.get(game.get('id'), i),
+      players: []
+    };
+  }
   game.get('players').forEach(function (player) {
     var team = player.get('team');
-    teams[team] = teams[team] || {players: [], index: team};
     teams[team].players.push(player);
   });
   return Immutable.fromJS(teams);

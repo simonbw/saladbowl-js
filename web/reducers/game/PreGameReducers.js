@@ -4,8 +4,7 @@ var ActionTypes = require('../../../shared/ActionTypes');
 var GameHelpers = require('../../GameHelpers');
 
 /**
- * Add a new player to the game.
- * Also adds a bunch of blank words to the game.
+ * Called when a new player has joined.
  * @param game {Immutable.Map}
  * @param action
  * @returns {*}
@@ -32,7 +31,7 @@ exports[ActionTypes.CLIENT.PLAYER_JOINED] = function (game, action) {
 
 
 /**
- * Update a word in the game.
+ * Called when a word has changed.
  * @param game {Immutable.Map}
  * @param action
  * @returns {Immutable.Map}
@@ -53,7 +52,7 @@ exports[ActionTypes.CLIENT.WORD_UPDATED] = function (game, action) {
 
 
 /**
- * Start the game.
+ * Called when the game has started.
  * @param game
  * @param action
  * @returns {*}
@@ -63,7 +62,7 @@ exports[ActionTypes.CLIENT.GAME_STARTED] = function (game, action) {
 };
 
 /**
- * Start the game.
+ * Called when a player joins a team.
  * @param game
  * @param action
  * @returns {*}

@@ -37,7 +37,7 @@ exports[ActionTypes.SERVER.JOIN_TEAM] = function (data, socket) {
   HandlerHelpers.dispatch(socket, {
     type: ActionTypes.CLIENT.TEAM_JOINED,
     playerId: socket.user.id,
-    teamId: data.teamId
+    team: data.team
   });
 };
 

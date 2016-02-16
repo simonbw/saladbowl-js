@@ -1,4 +1,5 @@
 var GameActions = require('../shared/ActionTypes');
+var MessageTypes = require('../shared/MessageTypes');
 
 var UpdateGame = module.exports;
 
@@ -16,7 +17,7 @@ UpdateGame.init = function (socket) {
  */
 UpdateGame.joinGame = function (name) {
   console.log('joining game');
-  this.socket.emit('GAME', {
+  this.socket.emit(MessageTypes.GAME, {
     type: GameActions.SERVER.JOIN_GAME,
     name: name
   });
@@ -28,9 +29,20 @@ UpdateGame.joinGame = function (name) {
  * @param playerWordIndex
  */
 UpdateGame.saveWord = function (word, playerWordIndex) {
-  this.socket.emit('GAME', {
+  this.socket.emit(MessageTypes.GAME, {
     type: GameActions.SERVER.SAVE_WORD,
     word: word,
     playerWordIndex: playerWordIndex
+  });
+};
+
+/**
+ * Join a team.
+ * @param team
+ */
+UpdateGame.joinTeam = function (team) {
+  this.socket.emit(MessageTypes.GAME, {
+    type: GameActions.SERVER.JOIN_TEAM,
+    team: team
   });
 };
