@@ -34,7 +34,7 @@ function Team(props) {
 
   return (
     <div className="team joinable" onClick={onClick}>
-      <h2>{team.get('name')} Join</h2>
+      <h2>{team.get('name')}</h2>
       <ol className="player-list">
         {team.get('players').map(function (player) {
           return (<Player player={player} key={player.get('id')} />);

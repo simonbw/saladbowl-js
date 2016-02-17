@@ -12,8 +12,10 @@ var TeamNames = module.exports;
  * @returns {string}
  */
 TeamNames.get = function (gameId, team) {
-  var index = (StringUtil.hash(gameId) + team) % animals.length;
-  return 'The ' + animals[index];
+  var hash = StringUtil.hash(gameId);
+  var animalIndex = (hash * 7 + team) % animals.length;
+  var adjectiveIndex = (hash * 13 + team) % adjectives.length;
+  return 'The ' + adjectives[adjectiveIndex] + ' ' + animals[animalIndex];
 };
 
 var animals = [
@@ -34,11 +36,38 @@ var animals = [
   'Orangutans',
   'Penguins',
   'Quail',
-  'Snakes',
+  'Sloths',
   'Turtles',
   'Umbrellabirds',
   'Walruses',
   'Xatus',
   'Yaks',
   'Zebras'
+];
+
+var adjectives = [
+  'African',
+  'Brilliant',
+  'Charming',
+  'Dilapidated',
+  'Erudite',
+  'Fastidious',
+  'Gargantuan',
+  'Handsome',
+  'Illegitimate',
+  'Jingoistic',
+  'Keen',
+  'Lethargic',
+  'Mystic',
+  'Noble',
+  'Organic',
+  'Perturbing',
+  'Queasy',
+  'Snarky',
+  'Tumuluous',
+  'Ubiquitous',
+  'Wise',
+  'Xenophobic',
+  'Yellow',
+  'Zesty'
 ];

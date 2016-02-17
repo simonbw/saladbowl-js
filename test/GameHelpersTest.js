@@ -48,7 +48,8 @@ describe('GameHelpers', function () {
   });
 
   it('getTeams should work', function () {
-    var game = defaultGame;
+    var game = defaultGame
+      .set('id', 'testid');
     var player1 = Immutable.fromJS({id: 'player1', team: 0});
     var player2 = Immutable.fromJS({id: 'player2', team: 0});
     var player3 = Immutable.fromJS({id: 'player3', team: 0});
