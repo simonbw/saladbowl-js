@@ -1,3 +1,6 @@
+var MathUtil = require('./MathUtil');
+
+
 /**
  * Utility for doing things based on random numbers.
  */
@@ -75,6 +78,7 @@ Random.take = function (options) {
 };
 
 /**
+ * Put an array into a random order and return the array.]
  *
  * @param a
  * @returns {*}
@@ -92,8 +96,29 @@ Random.shuffle = function (a) {
 };
 
 /**
+ * Put an array into a deterministically random order and return the array.
  *
- * @param chance
+ * @param a
+ * @param seed {number} - A random
+ * @returns {*}
+ */
+Random.seededShuffle = function (a, seed) {
+  var i, j, temp;
+  i = a.length;
+  while (--i > 0) {
+    seed = (seed * 1103515245 + 12345)| 0;
+    j = MathUtil.mod(seed, i + 1);
+    temp = a[j];
+    a[j] = a[i];
+    a[i] = temp;
+  }
+  return a;
+};
+
+/**
+ * Flip a coin.
+ *
+ * @param chance {number} - Between 0 (always false) and 1 (always true). Defaults to 0.5.
  * @returns {boolean}
  */
 Random.bool = function (chance) {
