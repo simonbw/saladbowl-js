@@ -10,8 +10,8 @@ var Validation = require('../../shared/Validation.js');
  */
 module.exports = function (props) {
   var dispatch = props.dispatch;
-  var game = props.game;
-  var ui = props.ui;
+  var game = props.state.get('game');
+  var ui = props.state.get('ui');
 
   var onWordChange = function (wordNumber, e) {
     var value = e.target.value;

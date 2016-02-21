@@ -7,8 +7,9 @@ var Provider = require('react-redux').Provider;
 var React = require('react');
 var ReactDom = require('react-dom');
 
-var GameApp = require('./components/GameApp');
+var ActionTypes = require('../shared/ActionTypes.js');
 var AppStore = require('./AppStore');
+var GameApp = require('./components/GameApp');
 var MessageTypes = require('../shared/MessageTypes');
 var UpdateGame = require('./UpdateGame');
 
@@ -17,13 +18,34 @@ var UpdateGame = require('./UpdateGame');
  */
 window.onload = function () {
   var initialState = Immutable.fromJS({
-    ui: {},
+    ui: {
+      userName: localStorage.getItem('userName')
+    },
+    userId: window.initialUserId,
     game: window.initialGame
   });
   var store = AppStore.get(initialState, true);
   render(store);
 
   var socket = io('/', {query: 'gameId=' + initialState.get('game').get('id')});
+
+  socket.on('connect', function () {
+    console.log('connected');
+    store.dispatch({
+      type: ActionTypes.UI.FIELD_CHANGED,
+      field: 'connected',
+      value: true
+    });
+  });
+
+  socket.on('disconnect', function () {
+    console.log('disconnected');
+    store.dispatch({
+      type: ActionTypes.UI.FIELD_CHANGED,
+      field: 'connected',
+      value: false
+    });
+  });
 
   socket.on(MessageTypes.ERROR, function (error) {
     console.log('Error Received:', error);

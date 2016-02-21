@@ -11,7 +11,7 @@ var Validation = require('../../shared/Validation.js');
  */
 module.exports = function (props) {
   var dispatch = props.dispatch;
-  var ui = props.ui;
+  var ui = props.state.get('ui');
 
   var onNameChange = function (e) {
     dispatch({

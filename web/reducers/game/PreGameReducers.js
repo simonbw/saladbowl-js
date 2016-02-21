@@ -23,6 +23,7 @@ exports[ActionTypes.CLIENT.PLAYER_JOINED] = function (game, action) {
         words.set(i, Immutable.fromJS({
           playerId: player.get('id'),
           word: null,
+          skips: 0,
           inBowl: false
         }));
       }

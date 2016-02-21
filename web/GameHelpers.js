@@ -34,13 +34,12 @@ GameHelpers.getNextWordIndex = function (game) {
  * @param game
  * @returns {boolean}
  */
-GameHelpers.userIsJoined = function (game) {
-  var userId = game.get('userId');
-  if (!userId) {
+GameHelpers.playerIsJoined = function (game, playerId) {
+  if (!playerId) {
     return false;
   }
   return game.get('players').some(function (player) {
-    return player.get('id') == userId;
+    return player.get('id') == playerId;
   });
 };
 
@@ -51,6 +50,7 @@ GameHelpers.userIsJoined = function (game) {
  */
 GameHelpers.getTeams = function (game) {
   var teams = [];
+
   var lastTeam = game.get('players').reduce(function (largest, player) {
     return Math.max(largest, player.get('team'));
   }, 0);
@@ -58,14 +58,39 @@ GameHelpers.getTeams = function (game) {
     teams[i] = {
       index: i,
       name: TeamNames.get(game.get('id'), i),
-      players: []
+      players: [],
+      points: []
     };
   }
+
   game.get('players').forEach(function (player) {
-    var team = player.get('team');
-    teams[team].players.push(player);
+    player = player.set('ready', GameHelpers.playerWordsAreValid(game, player.get('id')));
+    teams[player.get('team')].players.push(player);
   });
+
+  game.get('points').forEach(function (point) {
+    teams[point.get('team')].points.push(point);
+  });
+
+  if (game.get('started') && !game.get('ended')) {
+    var team = teams[game.get('teamIndex') % teams.length];
+    team.current = true;
+    team.players[game.get('playerIndex') % teams.length] = team.players[game.get('playerIndex') % teams.length].set('current', true);
+  }
+
   return Immutable.fromJS(teams);
+};
+
+/**
+ * Return the player object with the given id.
+ * @param game
+ * @param playerId
+ * @returns {*}
+ */
+GameHelpers.getPlayer = function (game, playerId) {
+  return game.get('players').find(function (player) {
+    return player.get('id') == playerId;
+  });
 };
 
 /**
@@ -74,21 +99,18 @@ GameHelpers.getTeams = function (game) {
  * @returns {Immutable.Map}
  */
 GameHelpers.getCurrentPlayer = function (game) {
-  var team = GameHelpers.getTeams(game).get(game.get('teamIndex'));
-  return team.get(MathUtil.mod(game.get('playerIndex'), team.size));
+  var team = GameHelpers.getCurrentTeam(game);
+  return team.get('players').get(MathUtil.mod(game.get('playerIndex'), team.get('players').size));
 };
 
 /**
- * Return true if the user is the current player.
+ * Return the current team.
  * @param game
- * @returns {boolean}
+ * @returns {*}
  */
-GameHelpers.userIsCurrentPlayer = function (game) {
-  var userId = game.get('userId');
-  if (!userId) {
-    return false;
-  }
-  return GameHelpers.getCurrentPlayer(game).get('id') == userId;
+GameHelpers.getCurrentTeam = function (game) {
+  var teams = GameHelpers.getTeams(game);
+  return teams.get(MathUtil.mod(game.get('teamIndex'), teams.size));
 };
 
 /**
@@ -96,14 +118,13 @@ GameHelpers.userIsCurrentPlayer = function (game) {
  * @param game
  * @returns {boolean}
  */
-GameHelpers.userIsGuessing = function (game) {
-  var userId = game.get('userId');
-  if (!userId) {
+GameHelpers.playerIsGuessing = function (game, playerId) {
+  if (!playerId) {
     return false;
   }
-  var team = GameHelpers.getTeams(game).get('teamIndex');
-  return team.some(function (player) {
-    return player.get('id') == userId;
+  var team = GameHelpers.getCurrentTeam(game);
+  return team.get('players').some(function (player) {
+    return player.get('id') == playerId;
   });
 };
 
@@ -120,15 +141,6 @@ GameHelpers.getPlayerWords = function (game, playerId) {
 };
 
 /**
- * Return all of the user's words.
- * @param game
- * @returns {*}
- */
-GameHelpers.getUserWords = function (game) {
-  return GameHelpers.getPlayerWords(game, game.get('userId'));
-};
-
-/**
  * Return true if a player has saved all their words.
  * @param game
  * @param playerId
@@ -139,15 +151,6 @@ GameHelpers.playerWordsAreValid = function (game, playerId) {
   return words.every(function (word) {
     return Validation.validateWord(word.get('word'));
   });
-};
-
-/**
- * Return true if the user has saved all their words.
- * @param game
- * @returns {boolean}
- */
-GameHelpers.userWordsAreValid = function (game) {
-  return GameHelpers.playerWordsAreValid(game, game.get('userId'));
 };
 
 /**
@@ -163,10 +166,60 @@ GameHelpers.getPlayerIndex = function (game, playerId) {
 };
 
 /**
- * Return the index in the player list of the user.
+ * Return only the words that are in the bowl.
  * @param game
- * @returns {number}
  */
-GameHelpers.getUserPlayerIndex = function (game) {
-  return GameHelpers.getPlayerIndex(game, game.get('userId'));
+GameHelpers.getWordsInBowl = function (game) {
+  return game.get('words').filter(function (word) {
+    return word.get('inBowl');
+  });
+};
+
+/**
+ * Return the word that was skipped the most times.
+ * @param game
+ * @returns {*}
+ */
+GameHelpers.getMostSkippedWord = function (game) {
+  return game.get('words').reduce(function (last, current) {
+    if (!last) {
+      return current;
+    }
+    if (current.get('skips') > last.get('skips')) {
+      return current;
+    } else {
+      return last;
+    }
+  });
+};
+
+/**
+ * Return true if the game is ready to be started.
+ * @param game
+ */
+GameHelpers.readyToStart = function (game) {
+  // Not Enough Players
+  if (game.get('players').size < 4) {
+    return false;
+  }
+  // Not all words are done
+  if (!game.get('words').every(function (word) {
+      return Validation.validateWord(word.get('word')) && word.get('inBowl');
+    })) {
+    return false;
+  }
+  var teams = GameHelpers.getTeams(game);
+  // Not enough teams
+  if (teams.size < 2) {
+    return false;
+  }
+  // Not enough players on each team
+  if (!teams.every(function (team) {
+      return team.get('players').size >= 2;
+    })) {
+    return false;
+  }
+
+  // Everything is good
+  return true;
 };

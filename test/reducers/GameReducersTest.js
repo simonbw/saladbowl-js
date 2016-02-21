@@ -38,27 +38,44 @@ describe('GameReducers', function () {
 
   it('should play through a full game', function () {
     var game = reducer(null, null)
-      .set('wordsPerPlayer', 4);
+      .set('wordsPerPlayer', 4)
+      .set('id', 'testGameId');
     for (var p = 0; p < 4; p++) {
       game = addPlayer(game, p, 'p' + p);
     }
     expect(game.get('players').size).toEqual(4);
     expect(game.get('words').size).toEqual(16);
     for (var p = 0; p < 4; p++) {
-      for (var w = 0; w < 3; w++) {
+      for (var w = 0; w < 4; w++) {
         var word = 'p' + p + 'w' + w;
         game = updateWord(game, word, p, w);
       }
     }
     expect(game.get('words').get(6).get('word')).toEqual('p1w2');
 
-    //game = startGame(game);
-    //game = startRound(game);
-    //game.get('words').forEach(function (word) {
-    //  expect(word.get('inBowl')).toEqual(true, 'All words should be in bowl');
-    //});
-    //game = correctWord(game);
-    //game = skipWord(game);
+    game = joinTeam(game, 0, 0);
+    game = joinTeam(game, 1, 0);
+    game = joinTeam(game, 2, 1);
+    game = joinTeam(game, 3, 1);
+
+    game = startGame(game);
+
+    game = startRound(game);
+
+    expect(game.get('words').every(function (word) {
+      return word.get('inBowl');
+    })).toEqual(true, 'All words should be in bowl ' + JSON.stringify(game, null, 2));
+
+    game = correctWord(game);
+
+    for (var i = 0; i < 100; i++) {
+      game = skipWord(game);
+    }
+    for (var i = 0; i < 15; i++) {
+      game = correctWord(game);
+    }
+
+    game.get('id');
   });
 });
 
@@ -70,6 +87,13 @@ function addPlayer(game, id, name) {
   });
 }
 
+function joinTeam(game, playerId, team) {
+  return reducer(game, {
+    type: ActionTypes.CLIENT.TEAM_JOINED,
+    playerId: playerId,
+    team: team
+  });
+}
 
 function updateWord(game, word, playerId, playerWordIndex) {
   return reducer(game, {
@@ -80,13 +104,11 @@ function updateWord(game, word, playerId, playerWordIndex) {
   });
 }
 
-
 function startGame(game) {
   return reducer(game, {
     type: ActionTypes.CLIENT.GAME_STARTED
   });
 }
-
 
 function startRound(game) {
   return reducer(game, {
@@ -94,13 +116,11 @@ function startRound(game) {
   });
 }
 
-
 function correctWord(game) {
   return reducer(game, {
     type: ActionTypes.CLIENT.WORD_CORRECT
   });
 }
-
 
 function skipWord(game) {
   return reducer(game, {

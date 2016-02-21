@@ -43,10 +43,10 @@ router.get('/:gameId', function (req, res, next) {
   // TODO: Redirect when no game found
   GameStore.get(req.params.gameId)
     .then(function (game) {
-      game = game.set('userId', req.user.id);
       var initialGame = JSON.stringify(game);
       res.render('game', {
         initialGame: initialGame,
+        userId: req.user.id,
         scripts: ['/js/gamePage.js']
       });
     })

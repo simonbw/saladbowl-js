@@ -4,7 +4,7 @@
  */
 exports.hash = function (s) {
   if (typeof s != "string") {
-    throw Error('Cannot hash', typeof s);
+    throw Error('Cannot hash: ' + (typeof s));
   }
   var hash = 0;
   for (var i = 0; i < s.length; i++) {

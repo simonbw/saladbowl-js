@@ -21,6 +21,7 @@ function GameComponent(props) {
   var dispatch = props.dispatch;
   var state = props.state;
   var game = state.get('game');
+  var userId = state.get('userId');
   var ui = state.get('ui');
 
 
@@ -30,30 +31,30 @@ function GameComponent(props) {
 
   // Choose which page to show.
   var page;
-  if (!GameHelpers.userIsJoined(game)) {
+  if (!GameHelpers.playerIsJoined(game, userId)) {
     if (game.get('started')) {
       page = (<div>You cannot join a game once it has started.</div>)
     } else {
-      page = (<JoinGamePage game={game} ui={ui} dispatch={dispatch}/>);
+      page = (<JoinGamePage state={state} dispatch={dispatch}/>);
     }
-  } else if (!GameHelpers.userWordsAreValid(game)) {
-    page = (<AddWordsPage game={game} ui={ui} dispatch={dispatch}/>);
+  } else if (!GameHelpers.playerWordsAreValid(game, userId)) {
+    page = (<AddWordsPage state={state} dispatch={dispatch}/>);
   } else if (!game.get('started')) {
-    page = (<JoinTeamsPage game={game} ui={ui} dispatch={dispatch}/>);
-  } else if (!game.get('ended')) {
-    page = (<GameOverPage game={game} ui={ui} dispatch={dispatch}/>);
-  } else if (GameHelpers.userIsCurrentPlayer(game)) {
-    page = (<CurrentPlayerPage game={game} ui={ui} dispatch={dispatch}/>);
-  } else if (GameHelpers.userIsGuessing(game)) {
-    page = (<GuessingPlayerPage game={game} ui={ui} dispatch={dispatch}/>);
+    page = (<JoinTeamsPage state={state} dispatch={dispatch}/>);
+  } else if (game.get('ended')) {
+    page = (<GameOverPage state={state} dispatch={dispatch}/>);
+  } else if (GameHelpers.getCurrentPlayer(game).get('id') == userId) {
+    page = (<CurrentPlayerPage state={state} dispatch={dispatch}/>);
+  } else if (GameHelpers.playerIsGuessing(game, userId)) {
+    page = (<GuessingPlayerPage state={state} dispatch={dispatch}/>);
   } else {
-    page = (<WaitingPlayerPage game={game} ui={ui} dispatch={dispatch}/>);
+    page = (<WaitingPlayerPage state={state} dispatch={dispatch}/>);
   }
 
   return (
     <div>
       {page}
-      <DebugPane state={state}/>
+      <DebugPane state={state} dispatch={dispatch}/>
     </div>
   );
 }

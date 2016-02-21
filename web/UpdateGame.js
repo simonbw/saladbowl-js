@@ -9,7 +9,7 @@ var UpdateGame = module.exports;
  */
 UpdateGame.init = function (socket) {
   this.socket = socket;
-};
+}.bind(UpdateGame);
 
 /**
  * Send a join game action.
@@ -21,7 +21,7 @@ UpdateGame.joinGame = function (name) {
     type: GameActions.SERVER.JOIN_GAME,
     name: name
   });
-};
+}.bind(UpdateGame);
 
 /**
  * Send a save word action.
@@ -34,7 +34,7 @@ UpdateGame.saveWord = function (word, playerWordIndex) {
     word: word,
     playerWordIndex: playerWordIndex
   });
-};
+}.bind(UpdateGame);
 
 /**
  * Join a team.
@@ -45,4 +45,42 @@ UpdateGame.joinTeam = function (team) {
     type: GameActions.SERVER.JOIN_TEAM,
     team: team
   });
-};
+}.bind(UpdateGame);
+
+/**
+ * Start the game.
+ */
+UpdateGame.startGame = function () {
+  this.socket.emit(MessageTypes.GAME, {
+    type: GameActions.SERVER.START_GAME
+  });
+}.bind(this);
+
+/**
+ * Start the round.
+ */
+UpdateGame.startRound = function () {
+  this.socket.emit(MessageTypes.GAME, {
+    type: GameActions.SERVER.START_ROUND
+  });
+}.bind(UpdateGame);
+
+/**
+ * Skip the current word.
+ */
+UpdateGame.skipWord = function () {
+  this.socket.emit(MessageTypes.GAME, {
+    type: GameActions.SERVER.SKIP_WORD
+  });
+}.bind(UpdateGame);
+
+/**
+ * Correctly guessed the current word.
+ */
+UpdateGame.correctWord = function () {
+  this.socket.emit(MessageTypes.GAME, {
+    type: GameActions.SERVER.CORRECT_WORD
+  });
+}.bind(UpdateGame);
+
+

@@ -19,7 +19,7 @@ module.exports = function (socket, next) {
       socket.gameRoom = socket.io.to(socket.gameId);
       socket.emit(MessageTypes.GAME, {
         type: ActionTypes.CLIENT.REPLACE_GAME,
-        game: game.set('userId', socket.user.id).toJS()
+        game: game.toJS()
       });
       next();
     })

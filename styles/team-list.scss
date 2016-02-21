@@ -48,7 +48,7 @@
         font-weight: 600;
       }
 
-      li.waiting {
+      li:not(.ready) {
         color: #CCC;
       }
     }

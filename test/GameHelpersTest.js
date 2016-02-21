@@ -6,7 +6,7 @@ var GameHelpers = require('../web/GameHelpers');
 
 
 describe('GameHelpers', function () {
-  it('getNextIndex should work', function () {
+  it('getNextWordIndex should work', function () {
     var game = defaultGame;
 
     // No words available
@@ -36,15 +36,16 @@ describe('GameHelpers', function () {
     expect(GameHelpers.getNextWordIndex(game)).toEqual(2);
   });
 
-  it('userIsJoined should work', function () {
+  it('playerIsJoined should work', function () {
     var game = defaultGame;
-    expect(GameHelpers.userIsJoined(game)).toEqual(false);
-    game = game.set('userId', 'testId');
-    expect(GameHelpers.userIsJoined(game)).toEqual(false);
-    game = game.set('players', game.get('players').push(Immutable.fromJS({id: 'notTestId'})));
-    expect(GameHelpers.userIsJoined(game)).toEqual(false);
-    game = game.set('players', game.get('players').push(Immutable.fromJS({id: 'testId'})));
-    expect(GameHelpers.userIsJoined(game)).toEqual(true);
+    var userId = 'userId';
+    expect(GameHelpers.playerIsJoined(game, userId)).toEqual(false);
+    game = game.set('userId', userId);
+    expect(GameHelpers.playerIsJoined(game, userId)).toEqual(false);
+    game = game.set('players', game.get('players').push(Immutable.fromJS({id: 'notUserId'})));
+    expect(GameHelpers.playerIsJoined(game, userId)).toEqual(false);
+    game = game.set('players', game.get('players').push(Immutable.fromJS({id: userId})));
+    expect(GameHelpers.playerIsJoined(game, userId)).toEqual(true);
   });
 
   it('getTeams should work', function () {
@@ -64,11 +65,11 @@ describe('GameHelpers', function () {
 
   it('getCurrentPlayer should work');
 
-  it('userIsCurrentPlayer should work');
+  it('getCurrentTeam should work');
 
-  it('userIsGuessing should work');
+  it('playerIsGuessing should work');
 
-  it('getPlayerWords getUserWords should work', function () {
+  it('getPlayerWords should work', function () {
     var game = defaultGame;
     var userId = 'testId';
     var word1 = Immutable.fromJS({playerId: userId, word: 'word1'});
@@ -87,10 +88,11 @@ describe('GameHelpers', function () {
 
     game = game.set('words', game.get('words').push(word3));
     expect(GameHelpers.getPlayerWords(game, userId).size).toEqual(2);
-    expect(GameHelpers.getUserWords(game).size).toEqual(2);
   });
 
-  it('getPlayerIndex and getUserPlayerIndex should work', function () {
+  it('playerWordsAreValid should work');
+
+  it('getPlayerIndex should work', function () {
     var game = defaultGame
       .set('userId', 'p2')
       .update('players', function (players) {
@@ -103,7 +105,38 @@ describe('GameHelpers', function () {
     expect(GameHelpers.getPlayerIndex(game, 'p1')).toEqual(0);
     expect(GameHelpers.getPlayerIndex(game, 'p2')).toEqual(1);
     expect(GameHelpers.getPlayerIndex(game, 'p3')).toEqual(2);
-    expect(GameHelpers.getUserPlayerIndex(game)).toEqual(1);
   });
-})
-;
+
+  it('readyToStart should work', function () {
+    var game = defaultGame.set('id', 'testgame');
+    expect(GameHelpers.readyToStart(game)).toEqual(false);
+    game = game.update('words', function (words) {
+      return words
+        .push(Immutable.fromJS({word: 'word1', inBowl: true}))
+        .push(Immutable.fromJS({word: 'word2', inBowl: true}))
+        .push(Immutable.fromJS({word: 'word3', inBowl: true}))
+        .push(Immutable.fromJS({word: 'word4', inBowl: true}));
+    });
+    expect(GameHelpers.readyToStart(game)).toEqual(false);
+    game = game.update('players', function (players) {
+      return players
+        .push(Immutable.fromJS({id: 'p1', team: 0}))
+        .push(Immutable.fromJS({id: 'p2', team: 0}))
+        .push(Immutable.fromJS({id: 'p3', team: 1}))
+        .push(Immutable.fromJS({id: 'p4', team: 1}));
+    });
+    expect(GameHelpers.readyToStart(game)).toEqual(true);
+  });
+
+  it('getMostSkippedWord should work', function () {
+    var word1 = Immutable.fromJS({word: 'word1', skips: 3});
+    var word2 = Immutable.fromJS({word: 'word2', skips: 5});
+    var word3 = Immutable.fromJS({word: 'word3', skips: 1});
+    var game = defaultGame.update('words', function (words) {
+      return words.push(word1, word2, word3)
+    });
+
+    expect(GameHelpers.getMostSkippedWord(game)).toEqual(word2);
+  });
+
+});
