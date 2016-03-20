@@ -4,11 +4,16 @@ var MessageTypes = require('../shared/MessageTypes');
 var UpdateGame = module.exports;
 
 /**
+ * The socket.io socket.
+ */
+var socket;
+
+/**
  * Call this to bind the socket to the class.
  * @param socket
  */
-UpdateGame.init = function (socket) {
-  this.socket = socket;
+UpdateGame.init = function (s) {
+  socket = s;
 }.bind(UpdateGame);
 
 /**
@@ -17,7 +22,7 @@ UpdateGame.init = function (socket) {
  */
 UpdateGame.joinGame = function (name) {
   console.log('joining game');
-  this.socket.emit(MessageTypes.GAME, {
+  socket.emit(MessageTypes.GAME, {
     type: GameActions.SERVER.JOIN_GAME,
     name: name
   });
@@ -29,7 +34,7 @@ UpdateGame.joinGame = function (name) {
  * @param playerWordIndex
  */
 UpdateGame.saveWord = function (word, playerWordIndex) {
-  this.socket.emit(MessageTypes.GAME, {
+  socket.emit(MessageTypes.GAME, {
     type: GameActions.SERVER.SAVE_WORD,
     word: word,
     playerWordIndex: playerWordIndex
@@ -41,7 +46,7 @@ UpdateGame.saveWord = function (word, playerWordIndex) {
  * @param team
  */
 UpdateGame.joinTeam = function (team) {
-  this.socket.emit(MessageTypes.GAME, {
+  socket.emit(MessageTypes.GAME, {
     type: GameActions.SERVER.JOIN_TEAM,
     team: team
   });
@@ -51,7 +56,7 @@ UpdateGame.joinTeam = function (team) {
  * Start the game.
  */
 UpdateGame.startGame = function () {
-  this.socket.emit(MessageTypes.GAME, {
+  socket.emit(MessageTypes.GAME, {
     type: GameActions.SERVER.START_GAME
   });
 }.bind(this);
@@ -60,7 +65,7 @@ UpdateGame.startGame = function () {
  * Start the round.
  */
 UpdateGame.startRound = function () {
-  this.socket.emit(MessageTypes.GAME, {
+  socket.emit(MessageTypes.GAME, {
     type: GameActions.SERVER.START_ROUND
   });
 }.bind(UpdateGame);
@@ -69,7 +74,7 @@ UpdateGame.startRound = function () {
  * Skip the current word.
  */
 UpdateGame.skipWord = function () {
-  this.socket.emit(MessageTypes.GAME, {
+  socket.emit(MessageTypes.GAME, {
     type: GameActions.SERVER.SKIP_WORD
   });
 }.bind(UpdateGame);
@@ -78,9 +83,16 @@ UpdateGame.skipWord = function () {
  * Correctly guessed the current word.
  */
 UpdateGame.correctWord = function () {
-  this.socket.emit(MessageTypes.GAME, {
+  socket.emit(MessageTypes.GAME, {
     type: GameActions.SERVER.CORRECT_WORD
   });
 }.bind(UpdateGame);
 
-
+/**
+ * Ask to replace the current game.
+ */
+UpdateGame.outOfSync = function () {
+  socket.emit(MessageTypes.GAME, {
+    type: GameActions.SERVER.OUT_OF_SYNC
+  });
+}.bind(UpdateGame);

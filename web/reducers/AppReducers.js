@@ -3,7 +3,10 @@ var Immutable = require('immutable');
 var GameReducers = require('./GameReducers');
 var UIReducers = require('./UIReducers');
 
-var DEFAULT_STATE = Immutable.fromJS({});
+/**
+ * @type {Immutable.Map}
+ */
+var DEFAULT_STATE = Immutable.Map();
 
 /**
  * Return a new state that is the result of completing an action.
@@ -14,7 +17,5 @@ var DEFAULT_STATE = Immutable.fromJS({});
 module.exports = function (state, action) {
   state = state || DEFAULT_STATE;
 
-  return state
-    .set('game', GameReducers(state.get('game'), action))
-    .set('ui', UIReducers(state.get('ui'), action));
+  return state.set('game', GameReducers(state.get('game'), action)).set('ui', UIReducers(state.get('ui'), action));
 };

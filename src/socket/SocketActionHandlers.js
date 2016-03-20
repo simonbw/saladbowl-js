@@ -4,8 +4,9 @@ var MessageTypes = require('../../shared/MessageTypes');
  * Map of all action handlers.
  */
 var handlers = Object.assign({},
-  require('./handlers/PreGameHandlers'),
-  require('./handlers/MidGameHandlers'));
+  require('./handlers/MidGameHandlers'),
+  require('./handlers/OutOfSyncHelper'),
+  require('./handlers/PreGameHandlers'));
 
 
 /**

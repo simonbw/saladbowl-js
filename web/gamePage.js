@@ -64,6 +64,17 @@ window.onload = function () {
       var gameHash = game.hashCode();
       if (gameHash != action.gameHashCode) {
         console.log('Game not in sync', gameHash, action.gameHashCode);
+        store.dispatch({
+          type: ActionTypes.UI.FIELD_CHANGED,
+          field: 'synced',
+          value: false
+        });
+      } else {
+        store.dispatch({
+          type: ActionTypes.UI.FIELD_CHANGED,
+          field: 'synced',
+          value: true
+        });
       }
     }
   });
