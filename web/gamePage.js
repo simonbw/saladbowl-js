@@ -1,91 +1,84 @@
-var Game = require('../shared/Game');
-var processResponse = require('./processResponse');
-var Sounds = require('./Sounds.js');
-var Timer = require('./Timer');
+window.Promise = window.Promise || require('promise-polyfill');
+require('setimmediate');
+
+var Immutable = require('immutable');
+var io = require('socket.io-client');
+var Provider = require('react-redux').Provider;
+var React = require('react');
+var ReactDom = require('react-dom');
+
+var ActionTypes = require('../shared/ActionTypes.js');
+var AppStore = require('./AppStore');
+var GameApp = require('./components/GameApp');
+var MessageTypes = require('../shared/MessageTypes');
+var UpdateGame = require('./UpdateGame');
 
 /**
- * Redraw the page.
- * @param data
+ * Render the page and open the socket.
  */
-function redraw(data) {
-  $('#main-content').html(Handlebars.templates['game/main'](data));
-  Timer.start(data.game, data.player);
-  bindAll(data.game);
-}
+window.onload = function () {
+  var initialState = Immutable.fromJS({
+    ui: {
+      userName: localStorage.getItem('userName')
+    },
+    userId: window.initialUserId,
+    game: window.initialGame
+  });
+  var store = AppStore.get(initialState, true);
+  render(store);
 
-/**
- * Bind all event handlers.
- * @param game
- */
-function bindAll(game) {
-  // Bind everything. TODO: Make this shorter/cleaner
-  // TODO: Don't allow double clicks
-  function bindClick(selector, action, data) {
-    $(selector).click(function () {
-      $.post(game.getUrl(action), data).done();
+  var socket = io('/', {query: 'gameId=' + initialState.get('game').get('id')});
+
+  socket.on('connect', function () {
+    console.log('connected');
+    store.dispatch({
+      type: ActionTypes.UI.FIELD_CHANGED,
+      field: 'connected',
+      value: true
     });
-  }
-
-  $('.button.correct').click(function () {
-    $('.correct').addClass('disabled');
-    $('.skip').addClass('disabled');
-    $('#current-word').fadeTo(100, 0);
-    $.post(game.getUrl('correct-word'), {'wordIndex': game.currentWord.index}).done();
-    Sounds.correctWord.play();
-  });
-  $('.button.skip').click(function () {
-    $('.correct').addClass('disabled');
-    $('.skip').addClass('disabled');
-    $('#current-word').fadeTo(100, 0);
-    $.post(game.getUrl('skip-word'), {'wordIndex': game.currentWord.index}).done();
-    Sounds.skipWord.play();
   });
 
-  //bindClick('.button.correct', 'correct-word', {'word': game.currentWord});
-  //bindClick('.button.skip', 'skip-word', {'word': game.currentWord});
-  bindClick('.button.start-round', 'start-round');
-  bindClick('#start-game-button:not(.disabled)', 'start-game');
-  $('.team.joinable').click(function () {
-    var team = $(this).data('team-id');
-    $.post(game.getUrl('join-team'), {'team': team})
-      .done();
+  socket.on('disconnect', function () {
+    console.log('disconnected');
+    store.dispatch({
+      type: ActionTypes.UI.FIELD_CHANGED,
+      field: 'connected',
+      value: false
+    });
   });
-}
 
-/**
- * Get data for the page.
- *
- * @param url
- * @param lastUpdatedAt
- */
-function getData(url, lastUpdatedAt) {
-  jQuery.get(url, {'lastUpdatedAt': lastUpdatedAt})
-    .done(function (response) {
-        var data = processResponse(response);
-        if (data.success) {
-          try {
-            redraw(data);
-            return getData(data.game.getUrl('json'), data.game.lastUpdatedAt);
-          }
-          catch (e) {
-            console.error(e);
-          }
-          getData(url, lastUpdatedAt);
-        }
+  socket.on(MessageTypes.ERROR, function (error) {
+    console.log('Error Received:', error);
+  });
+  socket.on(MessageTypes.REDIRECT, function (data) {
+    console.log('redirect received', data);
+    window.location = data.url;
+  });
+  socket.on(MessageTypes.GAME, function (action) {
+    console.log('action received', action);
+    store.dispatch(action);
+
+    if (action.hasOwnProperty('gameHashCode')) {
+      var state = store.getState();
+      var game = state.get('game');
+      var gameHash = game.hashCode();
+      if (gameHash != action.gameHashCode) {
+        console.log('Game not in sync', gameHash, action.gameHashCode);
       }
-    )
-    .fail(function () {
-      setTimeout(getData.bind(null, url, lastUpdatedAt), 250); // wait a little bit on failure
-    });
-}
+    }
+  });
+
+  UpdateGame.init(socket);
+};
 
 /**
- * Initialize the game page.
- * @param game
- * @param player
+ * Render the game.
  */
-module.exports.init = function (game, player) {
-  getData(game.getUrl('json'), game.lastUpdatedAt);
-  bindAll(game);
-  Timer.start(game, player);
-};
+function render(store) {
+  ReactDom.render(
+    <Provider store={store}>
+      <GameApp />
+    </Provider>,
+    document.getElementById('game-react')
+  );
+}

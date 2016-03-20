@@ -5,11 +5,11 @@
   margin: 10px;
 }
 
-span.player-name {
+.player-name {
   font-style: italic;
 }
 
-span.game-id {
+.game-id {
   font-family: Courier, 'Courier New', monospace;
   font-size: 1.1em;
 }
@@ -27,14 +27,14 @@ span.game-id {
   text-align: center;
 }
 
-#current-word {
+.current-word {
   font-size: 4em;
   padding: 20px;
   text-align: center;
 }
 
-.button.correct,
-.button.skip {
+.correct-button,
+.skip-button {
   font-size: 2em;
 
   &:not(.disabled):hover {
@@ -42,7 +42,7 @@ span.game-id {
   }
 }
 
-.button.correct {
+.correct-button {
   color: #0F0;
   &.disabled {
     color: #696;
@@ -53,7 +53,7 @@ span.game-id {
   }
 }
 
-.button.skip {
+.skip-button {
   color: #F00;
   &.disabled {
     color: #966;
@@ -89,23 +89,4 @@ span.game-id {
 
 .delete-button {
   margin-top: 50px;
-}
-
-.debug {
-  background: #FAFAFA;
-  margin-top: 50px;
-  padding: 20px;
-  text-align: left;
-
-  h4 {
-    font-family: monospace;
-    font-weight: bold;
-    margin: 0;
-    padding: 0;
-    text-align: left;
-  }
-  pre {
-    font-family: monospace;
-    white-space: pre-wrap;
-  }
 }
