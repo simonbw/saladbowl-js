@@ -50,10 +50,16 @@ window.onload = function () {
   socket.on(MessageTypes.ERROR, function (error) {
     console.log('Error Received:', error);
   });
+
   socket.on(MessageTypes.REDIRECT, function (data) {
     console.log('redirect received', data);
     window.location = data.url;
   });
+
+  socket.on(MessageTypes.HEARTBEAT, function (data) {
+    console.log('HEARTBEAT received', data.time);
+  });
+
   socket.on(MessageTypes.GAME, function (action) {
     console.log('action received', action);
     store.dispatch(action);
@@ -80,6 +86,8 @@ window.onload = function () {
   });
 
   UpdateGame.init(socket);
+
+  window.SOCKET = socket;
 };
 
 /**

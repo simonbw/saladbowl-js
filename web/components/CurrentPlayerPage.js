@@ -1,7 +1,8 @@
 var React = require('react');
 
-var UpdateGame = require('../UpdateGame');
 var GameHelpers = require('../GameHelpers');
+var Timer = require('./Timer');
+var UpdateGame = require('../UpdateGame');
 
 module.exports = function (props) {
   var state = props.state;

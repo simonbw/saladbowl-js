@@ -15,6 +15,12 @@ exports.ERROR = 'error';
 exports.GAME = 'GAME';
 
 /**
+ * Used for syncing clocks.
+ * @type {string}
+ */
+exports.HEARTBEAT = 'HEARTBEAT';
+
+/**
  * Sent to the client when redirecting to a new page.
  * @type {string}
  */
