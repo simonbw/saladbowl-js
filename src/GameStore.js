@@ -51,9 +51,11 @@ GameStore.save = function (game) {
  * Create a new game.
  * @returns {Promise.<T>}
  */
-GameStore.create = function () {
+GameStore.create = function (wordsPerPlayer) {
   var id = shortId.generate();
-  var game = defaultGame.set('id', id);
+  var game = defaultGame
+    .set('id', id)
+    .set('wordsPerPlayer', wordsPerPlayer);
   return GameStore.save(game);
 };
 

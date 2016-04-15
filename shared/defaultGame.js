@@ -7,11 +7,11 @@ module.exports = Immutable.fromJS({
   playerIndex: 0,
   players: [],
   roundStarted: false,
-  secondsPerRound: 8,
+  secondsPerRound: 60,
   started: false,
   teamIndex: 0,
   wordIndex: 0,
   words: [],
   points: [],
-  wordsPerPlayer: 2
+  wordsPerPlayer: 5
 });

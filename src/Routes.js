@@ -23,7 +23,8 @@ router.get('/new-game', function (req, res, next) {
  * Create a new game.
  */
 router.post('/new-game', function (req, res, next) {
-  GameStore.create().then(function (game) {
+  var wordsPerPlayer = parseInt(req.body.wordsPerPlayer);
+  GameStore.create(wordsPerPlayer).then(function (game) {
     res.redirect('/' + game.get('id'));
   });
 });
@@ -39,8 +40,6 @@ router.get('/how-to-play', function (req, res, next) {
  * Display the game app.
  */
 router.get('/:gameId', function (req, res, next) {
-  // TODO: Attach game
-  // TODO: Redirect when no game found
   GameStore.get(req.params.gameId)
     .then(function (game) {
       var initialGame = JSON.stringify(game);
