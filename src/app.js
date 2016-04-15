@@ -1,5 +1,6 @@
 var bodyParser = require('body-parser');
 var browserify = require('browserify-middleware');
+var babelify = require('babelify');
 var cookieParser = require('cookie-parser');
 var express = require('express');
 var favicon = require('serve-favicon');
@@ -42,7 +43,7 @@ app.use(logger('dev', {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
-app.use(jsUrl, browserify(webSourcePath, {'transform': ['reactify']}));
+app.use(jsUrl, browserify(webSourcePath, {transform: [babelify.configure({presets: ['es2015', 'react']})]}));
 app.use(sass({
   src: scssSourcePath,
   dest: scssDestPath,
