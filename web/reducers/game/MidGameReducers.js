@@ -13,7 +13,8 @@ var GameHelpers = require('../../GameHelpers');
 exports[ActionTypes.CLIENT.ROUND_STARTED] = function (game, action) {
   return game
     .set('lastCorrectWordIndex', null)
-    .set('roundStarted', true);
+    .set('roundStarted', true)
+    .set('roundStartedAt', action.startTime);
 };
 
 

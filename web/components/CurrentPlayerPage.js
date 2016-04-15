@@ -57,7 +57,8 @@ function PlayingPage(props) {
   var instructions = phases[game.get('phaseIndex')][1];
   return (
     <div>
-      <h1 className="phase-instructions">{phaseName}</h1>
+      <h1>{phaseName}</h1>
+      <Timer endTime={game.get('roundStartedAt') + game.get('secondsPerRound') * 1000}/>
       <div className="current-word word">{word.get('word')}</div>
       <button className="correct-button" onClick={UpdateGame.correctWord}>Correct</button>
       <button className="skip-button" onClick={UpdateGame.skipWord}>Skip</button>

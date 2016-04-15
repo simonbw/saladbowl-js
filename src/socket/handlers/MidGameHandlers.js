@@ -24,7 +24,8 @@ exports[ActionTypes.SERVER.SKIP_WORD] = function (data, socket) {
  */
 exports[ActionTypes.SERVER.START_ROUND] = function (data, socket) {
   HandlerHelpers.dispatch(socket, {
-    type: ActionTypes.CLIENT.ROUND_STARTED
+    type: ActionTypes.CLIENT.ROUND_STARTED,
+    startTime: Date.now()
   }, function (action, game) {
     // TODO: Better timer handling
     if (socket.roundTimeout) {

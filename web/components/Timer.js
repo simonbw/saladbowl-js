@@ -1,10 +1,7 @@
 var React = require('react');
+var Timing = require('../Timing.js');
 
 var DELAY = 50;
-
-function currentTime() {
-  return Date.now();
-}
 
 /**
  *
@@ -15,7 +12,7 @@ module.exports = React.createClass({
   },
 
   getInitialState: function () {
-    return {remaining: currentTime() - this.props.endTime};
+    return {remaining: this.getRemainingTime()};
   },
 
   componentDidMount: function () {
@@ -26,14 +23,20 @@ module.exports = React.createClass({
     clearInterval(this.timerInterval);
   },
 
+  getRemainingTime: function () {
+    return this.props.endTime - Timing.getServerTime();
+  },
+
   tick: function () {
-    var remaining = currentTime() - this.props.endTime;
-    this.setState({remaining: remaining});
+    this.setState({remaining: this.getRemainingTime()});
   },
 
   render: function () {
+    var seconds = this.state.remaining / 1000;
     return (
-      <div>{this.state.remaining.toFixed(1)}</div>
+      <div class="timer">
+        {seconds.toFixed(1)}
+      </div>
     );
   }
 });

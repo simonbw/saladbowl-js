@@ -12,6 +12,7 @@ var AppStore = require('./AppStore');
 var GameApp = require('./components/GameApp');
 var MessageTypes = require('../shared/MessageTypes');
 var UpdateGame = require('./UpdateGame');
+var Timing = require('./Timing');
 
 /**
  * Render the page and open the socket.
@@ -56,10 +57,6 @@ window.onload = function () {
     window.location = data.url;
   });
 
-  socket.on(MessageTypes.HEARTBEAT, function (data) {
-    console.log('HEARTBEAT received', data.time);
-  });
-
   socket.on(MessageTypes.GAME, function (action) {
     console.log('action received', action);
     store.dispatch(action);
@@ -86,6 +83,7 @@ window.onload = function () {
   });
 
   UpdateGame.init(socket);
+  Timing.init(socket);
 
   window.SOCKET = socket;
 };
