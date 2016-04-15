@@ -1,6 +1,6 @@
 var ActionTypes = require('../../../shared/ActionTypes');
 var GameStore = require('../../GameStore');
-var MessageTypes = require('../../../shared/MessageTypes.js');
+var MessageTypes = require('../../../shared/MessageTypes');
 
 /**
  * Replace the game when out of sync.

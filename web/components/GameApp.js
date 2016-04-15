@@ -51,8 +51,16 @@ function GameComponent(props) {
     page = (<WaitingPlayerPage state={state} dispatch={dispatch}/>);
   }
 
+  var errors = [];
+  if (ui.get('connected') === false) {
+    errors.push(<div key={0} className="error">Disconnected</div>);
+  }
+
   return (
     <div>
+      {errors.length > 0 &&
+      <div className="errors">{errors}</div>
+      }
       {page}
       <DebugPane state={state} dispatch={dispatch}/>
     </div>
