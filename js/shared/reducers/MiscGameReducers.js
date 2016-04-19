@@ -1,8 +1,8 @@
 'use strict';
 
-var Immutable = require('immutable');
+const Immutable = require('immutable');
 
-var ActionTypes = require('../../ActionTypes');
+const ActionTypes = require('../ActionTypes');
 
 
 /**

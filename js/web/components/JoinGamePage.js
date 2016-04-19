@@ -3,7 +3,8 @@
 const React = require('react');
 
 const ActionTypes = require('../../shared/ActionTypes');
-const UpdateGame = require('../UpdateGame');
+const GameActions = require('../actions/GameActions');
+const UIActions = require('../actions/UIActions');
 const Validation = require('../../shared/Validation.js');
 
 /**
@@ -16,18 +17,15 @@ module.exports = (props) => {
   const ui = props.state.get('ui');
 
   function onNameChange(e) {
-    dispatch({
-      type: ActionTypes.UI.FIELD_CHANGED,
-      field: 'userName',
-      value: e.target.value
-    });
+    dispatch(UIActions.updateField('userName', e.target.value));
   }
 
   const joinGame = (e) => {
+    // TODO: Don't use forms!
     // TODO: Disable form
     e.preventDefault();
     const userName = ui.get('userName');
-    UpdateGame.joinGame(userName);
+    dispatch(GameActions.joinGame(userName));
     localStorage.setItem('userName', userName);
   };
 

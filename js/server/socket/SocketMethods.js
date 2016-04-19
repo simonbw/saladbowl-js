@@ -8,9 +8,9 @@ const socketMethods = {};
  * @param next
  */
 module.exports = (socket, next) => {
-  for (var methodName in socketMethods) {
+  Object.keys(socketMethods).forEach((methodName) => {
     socket[methodName] = socketMethods[methodName].bind(socket);
     socket.gameRoom[methodName] = socketMethods[methodName].bind(socket.gameRoom);
-  }
+  });
   next();
 };

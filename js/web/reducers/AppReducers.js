@@ -2,7 +2,7 @@
 
 const Immutable = require('immutable');
 
-const GameReducers = require('./GameReducers');
+const GameReducers = require('../../shared/reducers/GameReducers');
 const UIReducers = require('./UIReducers');
 
 /**
@@ -18,6 +18,5 @@ const DEFAULT_STATE = Immutable.Map();
  */
 module.exports = (state, action) => {
   state = state || DEFAULT_STATE;
-
   return state.set('game', GameReducers(state.get('game'), action)).set('ui', UIReducers(state.get('ui'), action));
 };

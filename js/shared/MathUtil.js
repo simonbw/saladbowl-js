@@ -1,5 +1,7 @@
 'use strict';
 
+const MathUtil = module.exports;
+
 /**
  * Math utility functions.
  */
@@ -10,7 +12,7 @@
  * @param b {number}
  * @returns {number}
  */
-exports.mod = (a, b) => {
+MathUtil.mod = (a, b) => {
   return ((a % b) + b) % b;
 };
 
@@ -19,9 +21,9 @@ exports.mod = (a, b) => {
  * @param a {Array.<number>}
  * @returns {number}
  */
-exports.sum = (a) => {
-  var sum = 0;
-  for (var i = 0; i < a.length; i++) {
+MathUtil.sum = (a) => {
+  let sum = 0;
+  for (let i = 0; i < a.length; i++) {
     sum += a[i];
   }
   return sum;
@@ -34,6 +36,33 @@ exports.sum = (a) => {
  * @param max {number}
  * @returns {number}
  */
-exports.clamp = function (value, min, max) {
+MathUtil.clamp = function (value, min, max) {
   return Math.min(Math.max(value, min), max);
+};
+
+/**
+ * Return the mean value of an array of numbers.
+ * @param a {Array.<number>}
+ * @returns {number}
+ */
+MathUtil.mean = (a) => {
+  return MathUtil.sum(a) / a.length;
+};
+
+/**
+ * Return the median value of an array of numbers.
+ * @param a {Array.<number>}
+ * @returns {number}
+ */
+MathUtil.median = (a) => {
+  if (a.length == 0) {
+    return NaN;
+  }
+  a = a.slice(0);
+  a.sort((a, b) => a - b);
+  if (a.length % 2 === 0) { // even
+    return (a[a.length / 2 - 1] + a[a.length / 2]) / 2;
+  } else {
+    return a[Math.floor(a.length / 2)];
+  }
 };

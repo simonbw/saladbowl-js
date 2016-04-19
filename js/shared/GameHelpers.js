@@ -17,7 +17,7 @@ const GameHelpers = module.exports;
 GameHelpers.getNextWordIndex = (game) => {
   const words = game.get('words');
   const h = game.hashCode();
-  for (var i = 0; i < words.size; i++) {
+  for (let i = 0; i < words.size; i++) {
     // TODO: These should be const but node sucks
     const index = MathUtil.mod(i + h, words.size);
     const word = words.get(index);
@@ -60,7 +60,7 @@ GameHelpers.getTeams = (game) => {
   const lastTeam = game.get('players').reduce((largest, player) => {
     return Math.max(largest, player.get('team'));
   }, 0);
-  for (var i = 0; i <= lastTeam; i++) {
+  for (let i = 0; i <= lastTeam; i++) {
     teams[i] = {
       index: i,
       name: TeamNames.get(game.get('id'), i),
@@ -116,7 +116,7 @@ GameHelpers.getCurrentPlayer = (game) => {
  * @returns {*}
  */
 GameHelpers.getCurrentTeam = (game) => {
-  var teams = GameHelpers.getTeams(game);
+  let teams = GameHelpers.getTeams(game);
   return teams.get(MathUtil.mod(game.get('teamIndex'), teams.size));
 };
 
@@ -130,7 +130,7 @@ GameHelpers.playerIsGuessing = (game, playerId) => {
   if (!playerId) {
     return false;
   }
-  var team = GameHelpers.getCurrentTeam(game);
+  let team = GameHelpers.getCurrentTeam(game);
   return team.get('players').some((player) => {
     return player.get('id') == playerId;
   });
@@ -155,7 +155,7 @@ GameHelpers.getPlayerWords = (game, playerId) => {
  * @returns {boolean}
  */
 GameHelpers.playerWordsAreValid = (game, playerId) => {
-  var words = GameHelpers.getPlayerWords(game, playerId);
+  let words = GameHelpers.getPlayerWords(game, playerId);
   return words.every((word) => {
     return Validation.validateWord(word.get('word'));
   });
@@ -216,7 +216,7 @@ GameHelpers.readyToStart = (game) => {
     })) {
     return false;
   }
-  var teams = GameHelpers.getTeams(game);
+  let teams = GameHelpers.getTeams(game);
   // Not enough teams
   if (teams.size < 2) {
     return false;

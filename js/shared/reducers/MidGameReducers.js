@@ -2,9 +2,9 @@
 
 const Immutable = require('immutable');
 
-const ActionTypes = require('../../ActionTypes');
-const MathUtil = require('../../MathUtil');
-const GameHelpers = require('../../GameHelpers');
+const ActionTypes = require('../ActionTypes');
+const MathUtil = require('../MathUtil');
+const GameHelpers = require('../GameHelpers');
 
 /**
  * Start the round.

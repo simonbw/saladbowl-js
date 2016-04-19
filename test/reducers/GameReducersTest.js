@@ -21,7 +21,7 @@ describe('GameReducers', () => {
   });
 
   it('should add players and their words', () => {
-    var game = reducer(null, null)
+    let game = reducer(null, null)
       .set('wordsPerPlayer', 4);
     game = addPlayer(game, 1, 'p1');
     expect(game.get('players').size).toEqual(1);
@@ -33,7 +33,7 @@ describe('GameReducers', () => {
   });
 
   it('should update words', () => {
-    var game = reducer(null, null);
+    let game = reducer(null, null);
     game = addPlayer(game, 1, 'p1');
     game = addPlayer(game, 2, 'p2');
     game = updateWord(game, 'word2', 1, 2);
@@ -41,16 +41,16 @@ describe('GameReducers', () => {
   });
 
   it('should play through a full game', () => {
-    var game = reducer(null, null)
+    let game = reducer(null, null)
       .set('wordsPerPlayer', 4)
       .set('id', 'testGameId');
-    for (var p = 0; p < 4; p++) {
+    for (let p = 0; p < 4; p++) {
       game = addPlayer(game, p, 'p' + p);
     }
     expect(game.get('players').size).toEqual(4);
     expect(game.get('words').size).toEqual(16);
-    for (var p = 0; p < 4; p++) {
-      for (var w = 0; w < 4; w++) {
+    for (let p = 0; p < 4; p++) {
+      for (let w = 0; w < 4; w++) {
         const word = 'p' + p + 'w' + w;
         game = updateWord(game, word, p, w);
       }
@@ -72,10 +72,10 @@ describe('GameReducers', () => {
 
     game = correctWord(game);
 
-    for (var i = 0; i < 100; i++) {
+    for (let i = 0; i < 100; i++) {
       game = skipWord(game);
     }
-    for (var i = 0; i < 15; i++) {
+    for (let i = 0; i < 15; i++) {
       game = correctWord(game);
     }
 

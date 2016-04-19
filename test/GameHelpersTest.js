@@ -10,7 +10,7 @@ const it = require('mocha').it;
 
 describe('GameHelpers', () => {
   it('getNextWordIndex should work', () => {
-    var game = defaultGame;
+    let game = defaultGame;
 
     // No words available
     expect(() => {
@@ -40,7 +40,7 @@ describe('GameHelpers', () => {
   });
 
   it('playerIsJoined should work', () => {
-    var game = defaultGame;
+    let game = defaultGame;
     const userId = 'userId';
     expect(GameHelpers.playerIsJoined(game, userId)).toEqual(false);
     game = game.set('userId', userId);
@@ -52,7 +52,7 @@ describe('GameHelpers', () => {
   });
 
   it('getTeams should work', () => {
-    var game = defaultGame
+    let game = defaultGame
       .set('id', 'testid');
     const player1 = Immutable.fromJS({id: 'player1', team: 0});
     const player2 = Immutable.fromJS({id: 'player2', team: 0});
@@ -73,7 +73,7 @@ describe('GameHelpers', () => {
   it('playerIsGuessing should work');
 
   it('getPlayerWords should work', () => {
-    var game = defaultGame;
+    let game = defaultGame;
     const userId = 'testId';
     const word1 = Immutable.fromJS({playerId: userId, word: 'word1'});
     const word2 = Immutable.fromJS({playerId: userId, word: 'word2'});
@@ -96,7 +96,7 @@ describe('GameHelpers', () => {
   it('playerWordsAreValid should work');
 
   it('getPlayerIndex should work', () => {
-    var game = defaultGame
+    let game = defaultGame
       .set('userId', 'p2')
       .update('players', (players) => {
         return players
@@ -111,7 +111,7 @@ describe('GameHelpers', () => {
   });
 
   it('readyToStart should work', () => {
-    var game = defaultGame.set('id', 'testgame');
+    let game = defaultGame.set('id', 'testgame');
     expect(GameHelpers.readyToStart(game)).toEqual(false);
     game = game.update('words', (words) => {
       return words

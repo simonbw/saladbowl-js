@@ -22,7 +22,12 @@ module.exports = (props) => {
       }
       <LastCorrectWord word={lastCorrectWord}/>
       <div>{wordsInBowl.size} words remaining</div>
-      <TeamList teams={teams} showScore={true}/>
+      <TeamList
+        dispatch={props.dispatch}
+        joinable={false}
+        showScore={true}
+        teams={teams}
+      />
     </div>
   );
 };

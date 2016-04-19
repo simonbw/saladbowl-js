@@ -4,14 +4,14 @@ const React = require('react');
 
 const GameHelpers = require('../../shared/GameHelpers');
 const Timer = require('./Timer');
-const UpdateGame = require('../UpdateGame');
+const GameActions = require('../actions/GameActions');
 
 module.exports = (props) => {
   const state = props.state;
   if (!state.get('game').get('roundStarted')) {
-    return (<ReadyPage state={state}/>);
+    return (<ReadyPage state={state} dispatch={props.dispatch}/>);
   } else {
-    return (<PlayingPage state={state}/>);
+    return (<PlayingPage state={state} dispatch={props.dispatch}/>);
   }
 };
 
@@ -29,8 +29,9 @@ const phases = [
  * @constructor
  */
 function ReadyPage(props) {
+  const dispatch = props.dispatch;
   const game = props.state.get('game');
-  var phaseName;
+  let phaseName;
   try {
     phaseName = phases[game.get('phaseIndex')][0];
   } catch (e) {
@@ -42,7 +43,7 @@ function ReadyPage(props) {
     <div>
       <h1>{phaseName}</h1>
       <div className="phase-instructions">{instructions}</div>
-      <button onClick={UpdateGame.startRound}>Ready</button>
+      <button onClick={() => dispatch(GameActions.startRound())}>Ready</button>
     </div>
   );
 }
@@ -54,6 +55,7 @@ function ReadyPage(props) {
  * @constructor
  */
 function PlayingPage(props) {
+  const dispatch = props.dispatch;
   const game = props.state.get('game');
   const word = game.get('words').get(game.get('wordIndex'));
   const phaseName = phases[game.get('phaseIndex')][0];
@@ -62,8 +64,8 @@ function PlayingPage(props) {
       <h1>{phaseName}</h1>
       <Timer endTime={game.get('roundStartedAt') + game.get('secondsPerRound') * 1000}/>
       <div className="current-word word">{word.get('word')}</div>
-      <button className="correct-button" onClick={UpdateGame.correctWord}>Correct</button>
-      <button className="skip-button" onClick={UpdateGame.skipWord}>Skip</button>
+      <button className="correct-button" onClick={() => dispatch(GameActions.correctWord())}>Correct</button>
+      <button className="skip-button" onClick={() => dispatch(GameActions.skipWord())}>Skip</button>
     </div>
   );
 }

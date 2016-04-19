@@ -3,7 +3,7 @@
 const React = require('react');
 
 const ActionTypes = require('../../shared/ActionTypes');
-const UpdateGame = require('../UpdateGame.js');
+const GameActions = require('../actions/GameActions');
 const Validation = require('../../shared/Validation.js');
 
 /**
@@ -27,20 +27,21 @@ module.exports = (props) => {
 
   function getWords() {
     const words = [];
-    for (var i = 0; i < game.get('wordsPerPlayer'); i++) {
+    for (let i = 0; i < game.get('wordsPerPlayer'); i++) {
       words.push(ui.get('word' + i));
     }
     return words;
   }
 
   function addWords(e) {
-    // TODO: Disable form
+    // TODO: Disable form / show progress
     e.preventDefault();
-    UpdateGame.saveWords(getWords().map((word, i) => ({word: word, playerWordIndex: i})));
+    var words = getWords().map((word, i) => ({word: word, playerWordIndex: i}));
+    dispatch(GameActions.saveWords(words));
   }
 
   const inputs = [];
-  for (var i = 0; i < game.get('wordsPerPlayer'); i++) {
+  for (let i = 0; i < game.get('wordsPerPlayer'); i++) {
     inputs.push(<input key={i} autoFocus={i == 0} onChange={onWordChange.bind(this, i)} type="text"/>);
   }
 

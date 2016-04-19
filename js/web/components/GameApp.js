@@ -12,7 +12,7 @@ const GuessingPlayerPage = require('./GuessingPlayerPage');
 const JoinGamePage = require('./JoinGamePage');
 const JoinTeamsPage = require('./JoinTeamsPage');
 const Random = require('../../shared/Random');
-const UpdateGame = require('../UpdateGame');
+const GameActions = require('../actions/GameActions');
 const WaitingPlayerPage = require('./WaitingPlayerPage');
 
 /**
@@ -32,7 +32,7 @@ function GameComponent(props) {
   }
 
   // Choose which page to show.
-  var page;
+  let page;
   if (!GameHelpers.playerIsJoined(game, userId)) {
     if (game.get('started')) {
       page = (<div>You cannot join a game once it has started.</div>)

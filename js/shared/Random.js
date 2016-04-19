@@ -62,7 +62,7 @@ Random.normal = (mean, deviation) => {
  * @returns {*}
  */
 Random.choose = () => {
-  var options;
+  let options;
   options = 1 <= arguments.length ? [].slice.call(arguments, 0) : [];
   if (options.length === 1) {
     options = options[0];
@@ -86,7 +86,7 @@ Random.take = (options) => {
  * @returns {*}
  */
 Random.shuffle = (a) => {
-  var i, j, temp;
+  let i, j, temp;
   i = a.length;
   while (--i > 0) {
     j = Random.integer(0, i + 1);
@@ -105,7 +105,7 @@ Random.shuffle = (a) => {
  * @returns {*}
  */
 Random.seededShuffle = (a, seed) => {
-  var i, j, temp;
+  let i, j, temp;
   i = a.length;
   while (--i > 0) {
     seed = (seed * 1103515245 + 12345)| 0;

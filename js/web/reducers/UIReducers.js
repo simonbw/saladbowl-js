@@ -2,7 +2,7 @@
 
 const Immutable = require('immutable');
 
-const ActionTypes = require('../ActionTypes');
+const ActionTypes = require('../../shared/ActionTypes');
 
 const DEFAULT_STATE = Immutable.fromJS({});
 

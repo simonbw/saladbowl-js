@@ -2,27 +2,34 @@
 
 const React = require('react');
 
-const UpdateGame = require('../UpdateGame');
+const GameActions = require('../actions/GameActions');
 
 
 module.exports = (props) => {
   return (
     <div className="team-list">
       {props.teams.map((team, i) => {
-        return (<Team team={team} joinable={props.joinable} showScore={props.showScore} key={i}/>);
+        return (<Team
+          dispatch={props.dispatch}
+          joinable={props.joinable}
+          key={i}
+          showScore={props.showScore}
+          team={team}
+        />);
       }).toArray()}
     </div>
   );
 };
 
 function Team(props) {
+  const dispatch = props.dispatch;
   const team = props.team;
 
-  var onClick;
-  var className = "team";
+  let onClick;
+  let className = "team";
   if (props.joinable) {
     onClick = () => {
-      UpdateGame.joinTeam(team.get('index'));
+      dispatch(GameActions.joinTeam(team.get('index')));
     };
     className += ' joinable';
   }
@@ -30,7 +37,7 @@ function Team(props) {
     className += ' current';
   }
 
-  var header;
+  let header;
   if (props.showScore) {
     header = (<h2>{team.get('name')} {team.get('points').size}</h2>);
   } else {
@@ -51,7 +58,7 @@ function Team(props) {
 
 function Player(props) {
   const player = props.player;
-  var className = '';
+  let className = '';
   if (player.get('current')) {
     className += ' current';
   }

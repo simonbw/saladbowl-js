@@ -3,9 +3,9 @@
 const DEFAULT_STATE = require('../defaultGame');
 
 const reducers = Object.assign({},
-  require('./game/PreGameReducers'),
-  require('./game/MidGameReducers'),
-  require('./game/MiscGameReducers'));
+  require('./PreGameReducers'),
+  require('./MidGameReducers'),
+  require('./MiscGameReducers'));
 
 
 /**

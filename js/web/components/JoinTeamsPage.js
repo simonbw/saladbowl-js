@@ -5,11 +5,12 @@ const Immutable = require('immutable');
 
 const GameHelpers = require('../../shared/GameHelpers');
 const TeamList = require('./TeamList');
-const UpdateGame = require('../UpdateGame');
+const GameActions = require('../actions/GameActions');
 
 module.exports = (props) => {
+  const dispatch = props.dispatch;
   const game = props.state.get('game');
-  var teams = GameHelpers.getTeams(game)
+  let teams = GameHelpers.getTeams(game)
     .map((team) => {
       return team;
     });
@@ -19,17 +20,18 @@ module.exports = (props) => {
     players: []
   }));
 
-  function startGame() {
-    UpdateGame.startGame();
-  }
-
   return (
     <div>
       <h1>Join Teams</h1>
       <h2 className="game-id">{game.get('id')}</h2>
-      <TeamList teams={teams} joinable={true} score={false}/>
+      <TeamList
+        dispatch={props.dispatch}
+        joinable={true}
+        showScore={false}
+        teams={teams}
+      />
       {GameHelpers.readyToStart(game) &&
-      <button onClick={startGame}>Start Game</button>
+      <button onClick={() => dispatch(GameActions.startGame())}>Start Game</button>
       }
     </div>
   );

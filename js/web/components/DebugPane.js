@@ -2,20 +2,13 @@
 
 const React = require('react');
 
-const GameHelpers = require('../../shared/GameHelpers');
 const ActionTypes = require('../../shared/ActionTypes.js');
+const GameHelpers = require('../../shared/GameHelpers');
+const UIActions = require('../actions/UIActions');
 
 module.exports = (props) => {
   const state = props.state;
   const dispatch = props.dispatch;
-
-  function showDebug() {
-    dispatch({
-      type: ActionTypes.UI.FIELD_CHANGED,
-      field: 'debug',
-      value: true
-    });
-  }
 
   if (state.get('ui').get('debug')) {
     return (
@@ -31,7 +24,7 @@ module.exports = (props) => {
       fontSize: '8px'
     };
     return (
-      <div style={style} onClick={showDebug}>
+      <div style={style} onClick={() => dispatch(UIActions.updateField('debug', true))}>
         debug
       </div>
     )

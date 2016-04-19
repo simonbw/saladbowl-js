@@ -6,32 +6,20 @@ const MathUtil = require('../shared/MathUtil');
 
 const Timing = module.exports;
 
-const HEARTBEAT_INTERVAL = 1000;
-
 const offsets = [];
+const MAXIMUM_OFFSETS = 20;
 
-/**
- * The socket.io socket.
- */
-Timing.init = (socket) => {
-  var sentHeartbeatAt = Date.now();
-  socket.on(MessageTypes.HEARTBEAT, (data) => {
-    const now = Date.now();
-    const heartbeatDuration = now - sentHeartbeatAt;
+Timing.update = (sentHeartbeatAt, responseSendTime) => {
+  const now = Date.now();
+  const heartbeatDuration = now - sentHeartbeatAt;
 
-    // Assume the request takes the same time as the response
-    const serverTime = data.time + heartbeatDuration / 2;
-    offsets.push(now - serverTime);
+  // Assume the request takes the same time as the response
+  const serverTimeEstimate = responseSendTime + heartbeatDuration / 2;
 
-    setTimeout(() => {
-      sentHeartbeatAt = Date.now();
-      socket.emit(MessageTypes.HEARTBEAT);
-    }, HEARTBEAT_INTERVAL);
-  });
-  setTimeout(() => {
-    sentHeartbeatAt = Date.now();
-    socket.emit(MessageTypes.HEARTBEAT);
-  }, 100);
+  offsets.push(now - serverTimeEstimate);
+  if (offsets.length > MAXIMUM_OFFSETS) {
+    offsets.shift();
+  }
 };
 
 /**
@@ -39,7 +27,10 @@ Timing.init = (socket) => {
  * @returns {number}
  */
 Timing.getServerTime = () => {
-  const total = MathUtil.sum(offsets);
-  const averageOffset = total / offsets.length;
-  return Date.now() + averageOffset;
+  return Date.now() + Timing.getOffset();
 };
+
+/**
+ * @returns {number}
+ */
+Timing.getOffset = () => MathUtil.median(offsets) || 0;
