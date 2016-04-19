@@ -1,11 +1,13 @@
 @import "util";
 
+$spacing: 10px;
+
 input {
   border-radius: 5px;
   border: 1px solid #AAA;
   display: block;
   font-size: 14px;
-  margin: 20px auto;
+  margin: $spacing auto;
   max-width: 400px;
   padding: 10px;
   text-align: center;
@@ -13,7 +15,18 @@ input {
 
   &:focus {
     border-color: #666;
+    background: #FAFAFA;
     outline: none;
+  }
+}
+
+label {
+  color: #AAA;
+  display: block;
+  margin: $spacing auto
+  
+  input:first-of-type {
+    margin-top: 5px;
   }
 }
 
@@ -27,7 +40,7 @@ button, .button {
   display: block;
   font-size: 14px;
   font-weight: 600;
-  margin: 10px auto;
+  margin: $spacing auto;
   max-width: 400px;
   padding: 10px 20px;
   text-align: center;
@@ -38,6 +51,11 @@ button, .button {
   &:hover {
     border-color: #000;
     color: #000;
+  }
+
+  &:focus {
+    background: #FAFAFA;
+    outline: none;
   }
 
   &.disabled, &:disabled, &.disabled:hover, &:disabled:hover {

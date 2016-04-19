@@ -13,6 +13,17 @@ router.get('/', function (req, res, next) {
 });
 
 /**
+ * Display the join game page.
+ */
+router.get('/join-game', function (req, res, next) {
+  if (req.query['game-id']) {
+    res.redirect('/' + req.query['game-id']);
+  } else {
+    res.render('join-game');
+  }
+});
+
+/**
  * Display the new game page.
  */
 router.get('/new-game', function (req, res, next) {

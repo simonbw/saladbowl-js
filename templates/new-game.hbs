@@ -1,7 +1,16 @@
 <form method="POST">
+  <h1>Create a New Game</h1>
+  <hr>
   <label>
     Words Per Player
-    <input type="number" name="wordsPerPlayer" value="5"/>
+    <input
+      max="100"
+      min="1"
+      name="wordsPerPlayer"
+      type="number"
+      value="5"
+    />
   </label>
   <button type="submit" autofocus>Go</button>
+  <a class="button" href="/">Back</a>
 </form>
