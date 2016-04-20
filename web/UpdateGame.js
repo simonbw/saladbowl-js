@@ -29,17 +29,15 @@ UpdateGame.joinGame = function (name) {
 }.bind(UpdateGame);
 
 /**
- * Send a save word action.
- * @param word
- * @param playerWordIndex
+ * Send a bunch of save word actions.
+ * @param words
  */
-UpdateGame.saveWord = function (word, playerWordIndex) {
+UpdateGame.saveWords = function (words) {
   socket.emit(MessageTypes.GAME, {
-    type: GameActions.SERVER.SAVE_WORD,
-    word: word,
-    playerWordIndex: playerWordIndex
-  });
-}.bind(UpdateGame);
+    type: GameActions.SERVER.SAVE_WORDS,
+    words: words
+  })
+};
 
 /**
  * Join a team.

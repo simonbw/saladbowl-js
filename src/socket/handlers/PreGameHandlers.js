@@ -4,12 +4,11 @@ var HandlerHelpers = require('./HandlerHelpers');
 /**
  *
  */
-exports[ActionTypes.SERVER.SAVE_WORD] = function (data, socket) {
+exports[ActionTypes.SERVER.SAVE_WORDS] = function (data, socket) {
   HandlerHelpers.dispatch(socket, {
-    type: ActionTypes.CLIENT.WORD_UPDATED,
+    type: ActionTypes.CLIENT.WORDS_UPDATED,
     playerId: socket.user.id,
-    playerWordIndex: data.playerWordIndex,
-    word: data.word
+    words: data.words
   });
 };
 

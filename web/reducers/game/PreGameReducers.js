@@ -7,7 +7,7 @@ var GameHelpers = require('../../GameHelpers');
  * Called when a new player has joined.
  * @param game {Immutable.Map}
  * @param action
- * @returns {*}
+ * @returns {Immutable.Map}
  */
 exports[ActionTypes.CLIENT.PLAYER_JOINED] = function (game, action) {
   // TODO: Make sure player hasn't already joined
@@ -37,26 +37,30 @@ exports[ActionTypes.CLIENT.PLAYER_JOINED] = function (game, action) {
  * @param action
  * @returns {Immutable.Map}
  */
-exports[ActionTypes.CLIENT.WORD_UPDATED] = function (game, action) {
-  var word = Immutable.fromJS({
-    word: action.word,
-    inBowl: true
-  });
-  var playerIndex = GameHelpers.getPlayerIndex(game, action.playerId);
-  var wordIndex = playerIndex * game.get('wordsPerPlayer') + action.playerWordIndex;
-  var oldWord = game.get('words').get(wordIndex);
-  if (!oldWord) {
-    throw new Error('Cannot update word that doesn\'t exist. wordIndex:' + wordIndex + ' playerIndex:' + playerIndex + ' playerWordIndex:' + action.playerWordIndex);
-  }
-  return game.setIn(['words', wordIndex], oldWord.merge(word));
+exports[ActionTypes.CLIENT.WORDS_UPDATED] = function (game, action) {
+  const playerIndex = GameHelpers.getPlayerIndex(game, action.playerId);
+
+  return game.set('words', game.get('words').withMutations((words) => {
+    action.words.forEach((wordData) => {
+      const wordIndex = playerIndex * game.get('wordsPerPlayer') + wordData.playerWordIndex;
+      const oldWord = words.get(wordIndex);
+      if (!oldWord) {
+        throw new Error('Cannot update word that doesn\'t exist. wordIndex:' + wordIndex + ' playerIndex:' + playerIndex + ' playerWordIndex:' + wordData.playerWordIndex);
+      }
+      words.set(wordIndex, oldWord.merge(Immutable.fromJS({
+        word: wordData.word,
+        inBowl: true
+      })));
+    });
+  }));
 };
 
 
 /**
  * Called when the game has started.
- * @param game
+ * @param game {Immutable.Map}
  * @param action
- * @returns {*}
+ * @returns {Immutable.Map}
  */
 exports[ActionTypes.CLIENT.GAME_STARTED] = function (game, action) {
   return game.set('started', true);
@@ -64,9 +68,9 @@ exports[ActionTypes.CLIENT.GAME_STARTED] = function (game, action) {
 
 /**
  * Called when a player joins a team.
- * @param game
+ * @param game {Immutable.Map}
  * @param action
- * @returns {*}
+ * @returns {Immutable.Map}
  */
 exports[ActionTypes.CLIENT.TEAM_JOINED] = function (game, action) {
   var playerIndex = GameHelpers.getPlayerIndex(game, action.playerId);

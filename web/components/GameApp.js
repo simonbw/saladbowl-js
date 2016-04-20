@@ -55,6 +55,9 @@ function GameComponent(props) {
   if (ui.get('connected') === false) {
     errors.push(<div key={0} className="error">Disconnected</div>);
   }
+  if (ui.get('synced') == false) {
+    errors.push(<div key={1} className="error">Out Of Sync</div>);
+  }
 
   return (
     <div>

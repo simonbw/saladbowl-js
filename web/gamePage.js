@@ -72,6 +72,7 @@ window.onload = function () {
           field: 'synced',
           value: false
         });
+        UpdateGame.outOfSync();
       } else {
         store.dispatch({
           type: ActionTypes.UI.FIELD_CHANGED,

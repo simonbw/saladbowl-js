@@ -24,22 +24,18 @@ module.exports = function (props) {
     });
   };
 
-  var getWords = function () {
-    return new Immutable.List().withMutations(function (words) {
-      for (var i = 0; i < game.get('wordsPerPlayer'); i++) {
-        words.push(ui.get('word' + i));
-      }
-    });
+  var getWords = () => {
+    const words = [];
+    for (var i = 0; i < game.get('wordsPerPlayer'); i++) {
+      words.push(ui.get('word' + i));
+    }
+    return words;
   };
 
   var addWords = function (e) {
     // TODO: Disable form
     e.preventDefault();
-    var words = getWords();
-    console.log('Adding Words', words.toJS());
-    words.forEach(function (word, i) {
-      UpdateGame.saveWord(word, i);
-    });
+    UpdateGame.saveWords(getWords().map((word, i) => ({word: word, playerWordIndex: i})));
   };
 
   var inputs = [];
