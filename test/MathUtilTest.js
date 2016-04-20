@@ -1,11 +1,15 @@
-var expect = require('expect');
-var MathUtil = require('../shared/MathUtil');
+'use strict';
 
-describe('MathUtil', function () {
+const describe = require('mocha').describe;
+const it = require('mocha').it;
+const expect = require('expect');
+const MathUtil = require('../js/shared/MathUtil');
 
-  describe('mod', function () {
+describe('MathUtil', () => {
 
-    it('should work', function () {
+  describe('mod', () => {
+
+    it('should work', () => {
       expect(MathUtil.mod(10, 12)).toEqual(10);
       expect(MathUtil.mod(4, 2)).toEqual(0);
       expect(MathUtil.mod(10, 3)).toEqual(1);
