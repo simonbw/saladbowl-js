@@ -59,7 +59,8 @@ router.get('/:gameId', (req, res, next) => {
       res.render('game', {
         initialGame: initialGame,
         userId: req.user.id,
-        scripts: ['/js/gamePage.js']
+        scripts: ['/js/gamePage.js'],
+        debugMode: req.app.get('env') === 'development'
       });
     })
     .catch((error) => {

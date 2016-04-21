@@ -19,12 +19,12 @@ const routes = require('./Routes');
 const app = express();
 
 // Paths
-const projectPath = path.join(__dirname, '..');
+const projectPath = path.join(__dirname, '..', '..');
 const staticAssetsPath = path.join(projectPath, 'public');
 const faviconPath = path.join(staticAssetsPath, 'images', 'favicon.png');
 const scssDestPath = path.join(staticAssetsPath, 'css');
 const scssSourcePath = path.join(projectPath, 'styles');
-const webSourcePath = path.join(projectPath, 'web');
+const webSourcePath = path.join(projectPath, 'js', 'web');
 const templatesPath = path.join(projectPath, 'templates');
 
 // Urls

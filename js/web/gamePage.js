@@ -24,8 +24,8 @@ window.onload = () => {
     ui: {
       userName: localStorage.getItem('userName')
     },
-    userId: window.initialUserId,
-    game: window.initialGame
+    userId: window.INITIAL_USER_ID,
+    game: window.INITIAL_GAME
   });
   const store = AppStore.get(initialState, true);
   render(store);

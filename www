@@ -1,6 +1,13 @@
 #!/usr/bin/env node
 'use strict';
 
+/**
+ * Run this file to start the server.
+ * Defaults to port 3000.
+ * Can be changed with PORT env variable.
+ */
+
+
 const app = require('./js/server/app');
 const debug = require('debug')('saladbowl:server');
 const http = require('http');
