@@ -67,7 +67,9 @@ function GameComponent(props) {
       <div className="errors">{errors}</div>
       }
       {page}
+      {window.DEBUG_MODE &&
       <DebugPane state={state} dispatch={dispatch}/>
+      }
     </div>
   );
 }

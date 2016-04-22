@@ -60,7 +60,7 @@ router.get('/:gameId', (req, res, next) => {
         initialGame: initialGame,
         userId: req.user.id,
         scripts: ['/js/gamePage.js'],
-        debugMode: req.app.get('env') === 'development'
+        debugMode: (req.app.get('env') === 'development'),
       });
     })
     .catch((error) => {

@@ -18,6 +18,8 @@ const socketIo = require('socket.io');
 const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 console.log('started server on port', port);
+console.log('app env', app.get('env'));
+
 
 // Create HTTP server.
 const server = http.createServer(app);
