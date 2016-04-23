@@ -1,22 +1,26 @@
-var expect = require('expect');
-var Immutable = require('immutable');
-var reducer = require('../../web/reducers/GameReducers');
-var ActionTypes = require('../../shared/ActionTypes');
+'use strict';
 
-describe('GameReducers', function () {
+const ActionTypes = require('../../js/shared/ActionTypes');
+const describe = require('mocha').describe;
+const expect = require('expect');
+const Immutable = require('immutable');
+const it = require('mocha').it;
+const reducer = require('../../js/shared/reducers/GameReducers');
 
-  it('should error on incorrect actions', function () {
-    var state = new Immutable.Map();
+describe('GameReducers', () => {
+
+  it('should error on incorrect actions', () => {
+    const state = Immutable.Map();
     expect(reducer(state, null)).toEqual(state, 'null should return default state');
     expect(reducer(state, {})).toEqual(state, 'empty action should return default state');
     expect(reducer(state, {type: 'NOT_A_REAL_TYPE'})).toEqual(state, 'unknown type should return default state');
   });
 
-  it('should have initial state', function () {
+  it('should have initial state', () => {
     expect(reducer(null, null)).toExist();
   });
 
-  it('should add players and their words', function () {
+  it('should add players and their words', () => {
     var game = reducer(null, null)
       .set('wordsPerPlayer', 4);
     game = addPlayer(game, 1, 'p1');
@@ -28,7 +32,7 @@ describe('GameReducers', function () {
     expect(game.get('words').size).toEqual(12, 'should add all player words'); // 3 players * 4 words / Player
   });
 
-  it('should update words', function () {
+  it('should update words', () => {
     var game = reducer(null, null);
     game = addPlayer(game, 1, 'p1');
     game = addPlayer(game, 2, 'p2');
@@ -36,7 +40,7 @@ describe('GameReducers', function () {
     expect(game.get('words').get(2).get('word')).toEqual('word2');
   });
 
-  it('should play through a full game', function () {
+  it('should play through a full game', () => {
     var game = reducer(null, null)
       .set('wordsPerPlayer', 4)
       .set('id', 'testGameId');
@@ -47,7 +51,7 @@ describe('GameReducers', function () {
     expect(game.get('words').size).toEqual(16);
     for (var p = 0; p < 4; p++) {
       for (var w = 0; w < 4; w++) {
-        var word = 'p' + p + 'w' + w;
+        const word = 'p' + p + 'w' + w;
         game = updateWord(game, word, p, w);
       }
     }
@@ -62,7 +66,7 @@ describe('GameReducers', function () {
 
     game = startRound(game);
 
-    expect(game.get('words').every(function (word) {
+    expect(game.get('words').every((word) => {
       return word.get('inBowl');
     })).toEqual(true, 'All words should be in bowl ' + JSON.stringify(game, null, 2));
 
@@ -97,10 +101,17 @@ function joinTeam(game, playerId, team) {
 
 function updateWord(game, word, playerId, playerWordIndex) {
   return reducer(game, {
-    type: ActionTypes.CLIENT.WORD_UPDATED,
+    type: ActionTypes.CLIENT.WORDS_UPDATED,
     playerId: playerId,
-    word: word,
-    playerWordIndex: playerWordIndex
+    words: [{word: word, playerWordIndex: playerWordIndex}],
+  });
+}
+
+function updateWords(game, words, playerId) {
+  return reducer(game, {
+    type: ActionTypes.CLIENT.WORDS_UPDATED,
+    playerId: playerId,
+    words: words,
   });
 }
 

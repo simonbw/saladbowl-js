@@ -1,31 +1,34 @@
-var expect = require('expect');
-var Immutable = require('immutable');
+'use strict';
 
-var defaultGame = require('../shared/defaultGame');
-var GameHelpers = require('../web/GameHelpers');
+const defaultGame = require('../js/shared/defaultGame');
+const describe = require('mocha').describe;
+const expect = require('expect');
+const GameHelpers = require('../js/shared/GameHelpers');
+const Immutable = require('immutable');
+const it = require('mocha').it;
 
 
-describe('GameHelpers', function () {
-  it('getNextWordIndex should work', function () {
+describe('GameHelpers', () => {
+  it('getNextWordIndex should work', () => {
     var game = defaultGame;
 
     // No words available
-    expect(function () {
+    expect(() => {
       GameHelpers.getNextWordIndex(game);
     }).toThrow(Error);
 
-    game = game.update('words', function (words) {
+    game = game.update('words', (words) => {
       return words
         .push(Immutable.fromJS({word: 'word0', inBowl: false}))
         .push(Immutable.fromJS({word: 'word1', inBowl: false}));
     });
 
     // Still no words in bowl
-    expect(function () {
+    expect(() => {
       GameHelpers.getNextWordIndex(game);
     }).toThrow(Error); // no words available
 
-    game = game.update('words', function (words) {
+    game = game.update('words', (words) => {
       return words
         .push(Immutable.fromJS({word: 'word2', inBowl: true}))
         .push(Immutable.fromJS({word: 'word3', inBowl: false}))
@@ -36,9 +39,9 @@ describe('GameHelpers', function () {
     expect(GameHelpers.getNextWordIndex(game)).toEqual(2);
   });
 
-  it('playerIsJoined should work', function () {
+  it('playerIsJoined should work', () => {
     var game = defaultGame;
-    var userId = 'userId';
+    const userId = 'userId';
     expect(GameHelpers.playerIsJoined(game, userId)).toEqual(false);
     game = game.set('userId', userId);
     expect(GameHelpers.playerIsJoined(game, userId)).toEqual(false);
@@ -48,15 +51,15 @@ describe('GameHelpers', function () {
     expect(GameHelpers.playerIsJoined(game, userId)).toEqual(true);
   });
 
-  it('getTeams should work', function () {
+  it('getTeams should work', () => {
     var game = defaultGame
       .set('id', 'testid');
-    var player1 = Immutable.fromJS({id: 'player1', team: 0});
-    var player2 = Immutable.fromJS({id: 'player2', team: 0});
-    var player3 = Immutable.fromJS({id: 'player3', team: 0});
-    var player4 = Immutable.fromJS({id: 'player4', team: 0});
-    var player5 = Immutable.fromJS({id: 'player5', team: 1});
-    var player6 = Immutable.fromJS({id: 'player6', team: 1});
+    const player1 = Immutable.fromJS({id: 'player1', team: 0});
+    const player2 = Immutable.fromJS({id: 'player2', team: 0});
+    const player3 = Immutable.fromJS({id: 'player3', team: 0});
+    const player4 = Immutable.fromJS({id: 'player4', team: 0});
+    const player5 = Immutable.fromJS({id: 'player5', team: 1});
+    const player6 = Immutable.fromJS({id: 'player6', team: 1});
     game = game.set('players', game.get('players').push(player1, player2, player3, player4, player5, player6));
     expect(GameHelpers.getTeams(game).size).toEqual(2, 'There should be 2 teams');
     expect(GameHelpers.getTeams(game).get(0).get('players').size).toEqual(4, 'Team one should have 4 players');
@@ -69,12 +72,12 @@ describe('GameHelpers', function () {
 
   it('playerIsGuessing should work');
 
-  it('getPlayerWords should work', function () {
+  it('getPlayerWords should work', () => {
     var game = defaultGame;
-    var userId = 'testId';
-    var word1 = Immutable.fromJS({playerId: userId, word: 'word1'});
-    var word2 = Immutable.fromJS({playerId: userId, word: 'word2'});
-    var word3 = Immutable.fromJS({playerId: 'someOtherPlayer', word: 'word3'});
+    const userId = 'testId';
+    const word1 = Immutable.fromJS({playerId: userId, word: 'word1'});
+    const word2 = Immutable.fromJS({playerId: userId, word: 'word2'});
+    const word3 = Immutable.fromJS({playerId: 'someOtherPlayer', word: 'word3'});
 
     game = game.set('userId', userId);
     expect(GameHelpers.getPlayerWords(game, userId).size).toEqual(0);
@@ -92,10 +95,10 @@ describe('GameHelpers', function () {
 
   it('playerWordsAreValid should work');
 
-  it('getPlayerIndex should work', function () {
+  it('getPlayerIndex should work', () => {
     var game = defaultGame
       .set('userId', 'p2')
-      .update('players', function (players) {
+      .update('players', (players) => {
         return players
           .push(Immutable.fromJS({id: 'p1'}))
           .push(Immutable.fromJS({id: 'p2'}))
@@ -107,10 +110,10 @@ describe('GameHelpers', function () {
     expect(GameHelpers.getPlayerIndex(game, 'p3')).toEqual(2);
   });
 
-  it('readyToStart should work', function () {
+  it('readyToStart should work', () => {
     var game = defaultGame.set('id', 'testgame');
     expect(GameHelpers.readyToStart(game)).toEqual(false);
-    game = game.update('words', function (words) {
+    game = game.update('words', (words) => {
       return words
         .push(Immutable.fromJS({word: 'word1', inBowl: true}))
         .push(Immutable.fromJS({word: 'word2', inBowl: true}))
@@ -118,7 +121,7 @@ describe('GameHelpers', function () {
         .push(Immutable.fromJS({word: 'word4', inBowl: true}));
     });
     expect(GameHelpers.readyToStart(game)).toEqual(false);
-    game = game.update('players', function (players) {
+    game = game.update('players', (players) => {
       return players
         .push(Immutable.fromJS({id: 'p1', team: 0}))
         .push(Immutable.fromJS({id: 'p2', team: 0}))
@@ -128,11 +131,11 @@ describe('GameHelpers', function () {
     expect(GameHelpers.readyToStart(game)).toEqual(true);
   });
 
-  it('getMostSkippedWord should work', function () {
-    var word1 = Immutable.fromJS({word: 'word1', skips: 3});
-    var word2 = Immutable.fromJS({word: 'word2', skips: 5});
-    var word3 = Immutable.fromJS({word: 'word3', skips: 1});
-    var game = defaultGame.update('words', function (words) {
+  it('getMostSkippedWord should work', () => {
+    const word1 = Immutable.fromJS({word: 'word1', skips: 3});
+    const word2 = Immutable.fromJS({word: 'word2', skips: 5});
+    const word3 = Immutable.fromJS({word: 'word3', skips: 1});
+    const game = defaultGame.update('words', (words) => {
       return words.push(word1, word2, word3)
     });
 
