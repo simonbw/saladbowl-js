@@ -3,17 +3,18 @@
 @import "fonts";
 @import "form";
 @import "game";
-@import "index";
-@import "new-game";
+@import "game-over";
 @import "team-list";
 @import "util";
+@import "variables";
 
 * {
   box-sizing: border-box;
 }
 
 body {
-  font: 14px "Raleway", Helvetica, Arial, sans-serif;
+  font-family: $font-main;
+  font-size: 14px;
   margin: 0;
   padding: 0;
   text-align: center;
@@ -48,13 +49,18 @@ h2 {
 }
 
 hr {
-  border-top: 1px solid #CCC;
+  border-top: 1px solid $gray2;
   border-bottom: none;
   margin: 20px 0;
 }
 
 a {
-  color: #666;
+  color: $gray1;
+
+  &:focus, &:active {
+    color: $black;
+    outline: none;
+  }
 }
 
 footer a {

@@ -1,6 +1,7 @@
+@import "variables";
 
-#timer {
-  font-family: Courier, 'Courier New', monospace;
+.timer {
+  font-family: $font-monospace;
   font-size: 2em;
   margin: 10px;
 }
@@ -10,7 +11,7 @@
 }
 
 .game-id {
-  font-family: Courier, 'Courier New', monospace;
+  font-family: $font-monospace;
   font-size: 1.1em;
 }
 
@@ -38,55 +39,28 @@
   font-size: 2em;
 
   &:not(.disabled):hover {
-    border-color: #000;
+    border-color: $black;
   }
 }
 
 .correct-button {
-  color: #0F0;
+  color: $green;
   &.disabled {
-    color: #696;
+    color: $dark-green;
   }
   &:not(.disabled):hover {
-    background: #EFE;
-    color: #0F0;
+    background: $light-green;
+    color: $green;
   }
 }
 
 .skip-button {
-  color: #F00;
+  color: $red;
   &.disabled {
-    color: #966;
+    color: $dark-red;
   }
   &:not(.disabled):hover {
-    background: #FEE;
-    color: #F00;
+    background: $light-red;
+    color: $red;
   }
-}
-
-.game-over-stats {
-  line-height: 1.4;
-  .category {
-    display: flex;
-    flex-flow: row nowrap;
-  }
-  .category-title,
-  .category-content {
-    flex-basis: 0;
-    padding: 10px 5px;
-  }
-
-  .category-title {
-    flex-grow: 1;
-    text-align: right;
-    font-weight: 600;
-  }
-  .category-content {
-    flex-grow: 2;
-    text-align: left;
-  }
-}
-
-.delete-button {
-  margin-top: 50px;
 }

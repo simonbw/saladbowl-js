@@ -1,27 +1,30 @@
 @import "util";
+@import "variables";
 
 $spacing: 10px;
+$padding: 10px 20px;
+$max-width: 400px;
 
 input {
   border-radius: 5px;
-  border: 1px solid #AAA;
+  border: 1px solid $gray2;
   display: block;
   font-size: 14px;
   margin: $spacing auto;
-  max-width: 400px;
-  padding: 10px;
+  max-width: $max-width;
+  padding: $padding;
   text-align: center;
   width: 100%;
 
   &:focus {
-    border-color: #666;
-    background: #FAFAFA;
+    border-color: $gray1;
+    background: $gray5;
     outline: none;
   }
 }
 
 label {
-  color: #AAA;
+  color: $gray2;
   display: block;
   margin: $spacing auto;
 
@@ -32,35 +35,40 @@ label {
 
 button, .button {
   @include user-select(none);
-  background: #FFF;
+  background: $white;
   border-radius: 5px;
-  border: 1px solid #AAA;
-  color: #666;
+  border: 1px solid $gray2;
+  color: $gray1;
   cursor: pointer;
   display: block;
   font-size: 14px;
   font-weight: 600;
   margin: $spacing auto;
-  max-width: 400px;
-  padding: 10px 20px;
+  max-width: $max-width;
+  padding: $padding;
   text-align: center;
   text-decoration: none;
   text-transform: uppercase;
   width: 100%;
 
   &:hover {
-    border-color: #000;
-    color: #000;
+    border-color: $black;
+    color: $black;
   }
 
   &:focus {
-    background: #FAFAFA;
+    border-color: $gray1;
     outline: none;
   }
 
+  &:active {
+    border-color: $gray1;
+    background: $gray5;
+  }
+
   &.disabled, &:disabled, &.disabled:hover, &:disabled:hover {
-    border-color: #CCC;
-    color: #AAA;
+    border-color: $gray4;
+    color: $gray4;
     cursor: default;
   }
 }

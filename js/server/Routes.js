@@ -1,8 +1,8 @@
 'use strict';
 
 const express = require('express');
-
 const GameStore = require('./GameStore');
+const MathUtil = require('../shared/MathUtil');
 
 const router = express.Router();
 module.exports = router;
@@ -36,7 +36,7 @@ router.get('/new-game', (req, res, next) => {
  * Create a new game.
  */
 router.post('/new-game', (req, res, next) => {
-  const wordsPerPlayer = parseInt(req.body.wordsPerPlayer);
+  const wordsPerPlayer = MathUtil.clamp(parseInt(req.body.wordsPerPlayer) || 5, 1, 100);
   GameStore.create(wordsPerPlayer).then((game) => {
     res.redirect('/' + game.get('id'));
   });

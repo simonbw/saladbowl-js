@@ -1,3 +1,5 @@
+@import "variables";
+
 .team-list {
   margin: 20px auto;
   max-width: 400px;
@@ -12,12 +14,12 @@
 
     &.joinable {
       cursor: pointer;
-      border-left-color: #EEE;
-      border-right-color: #EEE;
+      border-left-color: $gray4;
+      border-right-color: $gray4;
 
       &:hover {
-        border-left-color: #AAA;
-        border-right-color: #AAA;
+        border-left-color: $gray2;
+        border-right-color: $gray2;
       }
     }
 
@@ -28,8 +30,8 @@
     }
 
     h2 {
-      border-bottom: 1px solid #EEE;
-      color: #666;
+      border-bottom: 1px solid $gray4;
+      color: $gray1;
       display: flex;
       flex-flow: row wrap;
       font-size: 1.3em;
@@ -49,7 +51,7 @@
       }
 
       li:not(.ready) {
-        color: #CCC;
+        color: $gray2;
       }
     }
   }

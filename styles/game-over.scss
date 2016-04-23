@@ -1,0 +1,27 @@
+
+.game-over-stats {
+  line-height: 1.4;
+  .category {
+    display: flex;
+    flex-flow: row nowrap;
+  }
+  .category-title,
+  .category-content {
+    flex-basis: 0;
+    padding: 10px 5px;
+  }
+
+  .category-title {
+    flex-grow: 1;
+    text-align: right;
+    font-weight: 600;
+  }
+  .category-content {
+    flex-grow: 2;
+    text-align: left;
+  }
+}
+
+.delete-button {
+  margin-top: 50px;
+}

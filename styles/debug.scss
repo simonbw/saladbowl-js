@@ -1,19 +1,21 @@
+@import "variables";
 
 .debug-bar {
-  background: #FAFAFA;
+  background: $gray5;
   margin-top: 50px;
   padding: 20px;
   text-align: left;
 
   h4 {
-    font-family: monospace;
+    font-family: $font-monospace;
     font-weight: 600;
     margin: 0;
     padding: 0;
     text-align: left;
   }
+
   pre {
-    font-family: monospace;
+    font-family: $font-monospace;
     white-space: pre-wrap;
   }
 }

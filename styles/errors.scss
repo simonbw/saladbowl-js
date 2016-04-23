@@ -1,8 +1,10 @@
+@import "variables";
+
 .errors {
   .error {
-    border: 1px solid #F00;
-    background: #FDD;
-    color: #F00;
+    border: 1px solid $red;
+    background: $light-red;
+    color: $red;
     font-weight: bold;
     padding: 10px;
   }

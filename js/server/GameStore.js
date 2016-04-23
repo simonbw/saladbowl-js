@@ -13,6 +13,7 @@ const RequestError = require('./RequestError');
 const GameStore = module.exports;
 
 // Temporary in memory store for games
+// TODO: Better storage option
 const games = {};
 
 /**

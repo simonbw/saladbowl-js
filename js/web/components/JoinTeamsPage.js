@@ -27,8 +27,10 @@ module.exports = (props) => {
     <div>
       <h1>Join Teams</h1>
       <h2 className="game-id">{game.get('id')}</h2>
-      <TeamList teams={teams} joinable={true} score={false} />
-      <button disabled={!GameHelpers.readyToStart(game)} onClick={startGame}>Start Game</button>
+      <TeamList teams={teams} joinable={true} score={false}/>
+      {GameHelpers.readyToStart(game) &&
+      <button onClick={startGame}>Start Game</button>
+      }
     </div>
   );
 };
