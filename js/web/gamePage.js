@@ -88,7 +88,15 @@ window.onload = () => {
   UpdateGame.init(socket);
   Timing.init(socket);
 
-  window.SOCKET = socket;
+
+  // Make things globally available for debugging
+  if (window.DEBUG_MODE) {
+    window.DEBUG = {
+      socket: socket,
+      store: store,
+      GameHelpers: require('../shared/GameHelpers')
+    };
+  }
 };
 
 /**

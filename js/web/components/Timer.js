@@ -36,7 +36,7 @@ module.exports = React.createClass({
   render: function () {
     const seconds = this.state.remaining / 1000;
     return (
-      <div class="timer">
+      <div className="timer">
         {seconds.toFixed(1)}
       </div>
     );

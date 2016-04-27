@@ -135,11 +135,10 @@ describe('GameHelpers', () => {
     const word1 = Immutable.fromJS({word: 'word1', skips: 3});
     const word2 = Immutable.fromJS({word: 'word2', skips: 5});
     const word3 = Immutable.fromJS({word: 'word3', skips: 1});
-    const game = defaultGame.update('words', (words) => {
-      return words.push(word1, word2, word3)
-    });
+    const game = defaultGame.set('words', defaultGame.get('words').push(word1, word2, word3));
 
     expect(GameHelpers.getMostSkippedWord(game)).toEqual(word2);
+    expect(GameHelpers.getMostSkippedWord(game).get('word')).toEqual('word2');
   });
 
 });
