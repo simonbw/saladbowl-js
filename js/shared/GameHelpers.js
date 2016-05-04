@@ -81,7 +81,8 @@ GameHelpers.getTeams = (game) => {
   if (game.get('started') && !game.get('ended')) {
     const team = teams[game.get('teamIndex') % teams.length];
     team.current = true;
-    team.players[game.get('playerIndex') % teams.length] = team.players[game.get('playerIndex') % teams.length].set('current', true);
+    const playerIndex = game.get('playerIndex') % team.players.length;
+    team.players[playerIndex] = team.players[playerIndex].set('current', true);
   }
 
   return Immutable.fromJS(teams);
