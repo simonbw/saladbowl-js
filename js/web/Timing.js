@@ -27,7 +27,7 @@ Timing.update = (sentHeartbeatAt, responseSendTime) => {
  * @returns {number}
  */
 Timing.getServerTime = () => {
-  return Date.now() + Timing.getOffset();
+  return Date.now() - Timing.getOffset();
 };
 
 /**
