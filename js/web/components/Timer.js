@@ -34,10 +34,10 @@ module.exports = React.createClass({
   },
 
   render: function () {
-    const seconds = this.state.remaining / 1000;
+    const seconds = Math.max(this.state.remaining / 1000, 0);
     return (
       <div className="timer">
-        {seconds.toFixed(1)}
+        {seconds.toPrecision(1)}
       </div>
     );
   }
