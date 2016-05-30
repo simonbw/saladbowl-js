@@ -16,7 +16,8 @@ exports[ActionTypes.CLIENT.ROUND_STARTED] = (game, action) => {
   return game
     .set('lastCorrectWordIndex', null)
     .set('roundStarted', true)
-    .set('roundStartedAt', action.startTime);
+    .set('roundStartedAt', action.startTime)
+    .set('wordIndex', GameHelpers.getNextWordIndex(game));
 };
 
 

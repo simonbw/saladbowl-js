@@ -59,13 +59,20 @@ function PlayingPage(props) {
   const game = props.state.get('game');
   const word = game.get('words').get(game.get('wordIndex'));
   const phaseName = phases[game.get('phaseIndex')][0];
+  var canSkip = GameHelpers.canSkip(game);
   return (
     <div>
       <h1>{phaseName}</h1>
       <Timer endTime={game.get('roundStartedAt') + game.get('secondsPerRound') * 1000}/>
       <div className="current-word word">{word.get('word')}</div>
       <button className="correct-button" onClick={() => dispatch(GameActions.correctWord())}>Correct</button>
-      <button className="skip-button" onClick={() => dispatch(GameActions.skipWord())}>Skip</button>
+      <button
+        className="skip-button"
+        onClick={() => dispatch(GameActions.skipWord())}
+        disabled={!canSkip}
+      >
+        {canSkip ? "Skip" : "Last Word"}
+      </button>
     </div>
   );
 }

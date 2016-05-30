@@ -18,14 +18,12 @@ GameHelpers.getNextWordIndex = (game) => {
   const words = game.get('words');
   const h = game.hashCode();
   for (let i = 0; i < words.size; i++) {
-    // TODO: These should be const but node sucks
     const index = MathUtil.mod(i + h, words.size);
     const word = words.get(index);
     if (!word) {
       throw new Error('Word should exist:' + index + '(' + i + '+' + String(h) + '%' + words.size + ')');
     }
     const inBowl = word.get('inBowl');
-    const wordJson = word.toJS();
 
     if (word.get('inBowl')) {
       return index;
@@ -230,4 +228,13 @@ GameHelpers.readyToStart = (game) => {
 
   // Everything is good
   return true;
+};
+
+/**
+ * Return true if the player can skip.
+ * @param game
+ * @returns {boolean}
+ */
+GameHelpers.canSkip = (game) => {
+  return GameHelpers.getWordsInBowl(game).length > 1;
 };
