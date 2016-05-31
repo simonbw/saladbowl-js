@@ -15,21 +15,14 @@ const GameHelpers = module.exports;
  * @returns {number}
  */
 GameHelpers.getNextWordIndex = (game) => {
-  const words = game.get('words');
-  const h = game.hashCode();
-  for (let i = 0; i < words.size; i++) {
-    const index = MathUtil.mod(i + h, words.size);
-    const word = words.get(index);
-    if (!word) {
-      throw new Error('Word should exist:' + index + '(' + i + '+' + String(h) + '%' + words.size + ')');
-    }
-    const inBowl = word.get('inBowl');
-
-    if (word.get('inBowl')) {
-      return index;
-    }
+  const words = GameHelpers.getWordsInBowl(game);
+  if (words.size == 0) {
+    throw new Error('No next word available');
+  } else if (words.size == 1) {
+    return words.get(0).get('index');
+  } else {
+    return words.get(MathUtil.mod(game.hashCode(), words.size)).get('index');
   }
-  throw new Error('No next word available');
 };
 
 /**

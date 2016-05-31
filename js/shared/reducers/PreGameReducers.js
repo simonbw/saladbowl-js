@@ -15,18 +15,19 @@ exports[ActionTypes.CLIENT.PLAYER_JOINED] = (game, action) => {
   // TODO: Make sure player hasn't already joined
 
   let player = Immutable.fromJS(action.player);
-  let index = action.hasOwnProperty('playerIndex') ? action.playerIndex : game.get('players').size;
+  let playerIndex = action.hasOwnProperty('playerIndex') ? action.playerIndex : game.get('players').size;
 
   return game
-    .set('players', game.get('players').set(index, player))
+    .set('players', game.get('players').set(playerIndex, player))
     .set('words', game.get('words').withMutations((words) => {
       let wordsPerPlayer = game.get('wordsPerPlayer');
-      for (let i = index * wordsPerPlayer; i < (index + 1) * wordsPerPlayer; i++) {
-        words.set(i, Immutable.fromJS({
+      for (let wordIndex = playerIndex * wordsPerPlayer; wordIndex < (playerIndex + 1) * wordsPerPlayer; wordIndex++) {
+        words.set(wordIndex, Immutable.fromJS({
           playerId: player.get('id'),
           word: null,
           skips: 0,
-          inBowl: false
+          inBowl: false,
+          index: wordIndex
         }));
       }
     }));
