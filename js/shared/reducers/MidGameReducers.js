@@ -28,15 +28,11 @@ exports[ActionTypes.CLIENT.ROUND_STARTED] = (game, action) => {
  * @returns {Immutable.Map}
  */
 exports[ActionTypes.CLIENT.ROUND_ENDED] = (game, action) => {
-  return game.withMutations((game) => {
-    const teams = GameHelpers.getTeams(game);
-    game.set('roundStarted', false);
-    // Next team and player
-    game.set('teamIndex', MathUtil.mod(game.get('teamIndex') + 1, teams.size));
-    if (game.get('teamIndex') == 0) {
-      game.set('playerIndex', game.get('playerIndex') + 1);
-    }
-  });
+  const teams = GameHelpers.getTeams(game);
+  return game
+    .set('roundStarted', false)
+    .set('teamIndex', MathUtil.mod(game.get('teamIndex') + 1, teams.size))
+    .set('playerIndex', game.get('playerIndex') + game.get('teamIndex') == 0);
 };
 
 
