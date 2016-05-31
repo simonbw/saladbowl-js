@@ -3,7 +3,8 @@
 const React = require('react');
 const Timing = require('../Timing.js');
 
-const DELAY = 50;
+const DELAY = 50; // milliseconds to wait before drawing again
+const PRECISION = 2; // number of sig figs for timer to use
 
 /**
  *
@@ -37,7 +38,7 @@ module.exports = React.createClass({
     const seconds = Math.max(this.state.remaining / 1000, 0);
     return (
       <div className="timer">
-        {seconds.toPrecision(1)}
+        {seconds.toPrecision(PRECISION)}
       </div>
     );
   }
