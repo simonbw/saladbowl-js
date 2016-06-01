@@ -17,23 +17,19 @@ describe('GameHelpers', () => {
       GameHelpers.getNextWordIndex(game);
     }).toThrow(Error);
 
-    game = game.update('words', (words) => {
-      return words
-        .push(Immutable.fromJS({word: 'word0', index: 0, inBowl:
-        .push(Immutable.fromJS({word: 'word1', index: 1, inBowl: false}));
-    });
+    game = game.set('words', game.get('words')
+      .push(Immutable.fromJS({word: 'word0', index: 0, inBowl: false}))
+      .push(Immutable.fromJS({word: 'word1', index: 1, inBowl: false})));
 
     // Still no words in bowl
     expect(() => {
       GameHelpers.getNextWordIndex(game);
     }).toThrow(Error); // no words available
 
-    game = game.update('words', (words) => {
-      return words
-        .push(Immutable.fromJS({word: 'word2', index: 2, inBowl: true}))
-        .push(Immutable.fromJS({word: 'word3', index: 3, inBowl: false}))
-        .push(Immutable.fromJS({word: 'word4', index: 4, inBowl: false}));
-    });
+    game = game.set('words', game.get('words')
+      .push(Immutable.fromJS({word: 'word2', index: 2, inBowl: true}))
+      .push(Immutable.fromJS({word: 'word3', index: 3, inBowl: false}))
+      .push(Immutable.fromJS({word: 'word4', index: 4, inBowl: false})));
 
     // there is only one word in the bowl so it should be chosen
     expect(GameHelpers.getNextWordIndex(game)).toEqual(2);
