@@ -1,3 +1,5 @@
+'use strict';
+
 const MessageTypes = require('../../shared/MessageTypes.js');
 
 module.exports = (socket) => {

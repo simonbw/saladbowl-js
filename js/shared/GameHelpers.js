@@ -229,5 +229,5 @@ GameHelpers.readyToStart = (game) => {
  * @returns {boolean}
  */
 GameHelpers.canSkip = (game) => {
-  return GameHelpers.getWordsInBowl(game).length > 1;
+  return GameHelpers.getWordsInBowl(game).size > 1;
 };

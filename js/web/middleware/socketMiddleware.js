@@ -1,3 +1,5 @@
+'use strict';
+
 const MessageTypes = require('../../shared/MessageTypes.js');
 
 // The prefix that all server actions start with

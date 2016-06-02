@@ -1,3 +1,5 @@
+'use strict';
+
 const ActionTypes = require('../../shared/ActionTypes.js');
 
 module.exports = (socket) => {

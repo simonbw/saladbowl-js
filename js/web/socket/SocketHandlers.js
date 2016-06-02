@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * @type {Object<string, function>}
  */

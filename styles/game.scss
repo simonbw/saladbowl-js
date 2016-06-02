@@ -39,17 +39,17 @@
 .skip-button {
   font-size: 2em;
 
-  &:not(.disabled):hover {
+  &:not(:disabled):hover {
     border-color: $black;
   }
 }
 
 .correct-button {
   color: $green;
-  &.disabled {
+  &:disabled {
     color: $dark-green;
   }
-  &:not(.disabled):hover {
+  &:not(:disabled):hover {
     background: $light-green;
     color: $green;
   }
@@ -57,10 +57,10 @@
 
 .skip-button {
   color: $red;
-  &.disabled {
+  &:disabled {
     color: $dark-red;
   }
-  &:not(.disabled):hover {
+  &:not(:disabled):hover {
     background: $light-red;
     color: $red;
   }

@@ -15,19 +15,12 @@ module.exports = (props) => {
   }
 };
 
-
 const phases = [
   ['Describe it', 'Say anything but the word.'],
   ['Charades', 'Just don\'t make a sound.'],
   ['One Word', 'You only get one word.']
 ];
 
-/**
- *
- * @param props
- * @returns {XML}
- * @constructor
- */
 function ReadyPage(props) {
   const dispatch = props.dispatch;
   const game = props.state.get('game');
@@ -48,28 +41,30 @@ function ReadyPage(props) {
   );
 }
 
-/**
- *
- * @param props
- * @returns {XML}
- * @constructor
- */
 function PlayingPage(props) {
-  const dispatch = props.dispatch;
   const game = props.state.get('game');
   const word = game.get('words').get(game.get('wordIndex'));
   const phaseName = phases[game.get('phaseIndex')][0];
-  var canSkip = GameHelpers.canSkip(game);
+  const canSkip = GameHelpers.canSkip(game);
+  const waitingForServer = props.state.get('ui').get('waitingForServer');
   return (
     <div>
       <h1>{phaseName}</h1>
       <Timer endTime={game.get('roundStartedAt') + game.get('secondsPerRound') * 1000}/>
-      <div className="current-word word">{word.get('word')}</div>
-      <button className="correct-button" onClick={() => dispatch(GameActions.correctWord())}>Correct</button>
+      <div className="current-word word">
+        {waitingForServer ? ' ' : word.get('word')}
+      </div>
+      <button
+        className="correct-button"
+        disabled={waitingForServer}
+        onClick={() => props.dispatch(GameActions.correctWord())}
+      >
+        Correct
+      </button>
       <button
         className="skip-button"
-        onClick={() => dispatch(GameActions.skipWord())}
-        disabled={!canSkip}
+        onClick={() => props.dispatch(GameActions.skipWord())}
+        disabled={waitingForServer || !canSkip}
       >
         {canSkip ? "Skip" : "Last Word"}
       </button>

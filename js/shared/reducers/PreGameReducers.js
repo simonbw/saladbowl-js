@@ -12,9 +12,12 @@ const GameHelpers = require('../GameHelpers');
  * @returns {Immutable.Map}
  */
 exports[ActionTypes.CLIENT.PLAYER_JOINED] = (game, action) => {
-  // TODO: Make sure player hasn't already joined
-
   let player = Immutable.fromJS(action.player);
+
+  if (game.get('players').some((otherPlayer) => player.get('id') == otherPlayer.get('id'))) {
+    throw new Error('Player already in game');
+  }
+
   let playerIndex = action.hasOwnProperty('playerIndex') ? action.playerIndex : game.get('players').size;
 
   return game

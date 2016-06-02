@@ -51,7 +51,7 @@ button, .button {
   text-transform: uppercase;
   width: 100%;
 
-  &:hover {
+  &:not(:disabled):hover {
     border-color: $black;
     color: $black;
   }
@@ -66,7 +66,7 @@ button, .button {
     background: $gray5;
   }
 
-  &.disabled, &:disabled, &.disabled:hover, &:disabled:hover {
+  &.disabled, &:disabled {
     border-color: $gray4;
     color: $gray4;
     cursor: default;

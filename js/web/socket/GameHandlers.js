@@ -1,3 +1,5 @@
+'use strict';
+
 const ActionTypes = require('../../shared/ActionTypes.js');
 const MessageTypes = require('../../shared/MessageTypes.js');
 const UIActions = require('../actions/UIActions');

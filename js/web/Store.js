@@ -5,6 +5,7 @@ const Redux = require('redux');
 const AppReducers = require('./reducers/AppReducers');
 const loggingMiddleware = require('./middleware/loggingMiddleware');
 const socketMiddleware = require('./middleware/socketMiddleware');
+const thunkMiddleware = require('./middleware/thunkMiddleware');
 
 /**
  *
@@ -19,6 +20,7 @@ module.exports = (initialState, socket, enableReduxDevTools) => {
     AppReducers,
     initialState,
     Redux.applyMiddleware(
+      thunkMiddleware,
       loggingMiddleware,
       socketMiddleware(socket)
     ));
