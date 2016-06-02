@@ -1,4 +1,6 @@
 'use strict';
+// @flow
+
 
 const Redux = require('redux');
 
@@ -13,7 +15,7 @@ const socketMiddleware = require('./middleware/socketMiddleware');
  * @param enableReduxDevTools
  * @returns {*}
  */
-module.exports = (initialState, socket, enableReduxDevTools) => {
+module.exports = (initialState:Object, socket:Socket, enableReduxDevTools:boolean) => {
   const reduxDevTools = (window.devToolsExtension && enableReduxDevTools) ? window.devToolsExtension() : (x) => x;
   return Redux.createStore(
     AppReducers,

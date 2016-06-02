@@ -1,10 +1,10 @@
 'use strict';
+// @flow
 
 /**
  * Return true if username is valid, else false.
- * @param userName
  */
-exports.validateUserName = (userName) => {
+exports.validateUserName = (userName:string):boolean => {
   if (typeof userName != 'string') {
     return false;
   }
@@ -13,10 +13,8 @@ exports.validateUserName = (userName) => {
 
 /**
  * Return true if a word is valid, else false.
- * @param word
- * @returns {boolean}
  */
-exports.validateWord = (word) => {
+exports.validateWord = (word:string):boolean => {
   if (typeof word != 'string') {
     return false;
   }

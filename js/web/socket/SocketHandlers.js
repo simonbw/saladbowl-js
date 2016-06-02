@@ -1,3 +1,7 @@
+'use strict';
+// @flow
+
+
 /**
  * @type {Object<string, function>}
  */
@@ -15,6 +19,6 @@ const handlers = [
  * Initialize all handlers on a socket.
  * @param socket
  */
-module.exports.init = (socket) => {
+module.exports.init = (socket:Socket) => {
   handlers.forEach((handler) => handler(socket));
 };

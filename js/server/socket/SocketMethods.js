@@ -1,4 +1,6 @@
 'use strict';
+// @flow
+
 
 const socketMethods = {};
 
@@ -7,7 +9,7 @@ const socketMethods = {};
  * @param socket
  * @param next
  */
-module.exports = (socket, next) => {
+module.exports = (socket:Socket, next:Next) => {
   Object.keys(socketMethods).forEach((methodName) => {
     socket[methodName] = socketMethods[methodName].bind(socket);
     socket.gameRoom[methodName] = socketMethods[methodName].bind(socket.gameRoom);

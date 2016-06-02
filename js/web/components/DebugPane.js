@@ -1,4 +1,6 @@
 'use strict';
+// @flow
+
 
 const React = require('react');
 
@@ -6,7 +8,7 @@ const ActionTypes = require('../../shared/ActionTypes.js');
 const GameHelpers = require('../../shared/GameHelpers');
 const UIActions = require('../actions/UIActions');
 
-module.exports = (props) => {
+module.exports = (props:Object) => {
   const state = props.state;
   const dispatch = props.dispatch;
 

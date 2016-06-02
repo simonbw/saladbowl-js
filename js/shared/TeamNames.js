@@ -1,4 +1,5 @@
 'use strict';
+// @flow
 
 const Random = require('./Random');
 const StringUtil = require('./StringUtil');
@@ -11,12 +12,8 @@ const TeamNames = module.exports;
 
 /**
  * Get the name of the nth team for a game.
- *
- * @param gameId {string}
- * @param team {number}
- * @returns {string}
  */
-TeamNames.get = (gameId, team) => {
+TeamNames.get = (gameId:string, team:number):string => {
   const seed = StringUtil.hash(gameId);
   const animal = shuffleAnimals(seed)[team % animals.length];
   const adjective = shuffleAdjectives(seed)[team % adjectives.length];
@@ -25,20 +22,16 @@ TeamNames.get = (gameId, team) => {
 
 /**
  * Return a randomly shuffled version of animals.
- * @param seed
- * @returns {*}
  */
-function shuffleAnimals(seed) {
+function shuffleAnimals(seed:number):Array<string> {
   seed = (seed * 13) | 0;
   return Random.seededShuffle(animals.slice(), seed);
 }
 
 /**
  * Return a randomly shuffled version of adjectives.
- * @param seed
- * @returns {*}
  */
-function shuffleAdjectives(seed) {
+function shuffleAdjectives(seed:number):Array<string> {
   seed = (seed * 17) | 0;
   return Random.seededShuffle(adjectives.slice(), seed);
 }

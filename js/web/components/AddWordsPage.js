@@ -1,4 +1,6 @@
 'use strict';
+// @flow
+
 
 const React = require('react');
 
@@ -9,7 +11,7 @@ const Validation = require('../../shared/Validation.js');
 /**
  *
  */
-module.exports = (props) => {
+module.exports = (props:Object) => {
   const dispatch = props.dispatch;
   const game = props.state.get('game');
   const ui = props.state.get('ui');

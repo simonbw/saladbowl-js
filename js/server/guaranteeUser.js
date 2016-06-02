@@ -1,4 +1,6 @@
 'use strict';
+// @flow
+
 
 const shortid = require('shortid');
 
@@ -7,7 +9,7 @@ const COOKIE_AGE = 24 * 60 * 60 * 1000; // one day
 /**
  * Guarantee user.
  */
-module.exports = (req, res, next) => {
+module.exports = (req:Request, res:Response, next:Next) => {
   req.user = {};
   req.user.name = req.cookies.username;
   if (req.cookies.userId) {

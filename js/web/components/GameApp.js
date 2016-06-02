@@ -1,4 +1,6 @@
 'use strict';
+// @flow
+
 
 const React = require('react');
 const ReactRedux = require('react-redux');
@@ -19,7 +21,7 @@ const WaitingPlayerPage = require('./WaitingPlayerPage');
  *
  * @constructor
  */
-function GameComponent(props) {
+function GameComponent(props:Object) {
   const dispatch = props.dispatch;
   const state = props.state;
   const game = state.get('game');

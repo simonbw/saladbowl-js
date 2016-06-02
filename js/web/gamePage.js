@@ -1,4 +1,6 @@
 'use strict';
+// @flow
+
 
 window.Promise = window.Promise || require('promise-polyfill');
 require('setimmediate');

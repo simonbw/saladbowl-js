@@ -1,4 +1,6 @@
 'use strict';
+// @flow
+
 
 const React = require('react');
 
@@ -6,7 +8,7 @@ const GameHelpers = require('../../shared/GameHelpers');
 const Timer = require('./Timer');
 const GameActions = require('../actions/GameActions');
 
-module.exports = (props) => {
+module.exports = (props:Object) => {
   const state = props.state;
   if (!state.get('game').get('roundStarted')) {
     return (<ReadyPage state={state} dispatch={props.dispatch}/>);

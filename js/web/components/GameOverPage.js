@@ -1,11 +1,13 @@
 'use strict';
+// @flow
+
 
 const React = require('react');
 
 const TeamList = require('./TeamList');
 const GameHelpers = require('../../shared/GameHelpers');
 
-module.exports = (props) => {
+module.exports = (props:Object) => {
   const game = props.state.get('game');
   const teams = GameHelpers.getTeams(game);
   let mostSkipped = GameHelpers.getMostSkippedWord(game);

@@ -1,4 +1,6 @@
 'use strict';
+// @flow
+
 
 const React = require('react');
 const Immutable = require('immutable');
@@ -7,7 +9,7 @@ const GameHelpers = require('../../shared/GameHelpers');
 const TeamList = require('./TeamList');
 const GameActions = require('../actions/GameActions');
 
-module.exports = (props) => {
+module.exports = (props:Object) => {
   const dispatch = props.dispatch;
   const game = props.state.get('game');
   let teams = GameHelpers.getTeams(game)

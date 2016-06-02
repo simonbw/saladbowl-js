@@ -1,4 +1,6 @@
 'use strict';
+// @flow
+
 
 const GameStore = require('../GameStore');
 const ActionTypes = require('../../shared/ActionTypes');
@@ -10,7 +12,7 @@ const MessageTypes = require('../../shared/MessageTypes');
  * @param socket
  * @param next
  */
-module.exports = (socket, next) => {
+module.exports = (socket:Socket, next:Next) => {
   socket.gameId = socket.handshake.query.gameId;
   GameStore.get(socket.gameId)
     .then((game) => {

@@ -1,6 +1,10 @@
+'use strict';
+// @flow
+
+
 const ActionTypes = require('../../shared/ActionTypes.js');
 
-module.exports = (socket) => {
+module.exports = (socket:Socket) => {
   socket.on('connect', () => {
     console.log('connected');
     socket.store.dispatch({

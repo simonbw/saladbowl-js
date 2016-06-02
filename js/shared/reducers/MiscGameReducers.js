@@ -1,4 +1,6 @@
 'use strict';
+// @flow
+
 
 const Immutable = require('immutable');
 

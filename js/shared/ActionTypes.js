@@ -1,4 +1,5 @@
 'use strict';
+// @flow
 
 /**
  * @file Defines all types of actions that modify games.

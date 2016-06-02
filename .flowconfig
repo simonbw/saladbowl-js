@@ -1,0 +1,8 @@
+[ignore]
+.*/node_modules/bower/.*
+.*/node_modules/config-chain/test/.*
+.*/node_modules/fbjs/.*
+.*/node_modules/npmconf/.*
+
+[libs]
+js/interfaces/

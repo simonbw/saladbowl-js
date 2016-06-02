@@ -1,4 +1,6 @@
 'use strict';
+// @flow
+
 
 const ActionTypes = require('../../../shared/ActionTypes');
 const HandlerHelpers = require('./HandlerHelpers');

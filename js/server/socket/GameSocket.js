@@ -1,10 +1,12 @@
 'use strict';
+// @flow
+
 
 /**
  *
  * @param io
  */
-exports.init = (io) => {
+exports.init = (io:SocketIO) => {
   io.use((socket, next) => {
     socket.io = io;
     next();

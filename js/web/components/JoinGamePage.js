@@ -1,4 +1,6 @@
 'use strict';
+// @flow
+
 
 const React = require('react');
 
@@ -12,7 +14,7 @@ const Validation = require('../../shared/Validation.js');
  * @param props
  * @returns {XML}
  */
-module.exports = (props) => {
+module.exports = (props:Object) => {
   const dispatch = props.dispatch;
   const ui = props.state.get('ui');
 

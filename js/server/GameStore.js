@@ -1,4 +1,6 @@
 'use strict';
+// @flow
+
 
 /**
  * @file Manages storing, retrieving, and updating games.
@@ -18,10 +20,8 @@ const games = {};
 
 /**
  * Get a game.
- * @param gameId
- * @returns {Promise.<T>}
  */
-GameStore.get = (gameId) => {
+GameStore.get = (gameId:string) => {
   if (!gameId) {
     return Promise.reject(new RequestError('Bad gameId:' + gameId, 400));
   }
@@ -32,15 +32,15 @@ GameStore.get = (gameId) => {
   return Promise.resolve(game);
 };
 
+GameStore.get('5', 10);
+
 /**
  * Update a game. Must have an id.
- * @param game
- * @returns {Promise.<T>}
  */
-GameStore.save = (game) => {
+GameStore.save = (game:Game) => {
   const gameId = game.get('id');
   if (!gameId) {
-    return Promise.reject(error);
+    return Promise.reject(new Error('Game must have an id'));
   }
   games[gameId] = game;
   return Promise.resolve(games[gameId]);
@@ -48,9 +48,8 @@ GameStore.save = (game) => {
 
 /**
  * Create a new game.
- * @returns {Promise.<T>}
  */
-GameStore.create = (wordsPerPlayer) => {
+GameStore.create = (wordsPerPlayer:number) => {
   const id = shortId.generate();
   const game = defaultGame
     .set('id', id)
@@ -60,9 +59,8 @@ GameStore.create = (wordsPerPlayer) => {
 
 /**
  * Deletes a game.
- * @returns {Promise.<T>}
  */
-GameStore.delete = (gameId) => {
+GameStore.delete = (gameId:string) => {
   const game = games[gameId];
   delete games[gameId];
   return Promise.resolve(game);
@@ -71,10 +69,8 @@ GameStore.delete = (gameId) => {
 
 /**
  * Update the game based on an action.
- * @param gameId
- * @param action
  */
-GameStore.dispatch = (gameId, action) => {
+GameStore.dispatch = (gameId:string, action:Object) => {
   // TODO: It would be really good if this queued the actions
   return GameStore.get(gameId)
     .then((game) => {

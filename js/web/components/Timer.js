@@ -1,4 +1,6 @@
 'use strict';
+// @flow
+
 
 const React = require('react');
 const Timing = require('../Timing.js');
@@ -11,7 +13,7 @@ const PRECISION = 2; // number of sig figs for timer to use
  */
 module.exports = React.createClass({
   propTypes: {
-    endTime: React.PropTypes.number
+    endTime: React.PropTypes.number.isRequired
   },
 
   'getInitialState': function () {
@@ -26,11 +28,11 @@ module.exports = React.createClass({
     clearInterval(this.timerInterval);
   },
 
-  getRemainingTime: function () {
+  getRemainingTime: function ():number {
     return this.props.endTime - Timing.getServerTime();
   },
 
-  tick: function () {
+  tick: function ():void {
     this.setState({remaining: this.getRemainingTime()});
   },
 

@@ -1,4 +1,6 @@
 'use strict';
+// @flow
+
 
 const React = require('react');
 
@@ -8,7 +10,7 @@ const LastCorrectWord = require('./LastCorrectWord');
 const TeamList = require('./TeamList');
 
 
-module.exports = (props) => {
+module.exports = (props:Object) => {
   const game = props.state.get('game');
   const teams = GameHelpers.getTeams(game);
   const lastCorrectWord = game.get('words').get(game.get('lastCorrectWordIndex'));

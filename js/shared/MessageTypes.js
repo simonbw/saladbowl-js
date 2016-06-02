@@ -1,4 +1,5 @@
 'use strict';
+// @flow
 
 /**
  * @file Types of messages that can be passed through the socket.

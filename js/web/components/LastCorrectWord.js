@@ -1,8 +1,10 @@
 'use strict';
+// @flow
+
 
 const React = require('react');
 
-module.exports = (props) => {
+module.exports = (props:Object) => {
   const lastCorrectWord = props.word;
 
   if (lastCorrectWord) {

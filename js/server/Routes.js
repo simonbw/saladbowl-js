@@ -1,4 +1,6 @@
 'use strict';
+// @flow
+
 
 const express = require('express');
 const GameStore = require('./GameStore');

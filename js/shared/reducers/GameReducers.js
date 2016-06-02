@@ -1,4 +1,6 @@
 'use strict';
+// @flow
+
 
 const DEFAULT_STATE = require('../defaultGame');
 
@@ -14,7 +16,7 @@ const reducers = Object.assign({},
  * @param action {Object}
  * @returns {Immutable.Map} new state
  */
-module.exports = (state, action) => {
+module.exports = (state:Game, action:Object) => {
   state = state || DEFAULT_STATE;
   if (action && action.type && reducers.hasOwnProperty(action.type)) {
     return reducers[action.type](state, action);

@@ -1,13 +1,12 @@
 'use strict';
+// @flow
+
 
 /**
  * Request error.
- *
- * @param message
- * @param status
  * @constructor
  */
-function RequestError(message, status) {
+function RequestError(message:string, status:number) {
   this.name = 'RequestError';
   this.message = message || 'Something went wrong';
   this.status = status || 400;

@@ -1,8 +1,12 @@
+'use strict';
+// @flow
+
+
 const ActionTypes = require('../../shared/ActionTypes.js');
 const MessageTypes = require('../../shared/MessageTypes.js');
 const UIActions = require('../actions/UIActions');
 
-module.exports = (socket) => {
+module.exports = (socket:Socket) => {
   socket.on(MessageTypes.GAME, function (action) {
     console.log('action received', action);
     const store = socket.store;

@@ -1,4 +1,6 @@
 'use strict';
+// @flow
+
 
 const GameStore = require('../../GameStore');
 const MessageTypes = require('../../../shared/MessageTypes.js');
@@ -9,7 +11,7 @@ const MessageTypes = require('../../../shared/MessageTypes.js');
  * @param action
  * @param actionTransform {function(action,game):action=}
  */
-exports.dispatch = (socket, action, actionTransform) => {
+exports.dispatch = (socket:Socket, action:Object, actionTransform:?Function) => {
   GameStore.dispatch(socket.gameId, action)
     .then((game) => {
       if (typeof actionTransform == 'function') {

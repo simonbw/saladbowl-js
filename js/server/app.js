@@ -1,4 +1,6 @@
 'use strict';
+// @flow
+
 
 const bodyParser = require('body-parser');
 const browserify = require('browserify-middleware');
@@ -45,7 +47,8 @@ app.use(logger('dev', {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
-app.use(jsUrl, browserify(webSourcePath, {transform: [babelify.configure({presets: ['es2015', 'react']})]}));
+const babelPresets = ['transform-flow-strip-types', 'es2015', 'react'];
+app.use(jsUrl, browserify(webSourcePath, {transform: [babelify.configure({presets: babelPresets})]}));
 app.use(sass({
   src: scssSourcePath,
   dest: scssDestPath,

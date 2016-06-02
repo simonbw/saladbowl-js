@@ -1,3 +1,7 @@
+'use strict';
+// @flow
+
+
 const MessageTypes = require('../../shared/MessageTypes.js');
 
 // The prefix that all server actions start with
@@ -6,7 +10,7 @@ const serverActionPrefix = 'SERVER.';
 /**
  *
  */
-module.exports = (socket) => (store) => (next) => (action) => {
+module.exports = (socket:Socket) => (store:Object) => (next:Next) => (action:Object) => {
   if (action.type.substring(0, serverActionPrefix.length) == serverActionPrefix) {
     console.log('SENDING SERVER ACTION', action);
     socket.emit(MessageTypes.GAME, action);

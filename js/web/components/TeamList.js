@@ -1,11 +1,13 @@
 'use strict';
+// @flow
+
 
 const React = require('react');
 
 const GameActions = require('../actions/GameActions');
 
 
-module.exports = (props) => {
+module.exports = (props:Object) => {
   return (
     <div className="team-list">
       {props.teams.map((team, i) => {

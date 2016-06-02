@@ -1,4 +1,6 @@
 'use strict';
+// @flow
+
 
 const MessageTypes = require('../../shared/MessageTypes');
 
@@ -16,14 +18,14 @@ const handlers = Object.assign({},
  * @param socket
  * @param next
  */
-module.exports = (socket, next) => {
+module.exports = (socket:Socket, next:Next) => {
   socket.on(MessageTypes.GAME, (action) => {
     console.log('Game Action Received', action);
     if (handlers.hasOwnProperty(action.type)) {
       try {
         handlers[action.type](action, socket);
       } catch (e) {
-        console.error('error handling action' + action.type, error);
+        console.error('error handling action' + action.type, e);
       }
     } else {
       console.error('Unknown Action', action);

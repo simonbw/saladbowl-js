@@ -1,13 +1,8 @@
 'use strict';
+// @flow
 
-/**
- *
- * @param err
- * @param req
- * @param res
- * @param next
- */
-function debugHandler (err, req, res, next) {
+
+function debugHandler (err:Error, req:Request, res:Response, next:Next) {
   res.status(err.status || 500);
   console.error(err.stack);
   if (req.xhr) {
@@ -20,14 +15,7 @@ function debugHandler (err, req, res, next) {
   }
 }
 
-/**
- *
- * @param err
- * @param req
- * @param res
- * @param next
- */
-function productionHandler (err, req, res, next) {
+function productionHandler (err:Error, req:Request, res:Response, next:Next) {
   res.status(err.status || 500);
   if (req.xhr) {
     res.send({message: err.message});
@@ -43,7 +31,7 @@ function productionHandler (err, req, res, next) {
  * Choose which error handler to use.
  * @param app
  */
-module.exports = (app) => {
+module.exports = (app:Map<string, any>) => {
   if (app.get('env') === 'development') {
     return debugHandler;
   } else {

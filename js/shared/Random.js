@@ -1,4 +1,5 @@
 'use strict';
+// @flow
 
 const MathUtil = require('./MathUtil');
 
@@ -13,12 +14,8 @@ const r = Math.random;
 
 /**
  * Return a random number between min and max.
- *
- * @param min
- * @param max
- * @returns {*}
  */
-Random.uniform = (min, max) => {
+Random.uniform = (min:?number, max:?number):number => {
   if (min == undefined) {
     return r();
   }
@@ -31,22 +28,15 @@ Random.uniform = (min, max) => {
 
 /**
  * Return a random integer between min and max.
- *
- * @param min
- * @param max
- * @returns {number}
  */
-Random.integer = (min, max) => {
+Random.integer = (min:?number, max:?number):number => {
   return Math.floor(Random.uniform(min, max));
 };
 
 /**
- *
- * @param mean
- * @param deviation
- * @returns {*}
+ * Return a random number from a normal distribution.
  */
-Random.normal = (mean, deviation) => {
+Random.normal = (mean:number, deviation:number):number => {
   if (mean == null) {
     mean = 0;
   }
@@ -58,8 +48,6 @@ Random.normal = (mean, deviation) => {
 
 /**
  * Return a random element from an array.
- *
- * @returns {*}
  */
 Random.choose = () => {
   let options;
@@ -72,20 +60,15 @@ Random.choose = () => {
 
 /**
  * Remove and return a random element from an array.
- *
- * @returns {*}
  */
-Random.take = (options) => {
+Random.take = function <T>(options:Array<T>):T {
   return options.splice(Random.integer(options.length), 1)[0];
 };
 
 /**
- * Put an array into a random order and return the array.]
- *
- * @param a
- * @returns {*}
+ * Put an array into a random order.
  */
-Random.shuffle = (a) => {
+Random.shuffle = <T>(a:Array<T>):Array<T> => {
   let i, j, temp;
   i = a.length;
   while (--i > 0) {
@@ -98,17 +81,15 @@ Random.shuffle = (a) => {
 };
 
 /**
- * Put an array into a deterministically random order and return the array.
- *
- * @param a
- * @param seed {number} - A random
- * @returns {*}
+ * Put an array into a deterministically random order.
  */
-Random.seededShuffle = (a, seed) => {
+Random.seededShuffle = <T>(a:Array
+  <T>, seed:number):Array
+    <T>=> {
   let i, j, temp;
   i = a.length;
   while (--i > 0) {
-    seed = (seed * 1103515245 + 12345)| 0;
+    seed = (seed * 1103515245 + 12345) | 0;
     j = MathUtil.mod(seed, i + 1);
     temp = a[j];
     a[j] = a[i];
@@ -121,11 +102,8 @@ Random.seededShuffle = (a, seed) => {
  * Flip a coin.
  *
  * @param chance {number} - Between 0 (always false) and 1 (always true). Defaults to 0.5.
- * @returns {boolean}
  */
-Random.bool = (chance) => {
-  if (chance == null) {
-    chance = 0.5;
-  }
-  return Math.random() < chance;
+Random.bool = (chance:number = 0.5):boolean => {
+  return Math.random()
+      < chance;
 };

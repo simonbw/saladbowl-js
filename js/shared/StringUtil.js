@@ -1,10 +1,10 @@
 'use strict';
+// @flow
 
 /**
  * Hash a string to an integer.
- * @returns {number}
  */
-exports.hash = (s) => {
+exports.hash = (s:string):number => {
   if (typeof s != "string") {
     throw Error('Cannot hash: ' + (typeof s));
   }

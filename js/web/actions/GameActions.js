@@ -1,11 +1,14 @@
+'use strict';
+// @flow
+
+
 const ActionTypes = require('../../shared/ActionTypes.js');
 
 const GameActions = module.exports;
 /**
  * Send a join game action.
- * @param name
  */
-GameActions.joinGame = (name) => {
+GameActions.joinGame = (name:string) => {
   return {
     type: ActionTypes.SERVER.JOIN_GAME,
     name: name
@@ -14,9 +17,8 @@ GameActions.joinGame = (name) => {
 
 /**
  * Send a bunch of save word actions.
- * @param words
  */
-GameActions.saveWords = (words) => {
+GameActions.saveWords = (words:Array<Object>) => {
   return {
     type: ActionTypes.SERVER.SAVE_WORDS,
     words: words
@@ -25,9 +27,8 @@ GameActions.saveWords = (words) => {
 
 /**
  * Join a team.
- * @param team
  */
-GameActions.joinTeam = (team) => {
+GameActions.joinTeam = (team:number) => {
   return {
     type: ActionTypes.SERVER.JOIN_TEAM,
     team: team

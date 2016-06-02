@@ -1,4 +1,5 @@
 'use strict';
+// flow
 
 const Immutable = require('immutable');
 const MathUtil = require('./MathUtil');
@@ -11,10 +12,8 @@ const GameHelpers = module.exports;
 
 /**
  * Calculate the next word index.
- * @param game
- * @returns {number}
  */
-GameHelpers.getNextWordIndex = (game) => {
+GameHelpers.getNextWordIndex = (game:Game):number => {
   const words = GameHelpers.getWordsInBowl(game);
   if (words.size == 0) {
     throw new Error('No next word available');
@@ -27,11 +26,8 @@ GameHelpers.getNextWordIndex = (game) => {
 
 /**
  * Return true if the user has joined the game.
- * @param game
- * @param playerId
- * @returns {boolean}
  */
-GameHelpers.playerIsJoined = (game, playerId) => {
+GameHelpers.playerIsJoined = (game:Game, playerId:string):boolean => {
   if (!playerId) {
     return false;
   }
@@ -42,10 +38,8 @@ GameHelpers.playerIsJoined = (game, playerId) => {
 
 /**
  * Return a list of teams.
- * @param game
- * @returns {Immutable.List}
  */
-GameHelpers.getTeams = (game) => {
+GameHelpers.getTeams = (game:Game):List<Map<string, any>> => {
   const teams = [];
 
   const lastTeam = game.get('players').reduce((largest, player) => {
@@ -81,9 +75,6 @@ GameHelpers.getTeams = (game) => {
 
 /**
  * Return the player object with the given id.
- * @param game
- * @param playerId
- * @returns {*}
  */
 GameHelpers.getPlayer = (game, playerId) => {
   return game.get('players').find((player) => {
@@ -93,8 +84,6 @@ GameHelpers.getPlayer = (game, playerId) => {
 
 /**
  * Return the player whose turn it is.
- * @param game
- * @returns {Immutable.Map}
  */
 GameHelpers.getCurrentPlayer = (game) => {
   const team = GameHelpers.getCurrentTeam(game);
@@ -103,8 +92,6 @@ GameHelpers.getCurrentPlayer = (game) => {
 
 /**
  * Return the current team.
- * @param game
- * @returns {*}
  */
 GameHelpers.getCurrentTeam = (game) => {
   let teams = GameHelpers.getTeams(game);
@@ -113,9 +100,6 @@ GameHelpers.getCurrentTeam = (game) => {
 
 /**
  * Return true if the user is on the guessing team.
- * @param game
- * @param playerId
- * @returns {boolean}
  */
 GameHelpers.playerIsGuessing = (game, playerId) => {
   if (!playerId) {
@@ -129,9 +113,6 @@ GameHelpers.playerIsGuessing = (game, playerId) => {
 
 /**
  * Return all of a player's words.
- * @param game
- * @param playerId
- * @returns {*}
  */
 GameHelpers.getPlayerWords = (game, playerId) => {
   return game.get('words').filter((word) => {
@@ -141,9 +122,6 @@ GameHelpers.getPlayerWords = (game, playerId) => {
 
 /**
  * Return true if a player has saved all their words.
- * @param game
- * @param playerId
- * @returns {boolean}
  */
 GameHelpers.playerWordsAreValid = (game, playerId) => {
   let words = GameHelpers.getPlayerWords(game, playerId);
@@ -154,9 +132,6 @@ GameHelpers.playerWordsAreValid = (game, playerId) => {
 
 /**
  * Return the index in the player list of a player.
- * @param game
- * @param playerId
- * @returns {number}
  */
 GameHelpers.getPlayerIndex = (game, playerId) => {
   return game.get('players').findEntry((player) => {
@@ -166,7 +141,6 @@ GameHelpers.getPlayerIndex = (game, playerId) => {
 
 /**
  * Return only the words that are in the bowl.
- * @param game
  */
 GameHelpers.getWordsInBowl = (game) => {
   return game.get('words').filter((word) => {
@@ -176,8 +150,6 @@ GameHelpers.getWordsInBowl = (game) => {
 
 /**
  * Return the word that was skipped the most times.
- * @param game
- * @returns {*}
  */
 GameHelpers.getMostSkippedWord = (game) => {
   return game.get('words').reduce((last, current) => {
@@ -194,7 +166,6 @@ GameHelpers.getMostSkippedWord = (game) => {
 
 /**
  * Return true if the game is ready to be started.
- * @param game
  */
 GameHelpers.readyToStart = (game) => {
   // Not Enough Players
@@ -225,8 +196,6 @@ GameHelpers.readyToStart = (game) => {
 
 /**
  * Return true if the player can skip.
- * @param game
- * @returns {boolean}
  */
 GameHelpers.canSkip = (game) => {
   return GameHelpers.getWordsInBowl(game).length > 1;
