@@ -50,11 +50,12 @@ GameStore.save = (game) => {
  * Create a new game.
  * @returns {Promise.<T>}
  */
-GameStore.create = (wordsPerPlayer) => {
+GameStore.create = (wordsPerPlayer, secondsPerRound) => {
   const id = shortId.generate();
   const game = defaultGame
     .set('id', id)
-    .set('wordsPerPlayer', wordsPerPlayer);
+    .set('wordsPerPlayer', wordsPerPlayer)
+    .set('secondsPerRound', secondsPerRound);
   return GameStore.save(game);
 };
 

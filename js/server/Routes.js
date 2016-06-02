@@ -37,7 +37,8 @@ router.get('/new-game', (req, res, next) => {
  */
 router.post('/new-game', (req, res, next) => {
   const wordsPerPlayer = MathUtil.clamp(parseInt(req.body.wordsPerPlayer) || 5, 1, 100);
-  GameStore.create(wordsPerPlayer).then((game) => {
+  const secondsPerRound = MathUtil.clamp(parseInt(req.body.secondsPerRound) || 60, 1, 200);
+  GameStore.create(wordsPerPlayer, secondsPerRound).then((game) => {
     res.redirect('/' + game.get('id'));
   });
 });
