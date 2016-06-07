@@ -17,7 +17,7 @@ const TeamNames = module.exports;
  * @returns {string}
  */
 TeamNames.get = (gameId, team) => {
-  const seed = StringUtil.hash(gameId);
+  const seed = StringUtil.hash(String(gameId));
   const animal = shuffleAnimals(seed)[team % animals.length];
   const adjective = shuffleAdjectives(seed)[team % adjectives.length];
   return 'The ' + adjective + ' ' + animal;
