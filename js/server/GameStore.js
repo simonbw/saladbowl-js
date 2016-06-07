@@ -16,6 +16,11 @@ const GameStore = module.exports;
 // TODO: Better storage option
 const games = {};
 
+const nextId = (() => {
+  let count = 1;
+  return () => count++;
+})();
+
 /**
  * Get a game.
  * @param gameId
@@ -51,7 +56,7 @@ GameStore.save = (game) => {
  * @returns {Promise.<T>}
  */
 GameStore.create = (wordsPerPlayer, secondsPerRound) => {
-  const id = shortId.generate();
+  const id = nextId();
   const game = defaultGame
     .set('id', id)
     .set('wordsPerPlayer', wordsPerPlayer)
