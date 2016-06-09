@@ -68,7 +68,7 @@ Random.take = function <T>(options:Array<T>):T {
 /**
  * Put an array into a random order.
  */
-Random.shuffle = <T>(a:Array<T>):Array<T> => {
+Random.shuffle = function <T>(a:Array<T>):Array<T> {
   let i, j, temp;
   i = a.length;
   while (--i > 0) {
@@ -83,9 +83,7 @@ Random.shuffle = <T>(a:Array<T>):Array<T> => {
 /**
  * Put an array into a deterministically random order.
  */
-Random.seededShuffle = <T>(a:Array
-  <T>, seed:number):Array
-    <T>=> {
+Random.seededShuffle = function <T>(a:Array<T>, seed:number):Array<T> {
   let i, j, temp;
   i = a.length;
   while (--i > 0) {
@@ -104,6 +102,5 @@ Random.seededShuffle = <T>(a:Array
  * @param chance {number} - Between 0 (always false) and 1 (always true). Defaults to 0.5.
  */
 Random.bool = (chance:number = 0.5):boolean => {
-  return Math.random()
-      < chance;
+  return Math.random() < chance;
 };

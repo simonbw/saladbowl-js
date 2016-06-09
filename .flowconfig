@@ -5,4 +5,4 @@
 .*/node_modules/npmconf/.*
 
 [libs]
-js/interfaces/
+js/flowtypes/

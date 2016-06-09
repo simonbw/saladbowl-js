@@ -5,7 +5,7 @@
   "scripts": {
     "start": "NODE_ENV=production node ./www",
     "dev": "nodemon ./www",
-    "test": "mocha --recursive",
+    "test": "mocha --recursive --compilers js:babel-register",
     "flow": "flow; test $? -eq 0 -o $? -eq 2"
   },
   "dependencies": {
@@ -39,6 +39,8 @@
     "socket.io-client": "^1.4.4"
   },
   "devDependencies": {
+    "babel-core": "^6.9.1",
+    "babel-register": "^6.9.0",
     "expect": "^1.14.0",
     "flow-bin": "^0.26.0",
     "mocha": "^2.4.5"
