@@ -51,6 +51,7 @@ module.exports = (props) => {
     <div>
       <form onSubmit={addWords}>
         <h1>Add Words</h1>
+        <h2 className="game-id">GameID: {game.get('id')}</h2>
         {inputs}
         <button disabled={disabled} type="submit">Add</button>
       </form>

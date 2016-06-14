@@ -23,7 +23,7 @@ module.exports = (props) => {
   return (
     <div>
       <h1>Join Teams</h1>
-      <h2 className="game-id">{game.get('id')}</h2>
+      <h2 className="game-id">GameID: {game.get('id')}</h2>
       <TeamList
         dispatch={props.dispatch}
         joinable={true}
