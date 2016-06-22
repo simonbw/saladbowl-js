@@ -9,6 +9,11 @@ const HandlerHelpers = require('./HandlerHelpers');
 exports[ActionTypes.SERVER.CORRECT_WORD] = (data, socket) => {
   HandlerHelpers.dispatch(socket, {
     type: ActionTypes.CLIENT.WORD_CORRECT
+  }, (action, game) => {
+    if (!game.get('roundStarted')) {
+      clearTimeout(socket.roundTimeout);
+    }
+    return action;
   });
 };
 
@@ -42,9 +47,7 @@ exports[ActionTypes.SERVER.START_ROUND] = (data, socket) => {
   });
 };
 
-/**
- *
- */
+// Never actually happens
 exports[ActionTypes.SERVER.END_ROUND] = (data, socket) => {
   if (socket.roundTimeout) {
     clearTimeout(socket.roundTimeout);

@@ -28,6 +28,9 @@ exports[ActionTypes.CLIENT.ROUND_STARTED] = (game, action) => {
  * @returns {Immutable.Map}
  */
 exports[ActionTypes.CLIENT.ROUND_ENDED] = (game, action) => {
+  if (!game.get('roundStarted')) { // Cannot end a round that has not started.
+    return game;
+  }
   const teams = GameHelpers.getTeams(game);
   const teamIndex = MathUtil.mod(game.get('teamIndex') + 1, teams.size);
   return game
@@ -62,9 +65,8 @@ exports[ActionTypes.CLIENT.WORD_CORRECT] = (game, action) => {
   });
 
   if (bowlIsEmpty) {
-    if (game.get('phaseIndex') == 2) {
+    if (game.get('phaseIndex') == 2) { // game is over
       return game
-        .set('roundEnded', true)
         .set('ended', true);
     } else {
       game = game
