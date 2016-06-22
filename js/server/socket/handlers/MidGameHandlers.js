@@ -46,6 +46,9 @@ exports[ActionTypes.SERVER.START_ROUND] = (data, socket) => {
  *
  */
 exports[ActionTypes.SERVER.END_ROUND] = (data, socket) => {
+  if (socket.roundTimeout) {
+    clearTimeout(socket.roundTimeout);
+  }
   HandlerHelpers.dispatch(socket, {
     type: ActionTypes.CLIENT.ROUND_ENDED
   });
