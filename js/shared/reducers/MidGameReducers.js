@@ -29,10 +29,11 @@ exports[ActionTypes.CLIENT.ROUND_STARTED] = (game, action) => {
  */
 exports[ActionTypes.CLIENT.ROUND_ENDED] = (game, action) => {
   const teams = GameHelpers.getTeams(game);
+  const teamIndex = MathUtil.mod(game.get('teamIndex') + 1, teams.size);
   return game
     .set('roundStarted', false)
-    .set('teamIndex', MathUtil.mod(game.get('teamIndex') + 1, teams.size))
-    .set('playerIndex', game.get('playerIndex') + (game.get('teamIndex') == 0));
+    .set('teamIndex', teamIndex)
+    .set('playerIndex', game.get('playerIndex') + (teamIndex == 0));
 };
 
 
