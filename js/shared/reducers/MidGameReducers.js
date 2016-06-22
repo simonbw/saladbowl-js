@@ -32,7 +32,7 @@ exports[ActionTypes.CLIENT.ROUND_ENDED] = (game, action) => {
   return game
     .set('roundStarted', false)
     .set('teamIndex', MathUtil.mod(game.get('teamIndex') + 1, teams.size))
-    .set('playerIndex', game.get('playerIndex') + game.get('teamIndex') == 0);
+    .set('playerIndex', game.get('playerIndex') + (game.get('teamIndex') == 0));
 };
 
 
