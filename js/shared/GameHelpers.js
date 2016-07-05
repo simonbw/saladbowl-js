@@ -61,7 +61,9 @@ GameHelpers.getTeams = (game) => {
   }
 
   game.get('players').forEach((player) => {
-    player = player.set('ready', GameHelpers.playerWordsAreValid(game, player.get('id')));
+    const ready = GameHelpers.playerWordsAreValid(game, player.get('id'));
+    const connected = Boolean(game.getIn(['connections', player.get('id')]));
+    player = player.set('ready', ready).set('connected', connected);
     teams[player.get('team')].players.push(player);
   });
 

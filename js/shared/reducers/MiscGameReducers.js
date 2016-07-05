@@ -19,6 +19,16 @@ exports[ActionTypes.CLIENT.REPLACE_GAME] = (state, action) => {
 };
 
 /**
+ * Set a user's connection state.
+ * @param state
+ * @param action
+ * @returns {*}
+ */
+exports[ActionTypes.CLIENT.USER_CONNECTION] = (state, action) => {
+  return state.setIn(['connections', action.userId], action.connected);
+};
+
+/**
  * Set the user id.
  * @param state
  * @param action

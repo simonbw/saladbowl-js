@@ -1,6 +1,8 @@
 const ActionTypes = require('../../shared/ActionTypes.js');
+const UIActions = require('./UIActions.js');
 
 const GameActions = module.exports;
+
 /**
  * Send a join game action.
  * @param name
@@ -59,6 +61,9 @@ GameActions.correctWord = () => ({
 /**
  * Ask to replace the current game.
  */
-GameActions.outOfSync = () => ({
-  type: ActionTypes.SERVER.OUT_OF_SYNC
-});
+GameActions.outOfSync = () => (dispatch) => {
+  dispatch(UIActions.updateField('synced', false));
+  return {
+    type: ActionTypes.SERVER.OUT_OF_SYNC
+  }
+};

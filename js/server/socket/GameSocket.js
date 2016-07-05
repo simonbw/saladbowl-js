@@ -13,6 +13,6 @@ exports.init = (io) => {
   io.use(require('./SocketLogger'));
   io.use(require('./SocketHeartbeat'));
   io.use(require('./SocketGameLookup'));
-  io.use(require('./SocketMethods'));
   io.use(require('./SocketActionHandlers'));
+  io.use(require('./SocketConnections'));
 };

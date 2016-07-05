@@ -28,12 +28,10 @@ window.onload = () => {
 
   const socket = io('/', {query: 'gameId=' + initialState.get('game').get('id')});
   SocketHandlers.init(socket);
-  window.SOCKET = socket;
   const store = Store(initialState, socket, window.DEBUG_MODE);
   socket.store = store; // TODO: Don't do this
 
   render(store);
-
 
   // Make things globally available for debugging
   if (window.DEBUG_MODE) {

@@ -19,10 +19,6 @@ module.exports = (socket, next) => {
       }
       socket.join(socket.gameId);
       socket.gameRoom = socket.io.to(socket.gameId);
-      socket.emit(MessageTypes.GAME, {
-        type: ActionTypes.CLIENT.REPLACE_GAME,
-        game: game.toJS()
-      });
       next();
     })
     .catch((error) => {

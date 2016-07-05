@@ -4,7 +4,6 @@
  * @type {Object<string, function>}
  */
 const handlers = [
-
   require('./ConnectionHandlers'),
   require('./ErrorHandlers'),
   require('./GameHandlers'),

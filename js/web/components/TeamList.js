@@ -26,15 +26,15 @@ function Team(props) {
   const team = props.team;
 
   let onClick;
-  let className = "team";
+  const classNames = ['team'];
   if (props.joinable) {
     onClick = () => {
       dispatch(GameActions.joinTeam(team.get('index')));
     };
-    className += ' joinable';
+    classNames.push('joinable');
   }
   if (team.get('current')) {
-    className += ' current';
+    classNames.push('current');
   }
 
   let header;
@@ -45,7 +45,7 @@ function Team(props) {
   }
 
   return (
-    <div className={className} onClick={onClick}>
+    <div className={classNames.join(' ')} onClick={onClick}>
       {header}
       <ol className="player-list">
         {team.get('players').map((player) => {
@@ -58,12 +58,15 @@ function Team(props) {
 
 function Player(props) {
   const player = props.player;
-  let className = '';
+  const classNames = [];
   if (player.get('current')) {
-    className += ' current';
+    classNames.push('current');
   }
   if (player.get('ready')) {
-    className += ' ready';
+    classNames.push('ready');
   }
-  return (<li className={className}>{player.get('name')}</li>);
+  if (player.get('connected')) {
+    classNames.push('connected');
+  }
+  return (<li className={classNames.join(' ')}>{player.get('name')}</li>);
 }
