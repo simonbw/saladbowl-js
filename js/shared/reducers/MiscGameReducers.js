@@ -1,17 +1,17 @@
 'use strict';
 
-const Immutable = require('immutable');
-
 const ActionTypes = require('../ActionTypes');
+const GameHelpers = require('../GameHelpers');
+const Immutable = require('immutable');
 
 
 /**
  * Replace the entire game.
- * @param state
+ * @param game
  * @param action
  * @returns {*}
  */
-exports[ActionTypes.CLIENT.REPLACE_GAME] = (state, action) => {
+exports[ActionTypes.CLIENT.REPLACE_GAME] = (game, action) => {
   if (!action.game) {
     throw Error('Replacement game action:' + JSON.stringify(action));
   }
@@ -20,23 +20,28 @@ exports[ActionTypes.CLIENT.REPLACE_GAME] = (state, action) => {
 
 /**
  * Set a user's connection state.
- * @param state
+ * @param game
  * @param action
  * @returns {*}
  */
-exports[ActionTypes.CLIENT.USER_CONNECTION] = (state, action) => {
-  return state.setIn(['connections', action.userId], action.connected);
+exports[ActionTypes.CLIENT.USER_CONNECTION] = (game, action) => {
+  game = game.setIn(['connections', action.userId], action.connected);
+  const playerIndex = GameHelpers.getPlayerIndex(game, action.userId);
+  if (action.connected && playerIndex >= 0) {
+    game = game.setIn(['players', playerIndex, 'active'], true); // No longer skip players if they reconnect
+  }
+  return game;
 };
 
 /**
  * Set the user id.
- * @param state
+ * @param game
  * @param action
  * @returns {*}
  */
-exports[ActionTypes.CLIENT.SET_USER_ID] = (state, action) => {
+exports[ActionTypes.CLIENT.SET_USER_ID] = (game, action) => {
   if (!action.userId) {
     throw Error('Cannot set null userId');
   }
-  return state.set('userId', action.userId);
+  return game.set('userId', action.userId);
 };

@@ -32,12 +32,7 @@ GameHelpers.getNextWordIndex = (game) => {
  * @returns {boolean}
  */
 GameHelpers.playerIsJoined = (game, playerId) => {
-  if (!playerId) {
-    return false;
-  }
-  return game.get('players').some((player) => {
-    return player.get('id') == playerId;
-  });
+  return GameHelpers.getPlayerIndex(game, playerId) >= 0;
 };
 
 /**
@@ -72,10 +67,13 @@ GameHelpers.getTeams = (game) => {
   });
 
   if (game.get('started') && !game.get('ended')) {
-    const team = teams[game.get('teamIndex') % teams.length];
-    team.current = true;
-    const playerIndex = game.get('playerIndex') % team.players.length;
-    team.players[playerIndex] = team.players[playerIndex].set('current', true);
+    const currentTeam = teams[game.get('teamIndex') % teams.length];
+    currentTeam.current = true;
+    const activePlayers = currentTeam.players.filter((player) => player.get('active'));
+    const activePlayerIndex = game.get('playerIndex') % activePlayers.length;
+    const currentPlayer = activePlayers[activePlayerIndex];
+    const currentPlayerIndex = currentTeam.players.findIndex((player) => player.get('id') == currentPlayer.get('id'));
+    currentTeam.players[currentPlayerIndex] = currentTeam.players[currentPlayerIndex].set('current', true);
   }
 
   return Immutable.fromJS(teams);
@@ -94,13 +92,48 @@ GameHelpers.getPlayer = (game, playerId) => {
 };
 
 /**
+ * Return the index in the player list of a player.
+ * @param game
+ * @param playerId
+ * @returns {number}
+ */
+GameHelpers.getPlayerIndex = (game, playerId) => {
+  if (playerId == null) {
+    return -1;
+  }
+  return game.get('players').findIndex((player) => {
+    return player.get('id') == playerId;
+  });
+};
+
+/**
  * Return the player whose turn it is.
  * @param game
  * @returns {Immutable.Map}
  */
 GameHelpers.getCurrentPlayer = (game) => {
   const team = GameHelpers.getCurrentTeam(game);
-  return team.get('players').get(MathUtil.mod(game.get('playerIndex'), team.get('players').size));
+  const activePlayers = team.get('players').filter((player) => player.get('active'));
+  return activePlayers.get(MathUtil.mod(game.get('playerIndex'), activePlayers.size));
+};
+
+/**
+ * Return the index for the player whose turn it is.
+ * @param game
+ * @returns {number}
+ */
+GameHelpers.getCurrentPlayerIndex = (game) => {
+  return GameHelpers.getPlayerIndex(game, GameHelpers.getCurrentPlayer(game).get('id'));
+};
+
+/**
+ * Return true if the player whose turn it is is connected.
+ * @param game
+ * @returns {boolean}
+ */
+GameHelpers.isCurrentPlayerConnected = (game) => {
+  const currentPlayer = GameHelpers.getCurrentPlayer(game);
+  return Boolean(game.get('connections').get(currentPlayer.get('id')));
 };
 
 /**
@@ -152,18 +185,6 @@ GameHelpers.playerWordsAreValid = (game, playerId) => {
   return words.every((word) => {
     return Validation.validateWord(word.get('word'));
   });
-};
-
-/**
- * Return the index in the player list of a player.
- * @param game
- * @param playerId
- * @returns {number}
- */
-GameHelpers.getPlayerIndex = (game, playerId) => {
-  return game.get('players').findEntry((player) => {
-    return player.get('id') == playerId;
-  })[0];
 };
 
 /**

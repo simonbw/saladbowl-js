@@ -55,14 +55,14 @@ function PlayingPage(props) {
         {waitingForServer ? ' ' : word.get('word')}
       </div>
       <button
-        className="correct-button"
+        className="correct-word-button"
         disabled={waitingForServer}
         onClick={() => props.dispatch(GameActions.correctWord())}
       >
         Correct
       </button>
       <button
-        className="skip-button"
+        className="skip-word-button"
         onClick={() => props.dispatch(GameActions.skipWord())}
         disabled={waitingForServer || !canSkip}
       >

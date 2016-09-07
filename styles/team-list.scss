@@ -50,8 +50,13 @@
         font-weight: 600;
       }
 
-      li:not(.ready) {
+      li:not(.ready),
+      li:not(.connected) {
         color: $gray2;
+      }
+
+      li:not(.active) {
+        text-decoration: line-through;
       }
     }
   }

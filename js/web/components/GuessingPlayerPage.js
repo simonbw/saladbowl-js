@@ -2,10 +2,11 @@
 
 const React = require('react');
 
+const GameActions = require('../actions/GameActions.js');
 const GameHelpers = require('../../shared/GameHelpers');
-const Timer = require('./Timer');
 const LastCorrectWord = require('./LastCorrectWord');
 const TeamList = require('./TeamList');
+const Timer = require('./Timer');
 
 
 module.exports = (props) => {
@@ -21,6 +22,7 @@ module.exports = (props) => {
       <Timer endTime={game.get('roundStartedAt') + game.get('secondsPerRound') * 1000}/>
       }
       <LastCorrectWord word={lastCorrectWord}/>
+      { /*TODO: Pluralize "words"*/ }
       <div>{wordsInBowl.size} words remaining</div>
       <TeamList
         dispatch={props.dispatch}
@@ -28,6 +30,14 @@ module.exports = (props) => {
         showScore={true}
         teams={teams}
       />
+      {!game.get('roundStarted') && !GameHelpers.isCurrentPlayerConnected(game) &&
+      <button
+        className="skip-player-button"
+        onClick={() => props.dispatch(GameActions.skipPlayer(GameHelpers.getCurrentPlayer(game).get('id')))}
+      >
+        SKIP PLAYER
+      </button>
+      }
     </div>
   );
 };

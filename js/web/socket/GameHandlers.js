@@ -15,7 +15,7 @@ module.exports = (socket) => {
       let game = state.get('game');
       let gameHash = game.hashCode();
       if (gameHash != action.gameHashCode) {
-        console.log('Game not in sync', gameHash, action.gameHashCode);
+        console.log('game not in sync', gameHash, action.gameHashCode);
         store.dispatch(GameActions.outOfSync());
       } else if (!state.get('ui').get('synced')) {
         store.dispatch(UIActions.updateField('synced', true))

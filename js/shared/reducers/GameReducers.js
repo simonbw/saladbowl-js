@@ -1,6 +1,6 @@
 'use strict';
 
-const DEFAULT_STATE = require('../defaultGame');
+const DEFAULT_GAME = require('../defaultGame');
 
 const reducers = Object.assign({},
   require('./PreGameReducers'),
@@ -9,15 +9,15 @@ const reducers = Object.assign({},
 
 
 /**
- * Return a new state that is the result of completing an action.
- * @param state {Immutable.Map}
+ * Return a new game that is the result of completing an action.
+ * @param game {Immutable.Map}
  * @param action {Object}
- * @returns {Immutable.Map} new state
+ * @returns {Immutable.Map} new game
  */
-module.exports = (state, action) => {
-  state = state || DEFAULT_STATE;
+module.exports = (game, action) => {
+  game = game || DEFAULT_GAME;
   if (action && action.type && reducers.hasOwnProperty(action.type)) {
-    return reducers[action.type](state, action);
+    return reducers[action.type](game, action);
   }
-  return state;
+  return game;
 };

@@ -12,7 +12,8 @@ const GameHelpers = require('../GameHelpers');
  * @returns {Immutable.Map}
  */
 exports[ActionTypes.CLIENT.PLAYER_JOINED] = (game, action) => {
-  let player = Immutable.fromJS(action.player);
+  const defaultPlayer = {team: 0, active: true}; // TODO: Move to default data somewhere
+  let player = Immutable.fromJS(Object.assign(defaultPlayer, action.player));
 
   if (game.get('players').some((otherPlayer) => player.get('id') == otherPlayer.get('id'))) {
     throw new Error('Player already in game');
@@ -25,12 +26,12 @@ exports[ActionTypes.CLIENT.PLAYER_JOINED] = (game, action) => {
     .set('words', game.get('words').withMutations((words) => {
       let wordsPerPlayer = game.get('wordsPerPlayer');
       for (let wordIndex = playerIndex * wordsPerPlayer; wordIndex < (playerIndex + 1) * wordsPerPlayer; wordIndex++) {
-        words.set(wordIndex, Immutable.fromJS({
-          playerId: player.get('id'),
-          word: null,
-          skips: 0,
+        words.set(wordIndex, Immutable.fromJS({ // TODO: Move to default data somewhere
           inBowl: false,
-          index: wordIndex
+          index: wordIndex,
+          playerId: player.get('id'),
+          skips: 0,
+          word: null
         }));
       }
     }));
@@ -45,6 +46,9 @@ exports[ActionTypes.CLIENT.PLAYER_JOINED] = (game, action) => {
  */
 exports[ActionTypes.CLIENT.WORDS_UPDATED] = (game, action) => {
   const playerIndex = GameHelpers.getPlayerIndex(game, action.playerId);
+  if (playerIndex < 0) {
+    throw new Error(`Player ${action.playerId} is not in game`);
+  }
 
   return game.set('words', game.get('words').withMutations((words) => {
     action.words.forEach((wordData) => {
