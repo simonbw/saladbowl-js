@@ -59,12 +59,74 @@ describe('GameHelpers', () => {
     game = game.set('players', game.get('players').push(player1, player2, player3, player4, player5, player6));
     expect(GameHelpers.getTeams(game).size).toEqual(2, 'There should be 2 teams');
     expect(GameHelpers.getTeams(game).get(0).get('players').size).toEqual(4, 'Team one should have 4 players');
-    expect(GameHelpers.getTeams(game).get(1).get('players').size).toEqual(2, 'Team two should have 4 players');
+    expect(GameHelpers.getTeams(game).get(1).get('players').size).toEqual(2, 'Team two should have 2 players');
   });
 
-  it('getCurrentPlayer should work');
+  it('getPlayer should work', () => {
+    const player1 = Immutable.fromJS({id: 'player1'});
+    const player2 = Immutable.fromJS({id: 'player2'});
+    const game = defaultGame.set('players',
+      defaultGame.get('players')
+        .push(player1)
+        .push(player2));
+    expect(GameHelpers.getPlayer(game, 'player1')).toEqual(player1);
+    expect(GameHelpers.getPlayer(game, 'player2')).toEqual(player2);
+    expect(GameHelpers.getPlayer(game, 'player3')).toNotExist();
+  });
 
-  it('getCurrentTeam should work');
+  it('getPlayerIndex should work', () => {
+    const player1 = Immutable.fromJS({id: 'player1'});
+    const player2 = Immutable.fromJS({id: 'player2'});
+    const game = defaultGame.set('players',
+      defaultGame.get('players')
+        .push(player1)
+        .push(player2));
+    expect(GameHelpers.getPlayerIndex(game, 'player1')).toEqual(0);
+    expect(GameHelpers.getPlayerIndex(game, 'player2')).toEqual(1);
+    expect(GameHelpers.getPlayerIndex(game, 'player3')).toEqual(-1);
+  });
+
+  describe('getCurrentPlayer', () => {
+    it('should work', () => {
+      const player1 = Immutable.fromJS({id: 'player1', team: 1, active: true});
+      const player2 = Immutable.fromJS({id: 'player2', team: 0, active: true});
+      const game = defaultGame.set('players', defaultGame.get('players').push(player1, player2));
+      expect(GameHelpers.getCurrentPlayer(game).toJS()).toInclude(player2.toJS());
+    });
+
+    it('should handle skipped players', () => {
+      const player1 = Immutable.fromJS({id: 'player1', team: 0, active: false});
+      const player2 = Immutable.fromJS({id: 'player2', team: 0, active: true});
+      const player3 = Immutable.fromJS({id: 'player3', team: 1, active: true});
+      const game = defaultGame.set('players', defaultGame.get('players').push(player1, player2, player3));
+      expect(GameHelpers.getCurrentPlayer(game).toJS()).toInclude(player2.toJS());
+    });
+  });
+
+  it('getCurrentPlayerIndex should work', () => {
+    const player1 = Immutable.fromJS({id: 'player1', team: 1, active: true});
+    const player2 = Immutable.fromJS({id: 'player2', team: 0, active: true});
+    const game = defaultGame.set('players', defaultGame.get('players').push(player1, player2));
+    expect(GameHelpers.getCurrentPlayer(game).get('id')).toEqual(player2.get('id'));
+    expect(GameHelpers.getCurrentPlayerIndex(game)).toEqual(1);
+  });
+
+  it('isCurrentPlayerConnected should work');
+
+  it('getCurrentTeam should work', () => {
+    const player1 = Immutable.fromJS({id: 'player1', team: 0});
+    const player2 = Immutable.fromJS({id: 'player2', team: 0});
+    const player3 = Immutable.fromJS({id: 'player3', team: 1});
+    const player4 = Immutable.fromJS({id: 'player4', team: 1});
+    const game = defaultGame
+      .set('id', 'testid')
+      .set('players', defaultGame.get('players')
+        .push(player1, player2, player3, player4));
+    const result = GameHelpers.getCurrentTeam(game).toJS();
+    expect(result.players.length).toEqual(2);
+    expect(result.players[0]).toInclude(player1.toJS());
+    expect(result.players[1]).toInclude(player2.toJS());
+  });
 
   it('playerIsGuessing should work');
 
@@ -91,19 +153,23 @@ describe('GameHelpers', () => {
 
   it('playerWordsAreValid should work');
 
-  it('getPlayerIndex should work', () => {
-    let game = defaultGame
-      .set('userId', 'p2')
-      .update('players', (players) => {
-        return players
-          .push(Immutable.fromJS({id: 'p1'}))
-          .push(Immutable.fromJS({id: 'p2'}))
-          .push(Immutable.fromJS({id: 'p3'}));
-      });
+  it('getWordsInBowl should work', () => {
+    const word1 = Immutable.fromJS({word: 'word1', inBowl: true});
+    const word2 = Immutable.fromJS({word: 'word2', inBowl: true});
+    const word3 = Immutable.fromJS({word: 'word3', inBowl: false});
+    const word4 = Immutable.fromJS({word: 'word4', inBowl: true});
+    const game = defaultGame.set('words', defaultGame.get('words').push(word1, word2, word3, word4));
+    expect(GameHelpers.getWordsInBowl(game)).toEqual(Immutable.List.of(word1, word2, word4));
+  });
 
-    expect(GameHelpers.getPlayerIndex(game, 'p1')).toEqual(0);
-    expect(GameHelpers.getPlayerIndex(game, 'p2')).toEqual(1);
-    expect(GameHelpers.getPlayerIndex(game, 'p3')).toEqual(2);
+  it('getMostSkippedWord should work', () => {
+    const word1 = Immutable.fromJS({word: 'word1', skips: 3});
+    const word2 = Immutable.fromJS({word: 'word2', skips: 5});
+    const word3 = Immutable.fromJS({word: 'word3', skips: 1});
+    const game = defaultGame.set('words', defaultGame.get('words').push(word1, word2, word3));
+
+    expect(GameHelpers.getMostSkippedWord(game)).toEqual(word2);
+    expect(GameHelpers.getMostSkippedWord(game).get('word')).toEqual('word2');
   });
 
   it('readyToStart should work', () => {
@@ -127,14 +193,6 @@ describe('GameHelpers', () => {
     expect(GameHelpers.readyToStart(game)).toEqual(true);
   });
 
-  it('getMostSkippedWord should work', () => {
-    const word1 = Immutable.fromJS({word: 'word1', skips: 3});
-    const word2 = Immutable.fromJS({word: 'word2', skips: 5});
-    const word3 = Immutable.fromJS({word: 'word3', skips: 1});
-    const game = defaultGame.set('words', defaultGame.get('words').push(word1, word2, word3));
-
-    expect(GameHelpers.getMostSkippedWord(game)).toEqual(word2);
-    expect(GameHelpers.getMostSkippedWord(game).get('word')).toEqual('word2');
-  });
-
-});
+  it('canSkip should work');
+})
+;

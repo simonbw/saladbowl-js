@@ -35,8 +35,8 @@
   word-wrap: break-word
 }
 
-.correct-button,
-.skip-button {
+.correct-word-button,
+.skip-word-button {
   font-size: 2em;
 
   &:not(:disabled):hover {
@@ -44,7 +44,7 @@
   }
 }
 
-.correct-button {
+.correct-word-button {
   color: $green;
   &:disabled {
     color: $dark-green;
@@ -55,7 +55,19 @@
   }
 }
 
-.skip-button {
+.skip-word-button {
+  color: $red;
+  &:disabled {
+    color: $dark-red;
+  }
+  &:not(:disabled):hover {
+    background: $light-red;
+    color: $red;
+  }
+}
+
+
+.skip-player-button {
   color: $red;
   &:disabled {
     color: $dark-red;

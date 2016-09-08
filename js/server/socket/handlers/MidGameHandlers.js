@@ -56,3 +56,10 @@ exports[ActionTypes.SERVER.END_ROUND] = (data, socket) => {
     type: ActionTypes.CLIENT.ROUND_ENDED
   });
 };
+
+exports[ActionTypes.SERVER.SKIP_PLAYER] = (data, socket) => {
+  HandlerHelpers.dispatch(socket, {
+    type: ActionTypes.CLIENT.PLAYER_SKIPPED,
+    playerId: data.playerId
+  });
+};

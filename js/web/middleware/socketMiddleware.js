@@ -10,7 +10,7 @@ const serverActionPrefix = 'SERVER.';
  */
 module.exports = (socket) => (store) => (next) => (action) => {
   if (action.type.substring(0, serverActionPrefix.length) == serverActionPrefix) {
-    console.log('SENDING SERVER ACTION', action);
+    console.log('sending server action:', action);
     socket.emit(MessageTypes.GAME, action);
   } else {
     return next(action);

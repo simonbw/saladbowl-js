@@ -22,8 +22,7 @@ exports[ActionTypes.SERVER.JOIN_GAME] = (data, socket) => {
     type: ActionTypes.CLIENT.PLAYER_JOINED,
     player: {
       id: socket.user.id,
-      name: data.name,
-      team: 0
+      name: data.name
     }
   }, (action, game) => {
     action.playerIndex = game.get('players').size - 1;

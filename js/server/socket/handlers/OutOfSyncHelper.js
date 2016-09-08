@@ -16,7 +16,7 @@ exports[ActionTypes.SERVER.OUT_OF_SYNC] = (data, socket) => {
       });
     })
     .catch((error) => {
-      console.error(error);
+      console.error('error getting game:', error, error.stack);
       socket.emit(MessageTypes.ERROR, error);
     });
 };

@@ -18,15 +18,15 @@ const handlers = Object.assign({},
  */
 module.exports = (socket, next) => {
   socket.on(MessageTypes.GAME, (action) => {
-    console.log('Game Action Received', action);
+    console.log('game action received:', action);
     if (handlers.hasOwnProperty(action.type)) {
       try {
         handlers[action.type](action, socket);
-      } catch (e) {
-        console.error('error handling action' + action.type, error);
+      } catch (error) {
+        console.error('error handling action' + action.type, error, error.stack);
       }
     } else {
-      console.error('Unknown Action', action);
+      console.error('unknown action:', action);
     }
   });
   next();

@@ -53,7 +53,7 @@ app.use(sass({
   debug: false,
   sourceMap: true,
   error: (error) => {
-    console.error(error);
+    console.error('SCSS error:', error, error.stack);
   }
 }));
 app.use(favicon(faviconPath));

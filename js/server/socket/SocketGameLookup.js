@@ -22,7 +22,7 @@ module.exports = (socket, next) => {
       next();
     })
     .catch((error) => {
-      console.error('SocketGameLookup Error:', error);
+      console.error('error getting game:', error, error.stack);
       next(error);
     });
 };

@@ -40,6 +40,8 @@ describe('GameReducers', () => {
     expect(game.get('words').get(2).get('word')).toEqual('word2');
   });
 
+  it('should skip players');
+
   it('should play through a full game', () => {
     let game = reducer(null, null)
       .set('wordsPerPlayer', 4)
@@ -80,6 +82,8 @@ describe('GameReducers', () => {
     }
 
     game.get('id');
+
+    // TODO: Finish the game
   });
 });
 
@@ -103,7 +107,7 @@ function updateWord(game, word, playerId, playerWordIndex) {
   return reducer(game, {
     type: ActionTypes.CLIENT.WORDS_UPDATED,
     playerId: playerId,
-    words: [{word: word, playerWordIndex: playerWordIndex}],
+    words: [{word: word, playerWordIndex: playerWordIndex}]
   });
 }
 
@@ -111,7 +115,7 @@ function updateWords(game, words, playerId) {
   return reducer(game, {
     type: ActionTypes.CLIENT.WORDS_UPDATED,
     playerId: playerId,
-    words: words,
+    words: words
   });
 }
 

@@ -95,3 +95,22 @@ exports[ActionTypes.CLIENT.WORD_SKIPPED] = (game, action) => {
     })
     .set('wordIndex', GameHelpers.getNextWordIndex(game));
 };
+
+
+/**
+ * Skip the current player.
+ * @param game {Immutable.Map}
+ * @param action
+ * @returns {Immutable.Map}
+ */
+exports[ActionTypes.CLIENT.PLAYER_SKIPPED] = (game, action) => {
+  if (!action.playerId) {
+    throw new Error('Player Skipped action requires action.playerId');
+  }
+  if (game.get('connections').get(action.playerId)) {
+    console.warn('Cannot skip connected player');
+    return game;
+  }
+  const playerIndex = GameHelpers.getPlayerIndex(game, action.playerId);
+  return game.setIn(['players', playerIndex, 'active'], false);
+};

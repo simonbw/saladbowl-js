@@ -59,11 +59,17 @@ GameActions.correctWord = () => ({
 });
 
 /**
+ * Skip the current word.
+ */
+GameActions.skipPlayer = (playerId) => ({
+  type: ActionTypes.SERVER.SKIP_PLAYER,
+  playerId: playerId
+});
+
+/**
  * Ask to replace the current game.
  */
 GameActions.outOfSync = () => (dispatch) => {
   dispatch(UIActions.updateField('synced', false));
-  return {
-    type: ActionTypes.SERVER.OUT_OF_SYNC
-  }
+  dispatch({type: ActionTypes.SERVER.OUT_OF_SYNC});
 };

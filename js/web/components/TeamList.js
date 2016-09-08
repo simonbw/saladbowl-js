@@ -68,5 +68,8 @@ function Player(props) {
   if (player.get('connected')) {
     classNames.push('connected');
   }
+  if (player.get('active')) {
+    classNames.push('active');
+  }
   return (<li className={classNames.join(' ')}>{player.get('name')}</li>);
 }
