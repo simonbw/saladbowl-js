@@ -8,6 +8,7 @@ const io = require('socket.io-client');
 const ReduxProvider = require('react-redux').Provider;
 const React = require('react');
 const ReactDom = require('react-dom');
+const NoSleep = require('./NoSleep');
 
 const ActionTypes = require('../shared/ActionTypes.js');
 const Store = require('./Store');
@@ -41,6 +42,12 @@ window.onload = () => {
       GameHelpers: require('../shared/GameHelpers')
     };
   }
+
+  const enableNoSleep = () => {
+    (new NoSleep()).enable();
+    document.addEventListener('touchstart', enableNoSleep, false);
+  };
+  document.addEventListener('touchstart', enableNoSleep, false);
 };
 
 /**
