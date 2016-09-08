@@ -8,14 +8,14 @@ To play, you will need a group of at least 4 people, though larger groups are pr
 Everyone will need an internet-enabled device to play.
 On the main page, start a new game and give it a name.
 
-Now everyone needs to join this game. You can either send them the url of the game, or they can find a link on the
-homepage.
+Now everyone needs to join this game.
+They can do this by entering the GameID on the homepage, or by simply going to the url of the game.
 
 When you have joined a game, first enter your name.
-After this you will be asked to submit 5 (or some other number) nouns to the "bowl".
+After this you will be asked to submit your nouns to the "bowl".
 Try to be creative.
 
-Once you have entered your words, you will need to join a team.
+Once you have entered your nouns, you will need to join a team.
 Join a team by clicking/tapping on it.
 When everyone is satisfied with the teams, press the "Start Game" button.
 
@@ -37,6 +37,6 @@ In the final round the reader is only allowed to say one word per noun.
 Like in the first round, no gestures are allowed.
 
 When all the nouns have been correctly guessed and the "bowl" is empty, the round is over.
-The words go back into the "bowl" and the next round begins.
+The nouns go back into the "bowl" and the next round begins.
 
 The team with the most points after all three rounds is the winner.

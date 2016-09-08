@@ -22,7 +22,7 @@ module.exports = (props) => {
       <div className="game-over-stats">
         <div className="category">
           <div className="category-title">
-            Most Skipped Word
+            Most Skipped Noun
           </div>
           <div className="category-content">
             <span className="word">{mostSkipped.get('word')}</span> with {mostSkipped.get('skips')} skips.
