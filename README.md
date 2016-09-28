@@ -1,6 +1,11 @@
 SaladBowl
 =========
 
+SaladBowl is a party game for groups of four or more. It generally takes between 45 and 60 minutes to play.
+
+What Is SaladBowl?
+------------------
+
 SaladBowl is based off of a popular party game that goes by many names including Salad Bowl, Bowl of Nouns, Nouns
 and Proper Nouns, and The Nouns Game.
 
@@ -40,3 +45,7 @@ When all the nouns have been correctly guessed and the "bowl" is empty, the roun
 The nouns go back into the "bowl" and the next round begins.
 
 The team with the most points after all three rounds is the winner.
+
+Development
+-----------
+Checkout out the [wiki](https://github.com/simonbw/saladbowl-js/wiki) for the development process.
