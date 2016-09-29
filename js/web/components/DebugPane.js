@@ -12,7 +12,7 @@ module.exports = (props) => {
 
   if (state.get('ui').get('debug')) {
     return (
-      <div className="debug-bar">
+      <div className="debug">
         <pre>
           {JSON.stringify(state, null, 2)}
         </pre>

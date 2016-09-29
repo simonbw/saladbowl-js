@@ -1,6 +1,6 @@
 @import "variables";
 
-.debug-bar {
+.debug {
   background: $gray5;
   margin-top: 50px;
   padding: 20px;
@@ -17,5 +17,43 @@
   pre {
     font-family: $font-monospace;
     white-space: pre-wrap;
+  }
+}
+
+.git-info {
+  background: $gray5;
+  font-family: $font-monospace;
+  padding: 10px;
+  text-align: left;
+
+  > * {
+    display: block;
+    padding: 3px;
+  }
+
+  .branch {
+    text-align: center;
+  }
+
+  .branch-name {
+    //font-style: italic;
+    font-weight: bold;
+  }
+
+  .log {
+    color: $black;
+    text-decoration: none;
+  }
+
+  .log + .log {
+    border-top: 1px solid $gray4;
+  }
+
+  .log:hover {
+    background: $white;
+  }
+
+  .hash {
+    font-weight: bold;
   }
 }
