@@ -1,0 +1,13 @@
+<h2>Git Log</h2>
+<div class="git-info">
+  <div class="branch">
+    <span>branch:</span>
+    <a href="{{branchUrl}}" class="branch-name">{{branchName}}</a>
+  </div>
+  {{#each logs}}
+    <a href="{{url}}" class="log">
+      <span class="hash">{{short}}</span>
+      <span class="message">{{message}}</span>
+    </a>
+  {{/each}}
+</div>
