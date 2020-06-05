@@ -17,6 +17,8 @@ exports[ActionTypes.CLIENT.ROUND_STARTED] = (game, action) => {
     .set('lastCorrectWordIndex', null)
     .set('roundStarted', true)
     .set('roundStartedAt', action.startTime)
+    .set('secondsThisRound', action.secondsThisRound)
+    .set('secondsLeftover', 0)
     .set('wordIndex', GameHelpers.getNextWordIndex(game));
 };
 
@@ -64,17 +66,20 @@ exports[ActionTypes.CLIENT.WORD_CORRECT] = (game, action) => {
     return !word.get('inBowl');
   });
 
-  if (bowlIsEmpty) {
+  if (bowlIsEmpty) { // The phase just
     if (game.get('phaseIndex') == 2) { // game is over
       return game
         .set('ended', true);
     } else {
+      const roundEndTime = game.get('roundStartedAt') + game.get('secondsThisRound')
+      const secondsLeftover = roundEndTime - action.time;
       game = game
         .set('words', game.get('words').map((word) => {
           return word.set('inBowl', true);
         }))
         .set('roundStarted', false)
-        .set('phaseIndex', game.get('phaseIndex') + 1);
+        .set('phaseIndex', game.get('phaseIndex') + 1)
+        .set('secondsLeftover', secondsLeftover);
     }
   }
 

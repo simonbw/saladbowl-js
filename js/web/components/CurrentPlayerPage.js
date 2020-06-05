@@ -50,7 +50,7 @@ function PlayingPage(props) {
   return (
     <div>
       <h1>{phaseName}</h1>
-      <Timer endTime={game.get('roundStartedAt') + game.get('secondsPerRound') * 1000}/>
+      <Timer endTime={game.get('roundStartedAt') + game.get('secondsThisRound') * 1000}/>
       <div className="current-word word">
         {waitingForServer ? ' ' : word.get('word')}
       </div>

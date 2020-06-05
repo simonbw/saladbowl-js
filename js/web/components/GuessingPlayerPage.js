@@ -19,7 +19,7 @@ module.exports = (props) => {
     <div>
       <h1>You Are Guessing</h1>
       {game.get('roundStarted') &&
-      <Timer endTime={game.get('roundStartedAt') + game.get('secondsPerRound') * 1000}/>
+      <Timer endTime={game.get('roundStartedAt') + game.get('secondsThisRound') * 1000}/>
       }
       <LastCorrectWord word={lastCorrectWord}/>
       { /*TODO: Pluralize "words"*/ }
