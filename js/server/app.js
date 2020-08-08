@@ -1,15 +1,12 @@
 'use strict';
 
 const bodyParser = require('body-parser');
-const browserify = require('browserify-middleware');
-const babelify = require('babelify');
 const cookieParser = require('cookie-parser');
 const express = require('express');
 const favicon = require('serve-favicon');
 const hbs = require('hbs');
 const logger = require('morgan');
 const path = require('path');
-const sass = require('node-sass-middleware');
 
 const errorHandler = require('./errorHandler');
 const GameSocket = require('./socket/GameSocket');
@@ -29,7 +26,6 @@ const templatesPath = path.join(projectPath, 'templates');
 
 // Urls
 const cssUrl = '/css';
-const jsUrl = '/js';
 
 // view engine setup
 app.set('views', templatesPath);
@@ -45,19 +41,9 @@ app.use(logger('dev', {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
-app.use(jsUrl, browserify(webSourcePath, {transform: [babelify.configure({presets: ['es2015', 'react']})]}));
-app.use(sass({
-  src: scssSourcePath,
-  dest: scssDestPath,
-  prefix: cssUrl,
-  debug: false,
-  sourceMap: true,
-  error: (error) => {
-    console.error('SCSS error:', error, error.stack);
-  }
-}));
 app.use(favicon(faviconPath));
 app.use(express.static(staticAssetsPath));
+app.use(express.static(path.join(projectPath, 'dist')));
 
 // My middleware
 app.use(guaranteeUser);

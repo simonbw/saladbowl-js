@@ -55,26 +55,10 @@ router.get('/how-to-play', (req, res, next) => {
  * Display the currently running version.
  */
 router.get('/version', (req, res, next) => {
-  const logPromise = childProcess.exec('git log -n 10 --pretty=oneline');
-  const branchPromise = childProcess.exec('git rev-parse --abbrev-ref HEAD');
-  Promise.all([logPromise, branchPromise]).then((results) => {
-    const logs = results[0].stdout.trim().split('\n').map((s) => {
-      const i = s.indexOf(' ');
-      const hash = s.slice(0, i);
-      return {
-        hash: hash,
-        short: hash.slice(0, 7),
-        message: s.slice(i + 1),
-        url: `https://github.com/simonbw/saladbowl-js/commit/${hash}`
-      };
-    });
-    const branchName = results[1].stdout.trim();
-
-    res.render('version', {
-      branchName: branchName,
-      branchUrl: `https://github.com/simonbw/saladbowl-js/tree/${branchName}`,
-      logs: logs
-    });
+  const hash = process.env.SOURCE_VERSION || 'unknown';
+  res.render('version', {
+    hash,
+    hashUrl: `https://github.com/simonbw/saladbowl-js/commit/${hash}`,
   });
 });
 
@@ -88,7 +72,7 @@ router.get('/:gameId', (req, res, next) => {
       res.render('game', {
         initialGame: initialGame,
         userId: req.user.id,
-        scripts: ['/js/gamePage.js'],
+        scripts: ['/js/web/gamePage.js'],
         debugMode: (req.app.get('env') === 'development')
       });
     })
