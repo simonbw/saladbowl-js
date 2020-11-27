@@ -2,6 +2,7 @@
 
 const ActionTypes = require('../../../shared/ActionTypes');
 const HandlerHelpers = require('./HandlerHelpers');
+const GameStore = require('../../GameStore');
 
 /**
  *
@@ -31,26 +32,29 @@ exports[ActionTypes.SERVER.SKIP_WORD] = (data, socket) => {
  *
  */
 exports[ActionTypes.SERVER.START_ROUND] = (data, socket) => {
-  const leftover = game.get('secondsLeftover');
-  const secondsThisRound = leftover > 0
-    ? leftover + game.get('bonusSeconds')
-    : game.get('secondsPerRound');
-  HandlerHelpers.dispatch(socket, {
-    type: ActionTypes.CLIENT.ROUND_STARTED,
-    startTime: Date.now(),
-    secondsThisRound: secondsThisRound
-  }, (action, game) => {
-    // TODO: Better timer handling
-    if (socket.roundTimeout) {
-      clearTimeout(socket.roundTimeout);
-    }
-    socket.roundTimeout = setTimeout(() => {
+  GameStore.get(socket.gameId)
+    .then(game => {
+      const leftover = game.get('secondsLeftover');
+      const secondsThisRound = leftover > 0
+        ? leftover + game.get('bonusSeconds')
+        : game.get('secondsPerRound');
       HandlerHelpers.dispatch(socket, {
-        type: ActionTypes.CLIENT.ROUND_ENDED
+        type: ActionTypes.CLIENT.ROUND_STARTED,
+        startTime: Date.now(),
+        secondsThisRound: secondsThisRound
+      }, (action) => {
+        // TODO: Better timer handling
+        if (socket.roundTimeout) {
+          clearTimeout(socket.roundTimeout);
+        }
+        socket.roundTimeout = setTimeout(() => {
+          HandlerHelpers.dispatch(socket, {
+            type: ActionTypes.CLIENT.ROUND_ENDED
+          });
+        }, secondsThisRound * 1000);
+        return action;
       });
-    }, secondsThisRound * 1000);
-    return action;
-  });
+    });
 };
 
 // Never actually happens because the server is the one that decides when rounds end
