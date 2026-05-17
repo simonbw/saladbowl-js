@@ -1,11 +1,11 @@
 'use strict';
 
-const React = require('react');
+import React from 'react';
 
-const TeamList = require('./TeamList');
-const GameHelpers = require('../../shared/GameHelpers');
+import TeamList from './TeamList';
+import GameHelpers from '../../shared/GameHelpers';
 
-module.exports = (props) => {
+export default (props) => {
   const game = props.state.get('game');
   const teams = GameHelpers.getTeams(game);
   let mostSkipped = GameHelpers.getMostSkippedWord(game);

@@ -1,11 +1,11 @@
 'use strict';
 
-const Redux = require('redux');
+import * as Redux from 'redux';
 
-const AppReducers = require('./reducers/AppReducers');
-const loggingMiddleware = require('./middleware/loggingMiddleware');
-const socketMiddleware = require('./middleware/socketMiddleware');
-const thunkMiddleware = require('./middleware/thunkMiddleware');
+import AppReducers from './reducers/AppReducers';
+import loggingMiddleware from './middleware/loggingMiddleware';
+import socketMiddleware from './middleware/socketMiddleware';
+import thunkMiddleware from './middleware/thunkMiddleware';
 
 /**
  *
@@ -14,7 +14,7 @@ const thunkMiddleware = require('./middleware/thunkMiddleware');
  * @param enableReduxDevTools
  * @returns {*}
  */
-module.exports = (initialState, socket, enableReduxDevTools) => {
+export default (initialState, socket, enableReduxDevTools) => {
   const reduxDevTools = (window.devToolsExtension && enableReduxDevTools) ? window.devToolsExtension() : (x) => x;
   return Redux.createStore(
     AppReducers,

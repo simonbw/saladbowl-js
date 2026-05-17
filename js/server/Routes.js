@@ -1,12 +1,11 @@
 'use strict';
 
-const express = require('express');
-const childProcess = require('child-process-promise');
-const GameStore = require('./GameStore');
-const MathUtil = require('../shared/MathUtil');
+import express from 'express';
+import childProcess from 'child-process-promise';
+import GameStore from './GameStore';
+import MathUtil from '../shared/MathUtil';
 
 const router = express.Router();
-module.exports = router;
 
 /**
  * Display the home page.
@@ -84,3 +83,5 @@ router.get('/:gameId', (req, res, next) => {
       }
     });
 });
+
+export default router;

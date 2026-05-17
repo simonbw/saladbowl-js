@@ -1,19 +1,19 @@
 'use strict';
 
-const React = require('react');
-const ReactRedux = require('react-redux');
+import React from 'react';
+import * as ReactRedux from 'react-redux';
 
-const AddWordsPage = require('./AddWordsPage');
-const CurrentPlayerPage = require('./CurrentPlayerPage');
-const DebugPane = require('./DebugPane');
-const GameHelpers = require('../../shared/GameHelpers');
-const GameOverPage = require('./GameOverPage');
-const GuessingPlayerPage = require('./GuessingPlayerPage');
-const JoinGamePage = require('./JoinGamePage');
-const JoinTeamsPage = require('./JoinTeamsPage');
-const Random = require('../../shared/Random');
-const GameActions = require('../actions/GameActions');
-const WaitingPlayerPage = require('./WaitingPlayerPage');
+import AddWordsPage from './AddWordsPage';
+import CurrentPlayerPage from './CurrentPlayerPage';
+import DebugPane from './DebugPane';
+import GameHelpers from '../../shared/GameHelpers';
+import GameOverPage from './GameOverPage';
+import GuessingPlayerPage from './GuessingPlayerPage';
+import JoinGamePage from './JoinGamePage';
+import JoinTeamsPage from './JoinTeamsPage';
+import Random from '../../shared/Random';
+import GameActions from '../actions/GameActions';
+import WaitingPlayerPage from './WaitingPlayerPage';
 
 /**
  *
@@ -86,4 +86,4 @@ function mapStateToProps(state) {
   };
 }
 
-module.exports = ReactRedux.connect(mapStateToProps)(GameComponent);
+export default ReactRedux.connect(mapStateToProps)(GameComponent);

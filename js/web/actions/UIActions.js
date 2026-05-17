@@ -1,5 +1,6 @@
-const ActionTypes = require('../../shared/ActionTypes.js');
-const UIActions = module.exports;
+import ActionTypes from '../../shared/ActionTypes.js';
+
+const UIActions = {};
 
 
 UIActions.updateField = (field, value) => {
@@ -9,3 +10,5 @@ UIActions.updateField = (field, value) => {
     value: value
   };
 };
+
+export default UIActions;

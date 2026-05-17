@@ -1,7 +1,9 @@
 'use strict';
 
-const GameStore = require('../../GameStore');
-const MessageTypes = require('../../../shared/MessageTypes.js');
+import GameStore from '../../GameStore';
+import MessageTypes from '../../../shared/MessageTypes.js';
+
+const HandlerHelpers = {};
 
 /**
  * Dispatch an action to the GameStore then the clients.
@@ -9,7 +11,7 @@ const MessageTypes = require('../../../shared/MessageTypes.js');
  * @param action
  * @param actionTransform {function(action,game):action=} - Return null to cancel emit
  */
-exports.dispatch = (socket, action, actionTransform) => {
+HandlerHelpers.dispatch = (socket, action, actionTransform) => {
   GameStore.dispatch(socket.gameId, action)
     .then((game) => {
       if (typeof actionTransform == 'function') {
@@ -27,3 +29,5 @@ exports.dispatch = (socket, action, actionTransform) => {
       socket.emit(MessageTypes.ERROR, error);
     });
 };
+
+export default HandlerHelpers;

@@ -1,21 +1,30 @@
 'use strict';
 
+import ConnectionHandlers from './ConnectionHandlers';
+import ErrorHandlers from './ErrorHandlers';
+import GameHandlers from './GameHandlers';
+import RoutingHandlers from './RoutingHandlers';
+import TimingHandlers from './TimingHandlers';
+
 /**
  * @type {Object<string, function>}
  */
 const handlers = [
-  require('./ConnectionHandlers'),
-  require('./ErrorHandlers'),
-  require('./GameHandlers'),
-  require('./RoutingHandlers'),
-  require('./TimingHandlers')
+  ConnectionHandlers,
+  ErrorHandlers,
+  GameHandlers,
+  RoutingHandlers,
+  TimingHandlers
 ];
 
+const SocketHandlers = {};
 
 /**
  * Initialize all handlers on a socket.
  * @param socket
  */
-module.exports.init = (socket) => {
+SocketHandlers.init = (socket) => {
   handlers.forEach((handler) => handler(socket));
 };
+
+export default SocketHandlers;

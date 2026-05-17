@@ -24,4 +24,4 @@ function disableSleeping() {
   noSleepVideo.play();
 }
 
-module.exports = disableSleeping;
+export default disableSleeping;

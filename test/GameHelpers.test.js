@@ -1,11 +1,10 @@
 'use strict';
 
-const defaultGame = require('../js/shared/defaultGame');
-const describe = require('mocha').describe;
-const expect = require('expect');
-const GameHelpers = require('../js/shared/GameHelpers');
-const Immutable = require('immutable');
-const it = require('mocha').it;
+import { describe, it, expect } from 'vitest';
+import * as Immutable from 'immutable';
+
+import defaultGame from '../js/shared/defaultGame';
+import GameHelpers from '../js/shared/GameHelpers';
 
 
 describe('GameHelpers', () => {
@@ -57,9 +56,9 @@ describe('GameHelpers', () => {
     const player5 = Immutable.fromJS({id: 'player5', team: 1});
     const player6 = Immutable.fromJS({id: 'player6', team: 1});
     game = game.set('players', game.get('players').push(player1, player2, player3, player4, player5, player6));
-    expect(GameHelpers.getTeams(game).size).toEqual(2, 'There should be 2 teams');
-    expect(GameHelpers.getTeams(game).get(0).get('players').size).toEqual(4, 'Team one should have 4 players');
-    expect(GameHelpers.getTeams(game).get(1).get('players').size).toEqual(2, 'Team two should have 2 players');
+    expect(GameHelpers.getTeams(game).size).toEqual(2);
+    expect(GameHelpers.getTeams(game).get(0).get('players').size).toEqual(4);
+    expect(GameHelpers.getTeams(game).get(1).get('players').size).toEqual(2);
   });
 
   it('getPlayer should work', () => {
@@ -71,7 +70,7 @@ describe('GameHelpers', () => {
         .push(player2));
     expect(GameHelpers.getPlayer(game, 'player1')).toEqual(player1);
     expect(GameHelpers.getPlayer(game, 'player2')).toEqual(player2);
-    expect(GameHelpers.getPlayer(game, 'player3')).toNotExist();
+    expect(GameHelpers.getPlayer(game, 'player3')).toBeFalsy();
   });
 
   it('getPlayerIndex should work', () => {
@@ -91,7 +90,7 @@ describe('GameHelpers', () => {
       const player1 = Immutable.fromJS({id: 'player1', team: 1, active: true});
       const player2 = Immutable.fromJS({id: 'player2', team: 0, active: true});
       const game = defaultGame.set('players', defaultGame.get('players').push(player1, player2));
-      expect(GameHelpers.getCurrentPlayer(game).toJS()).toInclude(player2.toJS());
+      expect(GameHelpers.getCurrentPlayer(game).toJS()).toMatchObject(player2.toJS());
     });
 
     it('should handle skipped players', () => {
@@ -99,7 +98,7 @@ describe('GameHelpers', () => {
       const player2 = Immutable.fromJS({id: 'player2', team: 0, active: true});
       const player3 = Immutable.fromJS({id: 'player3', team: 1, active: true});
       const game = defaultGame.set('players', defaultGame.get('players').push(player1, player2, player3));
-      expect(GameHelpers.getCurrentPlayer(game).toJS()).toInclude(player2.toJS());
+      expect(GameHelpers.getCurrentPlayer(game).toJS()).toMatchObject(player2.toJS());
     });
   });
 
@@ -124,8 +123,8 @@ describe('GameHelpers', () => {
         .push(player1, player2, player3, player4));
     const result = GameHelpers.getCurrentTeam(game).toJS();
     expect(result.players.length).toEqual(2);
-    expect(result.players[0]).toInclude(player1.toJS());
-    expect(result.players[1]).toInclude(player2.toJS());
+    expect(result.players[0]).toMatchObject(player1.toJS());
+    expect(result.players[1]).toMatchObject(player2.toJS());
   });
 
   it('playerIsGuessing should work');

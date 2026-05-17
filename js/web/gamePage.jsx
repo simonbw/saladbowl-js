@@ -1,18 +1,16 @@
 "use strict";
 
-window.Promise = window.Promise || require("promise-polyfill");
-require("setimmediate");
+import * as Immutable from "immutable";
+import io from "socket.io-client";
+import { Provider as ReduxProvider } from "react-redux";
+import React from "react";
+import ReactDom from "react-dom";
+import disableSleeping from "./NoSleep";
 
-const Immutable = require("immutable");
-const io = require("socket.io-client");
-const ReduxProvider = require("react-redux").Provider;
-const React = require("react");
-const ReactDom = require("react-dom");
-const disableSleeping = require("./NoSleep");
-
-const Store = require("./Store");
-const GameApp = require("./components/GameApp");
-const SocketHandlers = require("./socket/SocketHandlers");
+import Store from "./Store";
+import GameApp from "./components/GameApp";
+import SocketHandlers from "./socket/SocketHandlers";
+import GameHelpers from "../shared/GameHelpers";
 
 /**
  * Render the page and open the socket.
@@ -40,7 +38,7 @@ window.onload = () => {
     window.DEBUG = {
       socket: socket,
       store: store,
-      GameHelpers: require("../shared/GameHelpers")
+      GameHelpers: GameHelpers
     };
   }
 

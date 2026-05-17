@@ -1,10 +1,12 @@
 'use strict';
 
-const Immutable = require('immutable');
+import * as Immutable from 'immutable';
 
-const ActionTypes = require('../ActionTypes');
-const MathUtil = require('../MathUtil');
-const GameHelpers = require('../GameHelpers');
+import ActionTypes from '../ActionTypes';
+import MathUtil from '../MathUtil';
+import GameHelpers from '../GameHelpers';
+
+const reducers = {};
 
 /**
  * Start the round.
@@ -12,7 +14,7 @@ const GameHelpers = require('../GameHelpers');
  * @param action
  * @returns {Immutable.Map}
  */
-exports[ActionTypes.CLIENT.ROUND_STARTED] = (game, action) => {
+reducers[ActionTypes.CLIENT.ROUND_STARTED] = (game, action) => {
   return game
     .set('lastCorrectWordIndex', null)
     .set('roundStarted', true)
@@ -29,7 +31,7 @@ exports[ActionTypes.CLIENT.ROUND_STARTED] = (game, action) => {
  * @param action
  * @returns {Immutable.Map}
  */
-exports[ActionTypes.CLIENT.ROUND_ENDED] = (game, action) => {
+reducers[ActionTypes.CLIENT.ROUND_ENDED] = (game, action) => {
   if (!game.get('roundStarted')) { // Cannot end a round that has not started.
     return game;
   }
@@ -48,7 +50,7 @@ exports[ActionTypes.CLIENT.ROUND_ENDED] = (game, action) => {
  * @param action
  * @returns {Immutable.Map}
  */
-exports[ActionTypes.CLIENT.WORD_CORRECT] = (game, action) => {
+reducers[ActionTypes.CLIENT.WORD_CORRECT] = (game, action) => {
   // TODO: Validate that round is started and stuff
   const currentPlayer = GameHelpers.getCurrentPlayer(game);
   game = game
@@ -93,7 +95,7 @@ exports[ActionTypes.CLIENT.WORD_CORRECT] = (game, action) => {
  * @param action
  * @returns {Immutable.Map}
  */
-exports[ActionTypes.CLIENT.WORD_SKIPPED] = (game, action) => {
+reducers[ActionTypes.CLIENT.WORD_SKIPPED] = (game, action) => {
   return game
     .updateIn(['words', game.get('wordIndex')], (word) => {
       return word.set('skips', word.get('skips', 0) + 1);
@@ -108,7 +110,7 @@ exports[ActionTypes.CLIENT.WORD_SKIPPED] = (game, action) => {
  * @param action
  * @returns {Immutable.Map}
  */
-exports[ActionTypes.CLIENT.PLAYER_SKIPPED] = (game, action) => {
+reducers[ActionTypes.CLIENT.PLAYER_SKIPPED] = (game, action) => {
   if (!action.playerId) {
     throw new Error('Player Skipped action requires action.playerId');
   }
@@ -119,3 +121,5 @@ exports[ActionTypes.CLIENT.PLAYER_SKIPPED] = (game, action) => {
   const playerIndex = GameHelpers.getPlayerIndex(game, action.playerId);
   return game.setIn(['players', playerIndex, 'active'], false);
 };
+
+export default reducers;

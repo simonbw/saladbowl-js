@@ -1,11 +1,11 @@
 'use strict';
 
-const React = require('react');
+import React from 'react';
 
-const GameActions = require('../actions/GameActions');
+import GameActions from '../actions/GameActions';
 
 
-module.exports = (props) => {
+export default (props) => {
   return (
     <div className="team-list">
       {props.teams.map((team, i) => {

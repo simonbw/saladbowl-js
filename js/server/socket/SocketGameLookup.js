@@ -1,8 +1,8 @@
 'use strict';
 
-const GameStore = require('../GameStore');
-const ActionTypes = require('../../shared/ActionTypes');
-const MessageTypes = require('../../shared/MessageTypes');
+import GameStore from '../GameStore';
+import ActionTypes from '../../shared/ActionTypes';
+import MessageTypes from '../../shared/MessageTypes';
 
 
 /**
@@ -10,7 +10,7 @@ const MessageTypes = require('../../shared/MessageTypes');
  * @param socket
  * @param next
  */
-module.exports = (socket, next) => {
+export default (socket, next) => {
   socket.gameId = socket.handshake.query.gameId;
   GameStore.get(socket.gameId)
     .then((game) => {

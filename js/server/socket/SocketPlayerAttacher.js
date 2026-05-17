@@ -4,7 +4,7 @@
  * @param socket
  * @param next
  */
-module.exports = (socket, next) => {
+export default (socket, next) => {
   socket.user = {
     'id': socket.request.cookies.userId
   };

@@ -1,9 +1,7 @@
 'use strict';
 
-const describe = require('mocha').describe;
-const it = require('mocha').it;
-const expect = require('expect');
-const MathUtil = require('../js/shared/MathUtil');
+import { describe, it, expect } from 'vitest';
+import MathUtil from '../js/shared/MathUtil';
 
 describe('MathUtil', () => {
   it('mod should work', () => {

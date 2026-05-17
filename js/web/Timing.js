@@ -1,10 +1,10 @@
 'use strict';
 
-const MessageTypes = require('../shared/MessageTypes');
-const MathUtil = require('../shared/MathUtil');
+import MessageTypes from '../shared/MessageTypes';
+import MathUtil from '../shared/MathUtil';
 
 
-const Timing = module.exports;
+const Timing = {};
 
 const offsets = [];
 const MAXIMUM_OFFSETS = 20;
@@ -34,3 +34,5 @@ Timing.getServerTime = () => {
  * @returns {number}
  */
 Timing.getOffset = () => MathUtil.median(offsets) || 0;
+
+export default Timing;

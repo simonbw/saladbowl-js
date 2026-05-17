@@ -1,5 +1,7 @@
 'use strict';
 
+/* eslint-disable no-extend-native */
+
 Array.prototype.find = function (test, self) {
   if (typeof test !== 'function') {
     throw new Error('find must be called with a function');

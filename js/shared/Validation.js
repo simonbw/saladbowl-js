@@ -4,7 +4,7 @@
  * Return true if username is valid, else false.
  * @param userName
  */
-exports.validateUserName = (userName) => {
+export const validateUserName = (userName) => {
   if (typeof userName != 'string') {
     return false;
   }
@@ -16,7 +16,7 @@ exports.validateUserName = (userName) => {
  * @param word
  * @returns {boolean}
  */
-exports.validateWord = (word) => {
+export const validateWord = (word) => {
   if (typeof word != 'string') {
     return false;
   }

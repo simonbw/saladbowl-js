@@ -4,7 +4,7 @@
  * Hash a string to an integer.
  * @returns {number}
  */
-exports.hash = (s) => {
+export const hash = (s) => {
   if (typeof s != "string") {
     throw Error('Cannot hash: ' + (typeof s));
   }

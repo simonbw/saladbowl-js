@@ -3,7 +3,7 @@
 /**
  * Executes functions.
  */
-module.exports = (store) => (next) => (action) => {
+export default (store) => (next) => (action) => {
   if (typeof action == 'function') {
     return action(store.dispatch, store.getState); // NOTE: doesn't call next
   } else {

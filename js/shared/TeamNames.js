@@ -1,13 +1,13 @@
 'use strict';
 
-const Random = require('./Random');
-const StringUtil = require('./StringUtil');
+import Random from './Random';
+import * as StringUtil from './StringUtil';
 
 
 /**
  * Used for making interesting team names.
  */
-const TeamNames = module.exports;
+const TeamNames = {};
 
 /**
  * Get the name of the nth team for a game.
@@ -96,3 +96,5 @@ const adjectives = [
   'Yellow',
   'Zesty'
 ];
+
+export default TeamNames;

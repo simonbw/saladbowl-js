@@ -1,8 +1,8 @@
 'use strict';
 
-const Immutable = require('immutable');
+import * as Immutable from 'immutable';
 
-module.exports = Immutable.fromJS({
+export default Immutable.fromJS({
   connections: {},
   ended: false,
   lastCorrectWordIndex: null,

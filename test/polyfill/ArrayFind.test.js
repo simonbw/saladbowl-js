@@ -1,8 +1,8 @@
 'use strict';
 
+import { describe, it, expect } from 'vitest';
 
-require('../../js/web/polyfills/ArrayFind');
-const expect = require('expect');
+import '../../js/web/polyfills/ArrayFind';
 
 describe('ArrayFind', () => {
   describe('find', () => {

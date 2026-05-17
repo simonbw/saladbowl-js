@@ -1,14 +1,17 @@
 'use strict';
 
-const MessageTypes = require('../../shared/MessageTypes');
+import MessageTypes from '../../shared/MessageTypes';
+import MidGameHandlers from './handlers/MidGameHandlers';
+import OutOfSyncHelper from './handlers/OutOfSyncHelper';
+import PreGameHandlers from './handlers/PreGameHandlers';
 
 /**
  * Map of all action handlers.
  */
 const handlers = Object.assign({},
-  require('./handlers/MidGameHandlers'),
-  require('./handlers/OutOfSyncHelper'),
-  require('./handlers/PreGameHandlers'));
+  MidGameHandlers,
+  OutOfSyncHelper,
+  PreGameHandlers);
 
 
 /**
@@ -16,7 +19,7 @@ const handlers = Object.assign({},
  * @param socket
  * @param next
  */
-module.exports = (socket, next) => {
+export default (socket, next) => {
   socket.on(MessageTypes.GAME, (action) => {
     console.log('game action received:', action);
     if (handlers.hasOwnProperty(action.type)) {

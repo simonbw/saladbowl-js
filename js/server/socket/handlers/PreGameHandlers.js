@@ -1,12 +1,14 @@
 'use strict';
 
-const ActionTypes = require('../../../shared/ActionTypes');
-const HandlerHelpers = require('./HandlerHelpers');
+import ActionTypes from '../../../shared/ActionTypes';
+import HandlerHelpers from './HandlerHelpers';
+
+const handlers = {};
 
 /**
  *
  */
-exports[ActionTypes.SERVER.SAVE_WORDS] = (data, socket) => {
+handlers[ActionTypes.SERVER.SAVE_WORDS] = (data, socket) => {
   HandlerHelpers.dispatch(socket, {
     type: ActionTypes.CLIENT.WORDS_UPDATED,
     playerId: socket.user.id,
@@ -17,7 +19,7 @@ exports[ActionTypes.SERVER.SAVE_WORDS] = (data, socket) => {
 /**
  *
  */
-exports[ActionTypes.SERVER.JOIN_GAME] = (data, socket) => {
+handlers[ActionTypes.SERVER.JOIN_GAME] = (data, socket) => {
   HandlerHelpers.dispatch(socket, {
     type: ActionTypes.CLIENT.PLAYER_JOINED,
     player: {
@@ -33,7 +35,7 @@ exports[ActionTypes.SERVER.JOIN_GAME] = (data, socket) => {
 /**
  *
  */
-exports[ActionTypes.SERVER.JOIN_TEAM] = (data, socket) => {
+handlers[ActionTypes.SERVER.JOIN_TEAM] = (data, socket) => {
   HandlerHelpers.dispatch(socket, {
     type: ActionTypes.CLIENT.TEAM_JOINED,
     playerId: socket.user.id,
@@ -44,8 +46,10 @@ exports[ActionTypes.SERVER.JOIN_TEAM] = (data, socket) => {
 /**
  *
  */
-exports[ActionTypes.SERVER.START_GAME] = (data, socket) => {
+handlers[ActionTypes.SERVER.START_GAME] = (data, socket) => {
   HandlerHelpers.dispatch(socket, {
     type: ActionTypes.CLIENT.GAME_STARTED
   });
 };
+
+export default handlers;

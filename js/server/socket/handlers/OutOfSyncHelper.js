@@ -1,13 +1,15 @@
 'use strict';
 
-const ActionTypes = require('../../../shared/ActionTypes');
-const GameStore = require('../../GameStore');
-const MessageTypes = require('../../../shared/MessageTypes');
+import ActionTypes from '../../../shared/ActionTypes';
+import GameStore from '../../GameStore';
+import MessageTypes from '../../../shared/MessageTypes';
+
+const handlers = {};
 
 /**
  * Replace the game when out of sync.
  */
-exports[ActionTypes.SERVER.OUT_OF_SYNC] = (data, socket) => {
+handlers[ActionTypes.SERVER.OUT_OF_SYNC] = (data, socket) => {
   GameStore.get(socket.gameId).then((game) => {
       socket.emit(MessageTypes.GAME, {
         type: ActionTypes.CLIENT.REPLACE_GAME,
@@ -20,3 +22,5 @@ exports[ActionTypes.SERVER.OUT_OF_SYNC] = (data, socket) => {
       socket.emit(MessageTypes.ERROR, error);
     });
 };
+
+export default handlers;

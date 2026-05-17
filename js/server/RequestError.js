@@ -18,4 +18,4 @@ function RequestError(message, status) {
 
 RequestError.prototype = Error.prototype;
 
-module.exports = RequestError;
+export default RequestError;

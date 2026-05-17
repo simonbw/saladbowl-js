@@ -43,7 +43,7 @@ function productionHandler (err, req, res, next) {
  * Choose which error handler to use.
  * @param app
  */
-module.exports = (app) => {
+export default (app) => {
   if (app.get('env') === 'development') {
     return debugHandler;
   } else {

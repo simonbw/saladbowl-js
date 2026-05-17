@@ -1,12 +1,12 @@
 'use strict';
 
-const MessageTypes = require('../../shared/MessageTypes');
+import MessageTypes from '../../shared/MessageTypes';
 
 /**
  * @param socket
  * @param next
  */
-module.exports = (socket, next) => {
+export default (socket, next) => {
   socket.on(MessageTypes.HEARTBEAT, () => {
     socket.emit(MessageTypes.HEARTBEAT, {time: Date.now()});
   });

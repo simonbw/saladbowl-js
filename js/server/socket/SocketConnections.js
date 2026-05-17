@@ -1,13 +1,13 @@
 'use strict';
 
-const HandlerHelpers = require('./handlers/HandlerHelpers');
-const ActionTypes = require('../../shared/ActionTypes.js');
+import HandlerHelpers from './handlers/HandlerHelpers';
+import ActionTypes from '../../shared/ActionTypes.js';
 
 /**
  * @param socket
  * @param next
  */
-module.exports = (socket, next) => {
+export default (socket, next) => {
   // On connection
   setImmediate(() => {
     HandlerHelpers.dispatch(socket, {

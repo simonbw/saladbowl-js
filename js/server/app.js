@@ -1,22 +1,22 @@
 'use strict';
 
-const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
-const express = require('express');
-const favicon = require('serve-favicon');
-const hbs = require('hbs');
-const logger = require('morgan');
-const path = require('path');
+import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
+import express from 'express';
+import favicon from 'serve-favicon';
+import hbs from 'hbs';
+import logger from 'morgan';
+import path from 'path';
 
-const errorHandler = require('./errorHandler');
-const GameSocket = require('./socket/GameSocket');
-const guaranteeUser = require('./guaranteeUser');
-const routes = require('./Routes');
+import errorHandler from './errorHandler';
+import GameSocket from './socket/GameSocket';
+import guaranteeUser from './guaranteeUser';
+import routes from './Routes';
 
 const app = express();
 
 // Paths
-const projectPath = path.join(__dirname, '..', '..');
+const projectPath = path.join(import.meta.dirname, '..', '..');
 const staticAssetsPath = path.join(projectPath, 'public');
 const faviconPath = path.join(staticAssetsPath, 'images', 'favicon.png');
 const scssDestPath = path.join(staticAssetsPath, 'css');
@@ -60,4 +60,4 @@ app.initIo = (io) => {
   GameSocket.init(io);
 };
 
-module.exports = app;
+export default app;

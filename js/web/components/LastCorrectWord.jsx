@@ -1,8 +1,8 @@
 'use strict';
 
-const React = require('react');
+import React from 'react';
 
-module.exports = (props) => {
+export default (props) => {
   const lastCorrectWord = props.word;
 
   if (lastCorrectWord) {

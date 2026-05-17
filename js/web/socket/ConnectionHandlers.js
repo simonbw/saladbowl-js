@@ -1,8 +1,8 @@
 'use strict';
 
-const ActionTypes = require('../../shared/ActionTypes.js');
+import ActionTypes from '../../shared/ActionTypes.js';
 
-module.exports = (socket) => {
+export default (socket) => {
   socket.on('connect', () => {
     console.log('connected');
     socket.store.dispatch({

@@ -1,12 +1,12 @@
 'use strict';
 
-const React = require('react');
+import React from 'react';
 
-const GameHelpers = require('../../shared/GameHelpers');
-const Timer = require('./Timer');
-const GameActions = require('../actions/GameActions');
+import GameHelpers from '../../shared/GameHelpers';
+import Timer from './Timer';
+import GameActions from '../actions/GameActions';
 
-module.exports = (props) => {
+export default (props) => {
   const state = props.state;
   if (!state.get('game').get('roundStarted')) {
     return (<ReadyPage state={state} dispatch={props.dispatch}/>);

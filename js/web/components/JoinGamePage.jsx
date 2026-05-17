@@ -1,18 +1,18 @@
 'use strict';
 
-const React = require('react');
+import React from 'react';
 
-const ActionTypes = require('../../shared/ActionTypes');
-const GameActions = require('../actions/GameActions');
-const UIActions = require('../actions/UIActions');
-const Validation = require('../../shared/Validation.js');
+import ActionTypes from '../../shared/ActionTypes';
+import GameActions from '../actions/GameActions';
+import UIActions from '../actions/UIActions';
+import * as Validation from '../../shared/Validation.js';
 
 /**
  * Renders the Join Game Page.
  * @param props
  * @returns {XML}
  */
-module.exports = (props) => {
+export default (props) => {
   const dispatch = props.dispatch;
   const ui = props.state.get('ui');
   const game = props.state.get('game');

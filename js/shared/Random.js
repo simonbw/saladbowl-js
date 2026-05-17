@@ -1,12 +1,12 @@
 'use strict';
 
-const MathUtil = require('./MathUtil');
+import MathUtil from './MathUtil';
 
 
 /**
  * Utility for doing things based on random numbers.
  */
-const Random = module.exports;
+const Random = {};
 
 // just for shorthand
 const r = Math.random;
@@ -61,7 +61,7 @@ Random.normal = (mean, deviation) => {
  *
  * @returns {*}
  */
-Random.choose = () => {
+Random.choose = function () {
   let options;
   options = 1 <= arguments.length ? [].slice.call(arguments, 0) : [];
   if (options.length === 1) {
@@ -129,3 +129,5 @@ Random.bool = (chance) => {
   }
   return Math.random() < chance;
 };
+
+export default Random;

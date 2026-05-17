@@ -1,7 +1,7 @@
 'use strict';
 
-const React = require('react');
-const Timing = require('../Timing.js');
+import React from 'react';
+import Timing from '../Timing.js';
 
 const DELAY = 50; // milliseconds to wait before drawing again
 const PRECISION = 2; // number of sig figs for timer to use
@@ -9,7 +9,7 @@ const PRECISION = 2; // number of sig figs for timer to use
 /**
  *
  */
-module.exports = React.createClass({
+export default React.createClass({
   propTypes: {
     endTime: React.PropTypes.number
   },

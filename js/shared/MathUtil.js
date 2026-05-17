@@ -1,6 +1,6 @@
 'use strict';
 
-const MathUtil = module.exports;
+const MathUtil = {};
 
 /**
  * Math utility functions.
@@ -66,3 +66,5 @@ MathUtil.median = (a) => {
     return a[Math.floor(a.length / 2)];
   }
 };
+
+export default MathUtil;

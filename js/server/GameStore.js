@@ -4,13 +4,13 @@
  * @file Manages storing, retrieving, and updating games.
  */
 
-const shortId = require('shortid');
+import shortId from 'shortid';
 
-const defaultGame = require('../shared/defaultGame');
-const GameReducers = require('../shared/reducers/GameReducers');
-const RequestError = require('./RequestError');
+import defaultGame from '../shared/defaultGame';
+import GameReducers from '../shared/reducers/GameReducers';
+import RequestError from './RequestError';
 
-const GameStore = module.exports;
+const GameStore = {};
 
 // Temporary in memory store for games
 // TODO: Better storage option
@@ -88,3 +88,5 @@ GameStore.dispatch = (gameId, action) => {
       return GameStore.save(game);
     });
 };
+
+export default GameStore;

@@ -1,8 +1,8 @@
 'use strict';
 
-const Immutable = require('immutable');
+import * as Immutable from 'immutable';
 
-const ActionTypes = require('../../shared/ActionTypes');
+import ActionTypes from '../../shared/ActionTypes';
 
 const DEFAULT_STATE = Immutable.fromJS({});
 
@@ -41,7 +41,7 @@ reducers[ActionTypes.CLIENT.WORD_CORRECT] = (state) => {
  * @param action {Object}
  * @returns {Immutable.Map} new state
  */
-module.exports = (state, action) => {
+export default (state, action) => {
   state = state || DEFAULT_STATE;
   if (action && action.type && reducers.hasOwnProperty(action.type)) {
     return reducers[action.type](state, action);

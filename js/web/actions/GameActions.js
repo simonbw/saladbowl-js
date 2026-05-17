@@ -1,7 +1,7 @@
-const ActionTypes = require('../../shared/ActionTypes.js');
-const UIActions = require('./UIActions.js');
+import ActionTypes from '../../shared/ActionTypes.js';
+import UIActions from './UIActions.js';
 
-const GameActions = module.exports;
+const GameActions = {};
 
 /**
  * Send a join game action.
@@ -73,3 +73,5 @@ GameActions.outOfSync = () => (dispatch) => {
   dispatch(UIActions.updateField('synced', false));
   dispatch({type: ActionTypes.SERVER.OUT_OF_SYNC});
 };
+
+export default GameActions;

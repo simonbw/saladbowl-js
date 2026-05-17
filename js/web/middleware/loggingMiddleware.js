@@ -3,7 +3,7 @@
 /**
  * Logs all actions.
  */
-module.exports = (store) => (next) => (action) => {
+export default (store) => (next) => (action) => {
   console.log('dispatching', action);
   let result = next(action);
   const state = store.getState();

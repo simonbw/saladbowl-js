@@ -8,10 +8,12 @@
  */
 
 
-const app = require('./js/server/app');
-const debug = require('debug')('saladbowl:server');
-const http = require('http');
-const socketIo = require('socket.io');
+import app from './js/server/app';
+import createDebug from 'debug';
+import http from 'http';
+import socketIo from 'socket.io';
+
+const debug = createDebug('saladbowl:server');
 
 
 // Get port from environment and store in Express.

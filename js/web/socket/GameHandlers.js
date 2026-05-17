@@ -1,11 +1,11 @@
 'use strict';
 
-const ActionTypes = require('../../shared/ActionTypes.js');
-const MessageTypes = require('../../shared/MessageTypes.js');
-const UIActions = require('../actions/UIActions');
-const GameActions = require('../actions/GameActions');
+import ActionTypes from '../../shared/ActionTypes.js';
+import MessageTypes from '../../shared/MessageTypes.js';
+import UIActions from '../actions/UIActions';
+import GameActions from '../actions/GameActions';
 
-module.exports = (socket) => {
+export default (socket) => {
   socket.on(MessageTypes.GAME, function (action) {
     const store = socket.store;
     store.dispatch(action);

@@ -1,3 +1,5 @@
+'use strict';
+
 class PausableTimeout {
   constructor(callback, duration) {
     this.callback = () => {
@@ -34,3 +36,5 @@ class PausableTimeout {
     }
   }
 }
+
+export default PausableTimeout;

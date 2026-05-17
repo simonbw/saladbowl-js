@@ -1,9 +1,11 @@
 'use strict';
 
-const Immutable = require('immutable');
+import * as Immutable from 'immutable';
 
-const ActionTypes = require('../ActionTypes');
-const GameHelpers = require('../GameHelpers');
+import ActionTypes from '../ActionTypes';
+import GameHelpers from '../GameHelpers';
+
+const reducers = {};
 
 /**
  * Called when a new player has joined.
@@ -11,7 +13,7 @@ const GameHelpers = require('../GameHelpers');
  * @param action
  * @returns {Immutable.Map}
  */
-exports[ActionTypes.CLIENT.PLAYER_JOINED] = (game, action) => {
+reducers[ActionTypes.CLIENT.PLAYER_JOINED] = (game, action) => {
   const defaultPlayer = {team: 0, active: true}; // TODO: Move to default data somewhere
   let player = Immutable.fromJS(Object.assign(defaultPlayer, action.player));
 
@@ -44,7 +46,7 @@ exports[ActionTypes.CLIENT.PLAYER_JOINED] = (game, action) => {
  * @param action
  * @returns {Immutable.Map}
  */
-exports[ActionTypes.CLIENT.WORDS_UPDATED] = (game, action) => {
+reducers[ActionTypes.CLIENT.WORDS_UPDATED] = (game, action) => {
   const playerIndex = GameHelpers.getPlayerIndex(game, action.playerId);
   if (playerIndex < 0) {
     throw new Error(`Player ${action.playerId} is not in game`);
@@ -72,7 +74,7 @@ exports[ActionTypes.CLIENT.WORDS_UPDATED] = (game, action) => {
  * @param action
  * @returns {Immutable.Map}
  */
-exports[ActionTypes.CLIENT.GAME_STARTED] = (game, action) => {
+reducers[ActionTypes.CLIENT.GAME_STARTED] = (game, action) => {
   return game.set('started', true);
 };
 
@@ -82,7 +84,9 @@ exports[ActionTypes.CLIENT.GAME_STARTED] = (game, action) => {
  * @param action
  * @returns {Immutable.Map}
  */
-exports[ActionTypes.CLIENT.TEAM_JOINED] = (game, action) => {
+reducers[ActionTypes.CLIENT.TEAM_JOINED] = (game, action) => {
   let playerIndex = GameHelpers.getPlayerIndex(game, action.playerId);
   return game.setIn(['players', playerIndex, 'team'], action.team);
 };
+
+export default reducers;

@@ -1,11 +1,11 @@
 'use strict';
 
-const MessageTypes = require('../../shared/MessageTypes.js');
-const Timing = require('../Timing');
+import MessageTypes from '../../shared/MessageTypes.js';
+import Timing from '../Timing';
 
 const HEARTBEAT_INTERVAL = 500;
 
-module.exports = (socket) => {
+export default (socket) => {
   let sentHeartbeatAt;
   socket.on(MessageTypes.HEARTBEAT, (data) => {
     Timing.update(sentHeartbeatAt, data.time);

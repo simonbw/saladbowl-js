@@ -1,13 +1,13 @@
 'use strict';
 
-const React = require('react');
-const Immutable = require('immutable');
+import React from 'react';
+import * as Immutable from 'immutable';
 
-const GameHelpers = require('../../shared/GameHelpers');
-const TeamList = require('./TeamList');
-const GameActions = require('../actions/GameActions');
+import GameHelpers from '../../shared/GameHelpers';
+import TeamList from './TeamList';
+import GameActions from '../actions/GameActions';
 
-module.exports = (props) => {
+export default (props) => {
   const dispatch = props.dispatch;
   const game = props.state.get('game');
   let teams = GameHelpers.getTeams(game)

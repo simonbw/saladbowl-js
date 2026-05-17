@@ -1,12 +1,12 @@
 'use strict';
 
-const React = require('react');
+import React from 'react';
 
-const ActionTypes = require('../../shared/ActionTypes.js');
-const GameHelpers = require('../../shared/GameHelpers');
-const UIActions = require('../actions/UIActions');
+import ActionTypes from '../../shared/ActionTypes.js';
+import GameHelpers from '../../shared/GameHelpers';
+import UIActions from '../actions/UIActions';
 
-module.exports = (props) => {
+export default (props) => {
   const state = props.state;
   const dispatch = props.dispatch;
 

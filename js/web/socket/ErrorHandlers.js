@@ -1,8 +1,8 @@
 'use strict';
 
-const MessageTypes = require('../../shared/MessageTypes.js');
+import MessageTypes from '../../shared/MessageTypes.js';
 
-module.exports = (socket) => {
+export default (socket) => {
   socket.on(MessageTypes.ERROR, function (error) {
     console.log('error received:', error);
   });

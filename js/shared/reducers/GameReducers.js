@@ -1,11 +1,14 @@
 'use strict';
 
-const DEFAULT_GAME = require('../defaultGame');
+import DEFAULT_GAME from '../defaultGame';
+import PreGameReducers from './PreGameReducers';
+import MidGameReducers from './MidGameReducers';
+import MiscGameReducers from './MiscGameReducers';
 
 const reducers = Object.assign({},
-  require('./PreGameReducers'),
-  require('./MidGameReducers'),
-  require('./MiscGameReducers'));
+  PreGameReducers,
+  MidGameReducers,
+  MiscGameReducers);
 
 
 /**
@@ -14,7 +17,7 @@ const reducers = Object.assign({},
  * @param action {Object}
  * @returns {Immutable.Map} new game
  */
-module.exports = (game, action) => {
+export default (game, action) => {
   game = game || DEFAULT_GAME;
   if (action && action.type && reducers.hasOwnProperty(action.type)) {
     return reducers[action.type](game, action);

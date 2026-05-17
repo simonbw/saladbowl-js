@@ -1,11 +1,11 @@
 'use strict';
 
-const Immutable = require('immutable');
-const MathUtil = require('./MathUtil');
-const TeamNames = require('./TeamNames');
-const Validation = require('./Validation.js');
+import * as Immutable from 'immutable';
+import MathUtil from './MathUtil';
+import TeamNames from './TeamNames';
+import * as Validation from './Validation.js';
 
-const GameHelpers = module.exports;
+const GameHelpers = {};
 
 // TODO: Memoization
 
@@ -254,3 +254,5 @@ GameHelpers.readyToStart = (game) => {
 GameHelpers.canSkip = (game) => {
   return GameHelpers.getWordsInBowl(game).size > 1;
 };
+
+export default GameHelpers;
