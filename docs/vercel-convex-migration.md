@@ -1,6 +1,7 @@
 # Migration Design: Heroku → Vercel + Convex
 
-**Status:** Proposed · **Author:** drafted with Claude Code · **Date:** 2026-05-16
+**Status:** Phases 0 & 0.5 implemented on branch `migrate/vercel-convex`;
+Phases 1–6 (Convex) pending · **Date:** 2026-05-16
 
 ## 1. Goal
 
@@ -206,7 +207,7 @@ still resolve). `/version` is dropped or replaced with a build-time constant.
 
 ## 6. Implementation phases
 
-### Phase 0 — Tooling modernization (TypeScript, Vite, ESM, Node 20)
+### Phase 0 — Tooling modernization (TypeScript, Vite, ESM, Node 20) ✅ done
 
 **Goal:** a modern toolchain and TypeScript, with **zero behavior change** and
 **no runtime-library upgrades**. React 0.14, Redux 3, and react-redux 4 keep
@@ -259,7 +260,7 @@ that is scheduled for deletion:
 20; the app behaves identically (Express + socket.io + React 0.14) and is still
 deployable to Heroku.
 
-### Phase 0.5 — React & Redux upgrade
+### Phase 0.5 — React & Redux upgrade ✅ done
 
 **Goal:** bring the UI runtime current. Independent of Convex; the app stays the
 Express + socket.io app and remains deployable to Heroku at the end of the phase.
