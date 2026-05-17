@@ -6,25 +6,21 @@ import GameHandlers from './GameHandlers';
 import RoutingHandlers from './RoutingHandlers';
 import TimingHandlers from './TimingHandlers';
 
-/**
- * @type {Object<string, function>}
- */
-const handlers = [
+const handlers: Array<(socket: any) => void> = [
   ConnectionHandlers,
   ErrorHandlers,
   GameHandlers,
   RoutingHandlers,
-  TimingHandlers
+  TimingHandlers,
 ];
 
-const SocketHandlers = {};
-
-/**
- * Initialize all handlers on a socket.
- * @param socket
- */
-SocketHandlers.init = (socket) => {
-  handlers.forEach((handler) => handler(socket));
+const SocketHandlers = {
+  /**
+   * Initialize all handlers on a socket.
+   */
+  init(socket: any): void {
+    handlers.forEach((handler) => handler(socket));
+  },
 };
 
 export default SocketHandlers;

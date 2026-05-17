@@ -2,11 +2,10 @@
 
 import React from 'react';
 
-import ActionTypes from '../../shared/ActionTypes.js';
-import GameHelpers from '../../shared/GameHelpers';
 import UIActions from '../actions/UIActions';
+import type { PageProps } from '../types';
 
-export default (props) => {
+export default (props: PageProps) => {
   const state = props.state;
   const dispatch = props.dispatch;
 

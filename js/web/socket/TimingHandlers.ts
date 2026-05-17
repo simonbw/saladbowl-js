@@ -1,13 +1,13 @@
 'use strict';
 
-import MessageTypes from '../../shared/MessageTypes.js';
+import MessageTypes from '../../shared/MessageTypes';
 import Timing from '../Timing';
 
 const HEARTBEAT_INTERVAL = 500;
 
-export default (socket) => {
-  let sentHeartbeatAt;
-  socket.on(MessageTypes.HEARTBEAT, (data) => {
+export default (socket: any) => {
+  let sentHeartbeatAt: number;
+  socket.on(MessageTypes.HEARTBEAT, (data: { time: number }) => {
     Timing.update(sentHeartbeatAt, data.time);
 
     setTimeout(() => {

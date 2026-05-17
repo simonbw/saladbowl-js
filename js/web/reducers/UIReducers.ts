@@ -3,16 +3,17 @@
 import * as Immutable from 'immutable';
 
 import ActionTypes from '../../shared/ActionTypes';
+import type { Action } from '../types';
 
-const DEFAULT_STATE = Immutable.fromJS({});
+type UIState = Immutable.Map<string, any>;
 
-const reducers = {};
+const DEFAULT_STATE: UIState = Immutable.fromJS({});
+
+const reducers: Record<string, (state: UIState, action: Action) => UIState> =
+  {};
 
 /**
  * Set a field on the state.
- * @param state
- * @param action
- * @returns {*}
  */
 reducers[ActionTypes.UI.FIELD_CHANGED] = (state, action) => {
   return state.set(action.field, action.value);
@@ -34,14 +35,13 @@ reducers[ActionTypes.CLIENT.WORD_CORRECT] = (state) => {
   return state.set('waitingForServer', false);
 };
 
-
 /**
  * Return a new state that is the result of completing an action.
- * @param state {Immutable.Map}
- * @param action {Object}
- * @returns {Immutable.Map} new state
  */
-export default (state, action) => {
+export default (
+  state: UIState | null | undefined,
+  action: Action | null | undefined,
+): UIState => {
   state = state || DEFAULT_STATE;
   if (action && action.type && reducers.hasOwnProperty(action.type)) {
     return reducers[action.type](state, action);

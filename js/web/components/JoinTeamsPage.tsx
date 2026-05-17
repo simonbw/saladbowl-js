@@ -6,8 +6,9 @@ import * as Immutable from 'immutable';
 import GameHelpers from '../../shared/GameHelpers';
 import TeamList from './TeamList';
 import GameActions from '../actions/GameActions';
+import type { PageProps } from '../types';
 
-export default (props) => {
+export default (props: PageProps) => {
   const dispatch = props.dispatch;
   const game = props.state.get('game');
   let teams = GameHelpers.getTeams(game)

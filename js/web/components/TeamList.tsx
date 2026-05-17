@@ -1,14 +1,24 @@
 'use strict';
 
 import React from 'react';
+import type * as Immutable from 'immutable';
 
 import GameActions from '../actions/GameActions';
+import type { Dispatch } from '../types';
 
+type Team = Immutable.Map<string, any>;
 
-export default (props) => {
+interface TeamListProps {
+  teams: Immutable.Collection.Indexed<Team>;
+  dispatch: Dispatch;
+  joinable: boolean;
+  showScore: boolean;
+}
+
+export default (props: TeamListProps) => {
   return (
     <div className="team-list">
-      {props.teams.map((team, i) => {
+      {props.teams.map((team: Team, i: number) => {
         return (<Team
           dispatch={props.dispatch}
           joinable={props.joinable}
@@ -21,11 +31,18 @@ export default (props) => {
   );
 };
 
-function Team(props) {
+interface TeamProps {
+  dispatch: Dispatch;
+  joinable: boolean;
+  showScore: boolean;
+  team: Team;
+}
+
+function Team(props: TeamProps) {
   const dispatch = props.dispatch;
   const team = props.team;
 
-  let onClick;
+  let onClick: (() => void) | undefined;
   const classNames = ['team'];
   if (props.joinable) {
     onClick = () => {
@@ -37,7 +54,7 @@ function Team(props) {
     classNames.push('current');
   }
 
-  let header;
+  let header: React.ReactNode;
   if (props.showScore) {
     header = (<h2>{team.get('name')} {team.get('points').size}</h2>);
   } else {
@@ -48,7 +65,7 @@ function Team(props) {
     <div className={classNames.join(' ')} onClick={onClick}>
       {header}
       <ol className="player-list">
-        {team.get('players').map((player) => {
+        {team.get('players').map((player: Team) => {
           return (<Player player={player} key={player.get('id')}/>);
         }).toArray()}
       </ol>
@@ -56,9 +73,13 @@ function Team(props) {
   );
 }
 
-function Player(props) {
+interface PlayerProps {
+  player: Team;
+}
+
+function Player(props: PlayerProps) {
   const player = props.player;
-  const classNames = [];
+  const classNames: string[] = [];
   if (player.get('current')) {
     classNames.push('current');
   }

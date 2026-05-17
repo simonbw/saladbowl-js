@@ -11,15 +11,14 @@ import GameOverPage from './GameOverPage';
 import GuessingPlayerPage from './GuessingPlayerPage';
 import JoinGamePage from './JoinGamePage';
 import JoinTeamsPage from './JoinTeamsPage';
-import Random from '../../shared/Random';
-import GameActions from '../actions/GameActions';
 import WaitingPlayerPage from './WaitingPlayerPage';
+import type { AppState, Dispatch, PageProps } from '../types';
 
 /**
  *
  * @constructor
  */
-function GameComponent(props) {
+function GameComponent(props: PageProps) {
   const dispatch = props.dispatch;
   const state = props.state;
   const game = state.get('game');
@@ -80,7 +79,7 @@ function GameComponent(props) {
  * @param state
  * @returns {{state: *}}
  */
-function mapStateToProps(state) {
+function mapStateToProps(state: AppState) {
   return {
     'state': state
   };

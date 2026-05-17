@@ -1,12 +1,12 @@
 'use strict';
 
-import ActionTypes from '../../shared/ActionTypes.js';
-import MessageTypes from '../../shared/MessageTypes.js';
+import MessageTypes from '../../shared/MessageTypes';
 import UIActions from '../actions/UIActions';
 import GameActions from '../actions/GameActions';
+import type { Action } from '../types';
 
-export default (socket) => {
-  socket.on(MessageTypes.GAME, function (action) {
+export default (socket: any) => {
+  socket.on(MessageTypes.GAME, function (action: Action) {
     const store = socket.store;
     store.dispatch(action);
 

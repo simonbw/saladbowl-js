@@ -2,26 +2,24 @@
 
 import React from 'react';
 
-import ActionTypes from '../../shared/ActionTypes';
 import GameActions from '../actions/GameActions';
 import UIActions from '../actions/UIActions';
-import * as Validation from '../../shared/Validation.js';
+import * as Validation from '../../shared/Validation';
+import type { PageProps } from '../types';
 
 /**
  * Renders the Join Game Page.
- * @param props
- * @returns {XML}
  */
-export default (props) => {
+export default (props: PageProps) => {
   const dispatch = props.dispatch;
   const ui = props.state.get('ui');
   const game = props.state.get('game');
 
-  function onNameChange(e) {
+  function onNameChange(e: React.ChangeEvent<HTMLInputElement>) {
     dispatch(UIActions.updateField('userName', e.target.value));
   }
 
-  const joinGame = (e) => {
+  const joinGame = (e: React.FormEvent<HTMLFormElement>) => {
     // TODO: Don't use forms!
     // TODO: Disable form
     e.preventDefault();

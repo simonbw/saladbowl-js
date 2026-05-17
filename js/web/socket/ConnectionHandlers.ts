@@ -1,8 +1,8 @@
 'use strict';
 
-import ActionTypes from '../../shared/ActionTypes.js';
+import ActionTypes from '../../shared/ActionTypes';
 
-export default (socket) => {
+export default (socket: any) => {
   socket.on('connect', () => {
     console.log('connected');
     socket.store.dispatch({

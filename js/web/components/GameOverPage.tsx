@@ -4,8 +4,9 @@ import React from 'react';
 
 import TeamList from './TeamList';
 import GameHelpers from '../../shared/GameHelpers';
+import type { PageProps } from '../types';
 
-export default (props) => {
+export default (props: PageProps) => {
   const game = props.state.get('game');
   const teams = GameHelpers.getTeams(game);
   let mostSkipped = GameHelpers.getMostSkippedWord(game);

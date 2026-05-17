@@ -1,8 +1,13 @@
 'use strict';
 
 import React from 'react';
+import type * as Immutable from 'immutable';
 
-export default (props) => {
+interface LastCorrectWordProps {
+  word?: Immutable.Map<string, any>;
+}
+
+export default (props: LastCorrectWordProps) => {
   const lastCorrectWord = props.word;
 
   if (lastCorrectWord) {

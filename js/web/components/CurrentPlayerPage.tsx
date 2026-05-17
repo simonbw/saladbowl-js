@@ -5,8 +5,9 @@ import React from 'react';
 import GameHelpers from '../../shared/GameHelpers';
 import Timer from './Timer';
 import GameActions from '../actions/GameActions';
+import type { PageProps } from '../types';
 
-export default (props) => {
+export default (props: PageProps) => {
   const state = props.state;
   if (!state.get('game').get('roundStarted')) {
     return (<ReadyPage state={state} dispatch={props.dispatch}/>);
@@ -21,10 +22,10 @@ const phases = [
   ['One Word', 'You only get one word.']
 ];
 
-function ReadyPage(props) {
+function ReadyPage(props: PageProps) {
   const dispatch = props.dispatch;
   const game = props.state.get('game');
-  let phaseName;
+  let phaseName: string;
   try {
     phaseName = phases[game.get('phaseIndex')][0];
   } catch (e) {
@@ -41,7 +42,7 @@ function ReadyPage(props) {
   );
 }
 
-function PlayingPage(props) {
+function PlayingPage(props: PageProps) {
   const game = props.state.get('game');
   const word = game.get('words').get(game.get('wordIndex'));
   const phaseName = phases[game.get('phaseIndex')][0];

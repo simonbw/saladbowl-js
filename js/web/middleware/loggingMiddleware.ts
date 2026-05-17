@@ -1,12 +1,16 @@
 'use strict';
 
+import type { Middleware } from 'redux';
+
 /**
  * Logs all actions.
  */
-export default (store) => (next) => (action) => {
+const loggingMiddleware: Middleware = (store) => (next) => (action) => {
   console.log('dispatching', action);
   let result = next(action);
-  const state = store.getState();
+  const state: any = store.getState();
   console.log('next state', state.toJS(), state.get('game').hashCode());
   return result;
 };
+
+export default loggingMiddleware;

@@ -7,7 +7,7 @@ import { defineConfig } from "vitest/config";
 // (see the `build` script in package.json).
 export default defineConfig({
   esbuild: {
-    // React 0.14 uses the classic JSX runtime.
+    // Classic JSX runtime (components import React explicitly).
     jsxFactory: "React.createElement",
     jsxFragment: "React.Fragment",
   },
@@ -15,7 +15,7 @@ export default defineConfig({
     outDir: "dist",
     emptyOutDir: true,
     lib: {
-      entry: resolve(import.meta.dirname, "js/web/gamePage.jsx"),
+      entry: resolve(import.meta.dirname, "js/web/gamePage.tsx"),
       formats: ["iife"],
       name: "SaladBowl",
       fileName: () => "js/web/gamePage.js",

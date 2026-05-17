@@ -4,17 +4,21 @@ import React from 'react';
 
 import ActionTypes from '../../shared/ActionTypes';
 import GameActions from '../actions/GameActions';
-import * as Validation from '../../shared/Validation.js';
+import * as Validation from '../../shared/Validation';
+import type { PageProps } from '../types';
 
 /**
  *
  */
-export default (props) => {
+export default (props: PageProps) => {
   const dispatch = props.dispatch;
   const game = props.state.get('game');
   const ui = props.state.get('ui');
 
-  const onWordChange = (wordNumber, e) => {
+  const onWordChange = (
+    wordNumber: number,
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const value = e.target.value;
     const field = 'word' + wordNumber;
     console.log('wordChanged', field, value);
@@ -26,21 +30,21 @@ export default (props) => {
   };
 
   function getWords() {
-    const words = [];
+    const words: any[] = [];
     for (let i = 0; i < game.get('wordsPerPlayer'); i++) {
       words.push(ui.get('word' + i));
     }
     return words;
   }
 
-  function addWords(e) {
+  function addWords(e: React.FormEvent<HTMLFormElement>) {
     // TODO: Disable form / show progress
     e.preventDefault();
     var words = getWords().map((word, i) => ({word: word, playerWordIndex: i}));
     dispatch(GameActions.saveWords(words));
   }
 
-  const inputs = [];
+  const inputs: React.ReactNode[] = [];
   for (let i = 0; i < game.get('wordsPerPlayer'); i++) {
     inputs.push(<input key={i} autoFocus={i == 0} onChange={onWordChange.bind(this, i)} type="text"/>);
   }
