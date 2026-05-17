@@ -4,10 +4,14 @@ import Random from './Random';
 import * as StringUtil from './StringUtil';
 
 
+interface TeamNamesType {
+  get(gameId: string | number, team: number): string;
+}
+
 /**
  * Used for making interesting team names.
  */
-const TeamNames = {};
+const TeamNames = {} as TeamNamesType;
 
 /**
  * Get the name of the nth team for a game.
@@ -16,7 +20,7 @@ const TeamNames = {};
  * @param team {number}
  * @returns {string}
  */
-TeamNames.get = (gameId, team) => {
+TeamNames.get = (gameId: string | number, team: number): string => {
   const seed = StringUtil.hash(String(gameId));
   const animal = shuffleAnimals(seed)[team % animals.length];
   const adjective = shuffleAdjectives(seed)[team % adjectives.length];
@@ -28,7 +32,7 @@ TeamNames.get = (gameId, team) => {
  * @param seed
  * @returns {*}
  */
-function shuffleAnimals(seed) {
+function shuffleAnimals(seed: number): string[] {
   seed = (seed * 13) | 0;
   return Random.seededShuffle(animals.slice(), seed);
 }
@@ -38,7 +42,7 @@ function shuffleAnimals(seed) {
  * @param seed
  * @returns {*}
  */
-function shuffleAdjectives(seed) {
+function shuffleAdjectives(seed: number): string[] {
   seed = (seed * 17) | 0;
   return Random.seededShuffle(adjectives.slice(), seed);
 }

@@ -3,10 +3,21 @@
 import MathUtil from './MathUtil';
 
 
+interface RandomType {
+  uniform(min?: number, max?: number): number;
+  integer(min?: number, max?: number): number;
+  normal(mean?: number, deviation?: number): number;
+  choose(...args: any[]): any;
+  take<T>(options: T[]): T;
+  shuffle<T>(a: T[]): T[];
+  seededShuffle<T>(a: T[], seed: number): T[];
+  bool(chance?: number): boolean;
+}
+
 /**
  * Utility for doing things based on random numbers.
  */
-const Random = {};
+const Random = {} as RandomType;
 
 // just for shorthand
 const r = Math.random;
@@ -18,7 +29,7 @@ const r = Math.random;
  * @param max
  * @returns {*}
  */
-Random.uniform = (min, max) => {
+Random.uniform = (min?: number, max?: number): number => {
   if (min == undefined) {
     return r();
   }
@@ -36,7 +47,7 @@ Random.uniform = (min, max) => {
  * @param max
  * @returns {number}
  */
-Random.integer = (min, max) => {
+Random.integer = (min?: number, max?: number): number => {
   return Math.floor(Random.uniform(min, max));
 };
 
@@ -46,7 +57,7 @@ Random.integer = (min, max) => {
  * @param deviation
  * @returns {*}
  */
-Random.normal = (mean, deviation) => {
+Random.normal = (mean?: number, deviation?: number): number => {
   if (mean == null) {
     mean = 0;
   }
@@ -61,9 +72,9 @@ Random.normal = (mean, deviation) => {
  *
  * @returns {*}
  */
-Random.choose = function () {
-  let options;
-  options = 1 <= arguments.length ? [].slice.call(arguments, 0) : [];
+Random.choose = function (...args: any[]): any {
+  let options: any[];
+  options = 1 <= args.length ? args.slice(0) : [];
   if (options.length === 1) {
     options = options[0];
   }
@@ -75,7 +86,7 @@ Random.choose = function () {
  *
  * @returns {*}
  */
-Random.take = (options) => {
+Random.take = <T>(options: T[]): T => {
   return options.splice(Random.integer(options.length), 1)[0];
 };
 
@@ -85,8 +96,8 @@ Random.take = (options) => {
  * @param a
  * @returns {*}
  */
-Random.shuffle = (a) => {
-  let i, j, temp;
+Random.shuffle = <T>(a: T[]): T[] => {
+  let i: number, j: number, temp: T;
   i = a.length;
   while (--i > 0) {
     j = Random.integer(0, i + 1);
@@ -104,8 +115,8 @@ Random.shuffle = (a) => {
  * @param seed {number} - A random
  * @returns {*}
  */
-Random.seededShuffle = (a, seed) => {
-  let i, j, temp;
+Random.seededShuffle = <T>(a: T[], seed: number): T[] => {
+  let i: number, j: number, temp: T;
   i = a.length;
   while (--i > 0) {
     seed = (seed * 1103515245 + 12345)| 0;
@@ -123,7 +134,7 @@ Random.seededShuffle = (a, seed) => {
  * @param chance {number} - Between 0 (always false) and 1 (always true). Defaults to 0.5.
  * @returns {boolean}
  */
-Random.bool = (chance) => {
+Random.bool = (chance?: number): boolean => {
   if (chance == null) {
     chance = 0.5;
   }

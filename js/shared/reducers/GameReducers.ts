@@ -4,8 +4,9 @@ import DEFAULT_GAME from '../defaultGame';
 import PreGameReducers from './PreGameReducers';
 import MidGameReducers from './MidGameReducers';
 import MiscGameReducers from './MiscGameReducers';
+import type { Game, Action } from '../types';
 
-const reducers = Object.assign({},
+const reducers: Record<string, (game: Game, action: Action) => Game> = Object.assign({},
   PreGameReducers,
   MidGameReducers,
   MiscGameReducers);
@@ -17,7 +18,7 @@ const reducers = Object.assign({},
  * @param action {Object}
  * @returns {Immutable.Map} new game
  */
-export default (game, action) => {
+export default (game: Game | null | undefined, action: Action | null | undefined): Game => {
   game = game || DEFAULT_GAME;
   if (action && action.type && reducers.hasOwnProperty(action.type)) {
     return reducers[action.type](game, action);

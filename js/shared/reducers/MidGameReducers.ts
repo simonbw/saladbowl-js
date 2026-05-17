@@ -5,8 +5,9 @@ import * as Immutable from 'immutable';
 import ActionTypes from '../ActionTypes';
 import MathUtil from '../MathUtil';
 import GameHelpers from '../GameHelpers';
+import type { Game, Action } from '../types';
 
-const reducers = {};
+const reducers: Record<string, (game: Game, action: Action) => Game> = {};
 
 /**
  * Start the round.
@@ -64,7 +65,7 @@ reducers[ActionTypes.CLIENT.WORD_CORRECT] = (game, action) => {
     .setIn(['words', game.get('wordIndex'), 'inBowl'], false)
     .set('lastCorrectWordIndex', game.get('wordIndex'));
 
-  const bowlIsEmpty = game.get('words').every((word) => {
+  const bowlIsEmpty = game.get('words').every((word: any) => {
     return !word.get('inBowl');
   });
 
@@ -76,7 +77,7 @@ reducers[ActionTypes.CLIENT.WORD_CORRECT] = (game, action) => {
       const roundEndTime = game.get('roundStartedAt') + game.get('secondsThisRound')
       const secondsLeftover = roundEndTime - action.time;
       game = game
-        .set('words', game.get('words').map((word) => {
+        .set('words', game.get('words').map((word: any) => {
           return word.set('inBowl', true);
         }))
         .set('roundStarted', false)
@@ -97,7 +98,7 @@ reducers[ActionTypes.CLIENT.WORD_CORRECT] = (game, action) => {
  */
 reducers[ActionTypes.CLIENT.WORD_SKIPPED] = (game, action) => {
   return game
-    .updateIn(['words', game.get('wordIndex')], (word) => {
+    .updateIn(['words', game.get('wordIndex')], (word: any) => {
       return word.set('skips', word.get('skips', 0) + 1);
     })
     .set('wordIndex', GameHelpers.getNextWordIndex(game));

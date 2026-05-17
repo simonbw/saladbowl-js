@@ -3,9 +3,29 @@
 import * as Immutable from 'immutable';
 import MathUtil from './MathUtil';
 import TeamNames from './TeamNames';
-import * as Validation from './Validation.js';
+import * as Validation from './Validation';
+import type { Game } from './types';
 
-const GameHelpers = {};
+interface GameHelpersType {
+  getNextWordIndex(game: Game): number;
+  playerIsJoined(game: Game, playerId: string | null | undefined): boolean;
+  getTeams(game: Game): Immutable.List<any>;
+  getPlayer(game: Game, playerId: string): any;
+  getPlayerIndex(game: Game, playerId: string | null | undefined): number;
+  getCurrentPlayer(game: Game): any;
+  getCurrentPlayerIndex(game: Game): number;
+  isCurrentPlayerConnected(game: Game): boolean;
+  getCurrentTeam(game: Game): any;
+  playerIsGuessing(game: Game, playerId: string | null | undefined): boolean;
+  getPlayerWords(game: Game, playerId: string): any;
+  playerWordsAreValid(game: Game, playerId: string): boolean;
+  getWordsInBowl(game: Game): any;
+  getMostSkippedWord(game: Game): any;
+  readyToStart(game: Game): boolean;
+  canSkip(game: Game): boolean;
+}
+
+const GameHelpers = {} as GameHelpersType;
 
 // TODO: Memoization
 
@@ -14,7 +34,7 @@ const GameHelpers = {};
  * @param game
  * @returns {number}
  */
-GameHelpers.getNextWordIndex = (game) => {
+GameHelpers.getNextWordIndex = (game: Game): number => {
   const words = GameHelpers.getWordsInBowl(game);
   if (words.size == 0) {
     throw new Error('No next word available');
@@ -31,7 +51,7 @@ GameHelpers.getNextWordIndex = (game) => {
  * @param playerId
  * @returns {boolean}
  */
-GameHelpers.playerIsJoined = (game, playerId) => {
+GameHelpers.playerIsJoined = (game: Game, playerId: string | null | undefined): boolean => {
   return GameHelpers.getPlayerIndex(game, playerId) >= 0;
 };
 
@@ -40,10 +60,10 @@ GameHelpers.playerIsJoined = (game, playerId) => {
  * @param game
  * @returns {Immutable.List}
  */
-GameHelpers.getTeams = (game) => {
-  const teams = [];
+GameHelpers.getTeams = (game: Game): Immutable.List<any> => {
+  const teams: any[] = [];
 
-  const lastTeam = game.get('players').reduce((largest, player) => {
+  const lastTeam = game.get('players').reduce((largest: number, player: any) => {
     return Math.max(largest, player.get('team'));
   }, 0);
   for (let i = 0; i <= lastTeam; i++) {
@@ -55,28 +75,28 @@ GameHelpers.getTeams = (game) => {
     };
   }
 
-  game.get('players').forEach((player) => {
+  game.get('players').forEach((player: any) => {
     const ready = GameHelpers.playerWordsAreValid(game, player.get('id'));
     const connected = Boolean(game.getIn(['connections', player.get('id')]));
     player = player.set('ready', ready).set('connected', connected);
     teams[player.get('team')].players.push(player);
   });
 
-  game.get('points').forEach((point) => {
+  game.get('points').forEach((point: any) => {
     teams[point.get('team')].points.push(point);
   });
 
   if (game.get('started') && !game.get('ended')) {
     const currentTeam = teams[game.get('teamIndex') % teams.length];
     currentTeam.current = true;
-    const activePlayers = currentTeam.players.filter((player) => player.get('active'));
+    const activePlayers = currentTeam.players.filter((player: any) => player.get('active'));
     const activePlayerIndex = game.get('playerIndex') % activePlayers.length;
     const currentPlayer = activePlayers[activePlayerIndex];
-    const currentPlayerIndex = currentTeam.players.findIndex((player) => player.get('id') == currentPlayer.get('id'));
+    const currentPlayerIndex = currentTeam.players.findIndex((player: any) => player.get('id') == currentPlayer.get('id'));
     currentTeam.players[currentPlayerIndex] = currentTeam.players[currentPlayerIndex].set('current', true);
   }
 
-  return Immutable.fromJS(teams);
+  return Immutable.fromJS(teams) as Immutable.List<any>;
 };
 
 /**
@@ -85,8 +105,8 @@ GameHelpers.getTeams = (game) => {
  * @param playerId
  * @returns {*}
  */
-GameHelpers.getPlayer = (game, playerId) => {
-  return game.get('players').find((player) => {
+GameHelpers.getPlayer = (game: Game, playerId: string): any => {
+  return game.get('players').find((player: any) => {
     return player.get('id') == playerId;
   });
 };
@@ -97,11 +117,11 @@ GameHelpers.getPlayer = (game, playerId) => {
  * @param playerId
  * @returns {number}
  */
-GameHelpers.getPlayerIndex = (game, playerId) => {
+GameHelpers.getPlayerIndex = (game: Game, playerId: string | null | undefined): number => {
   if (playerId == null) {
     return -1;
   }
-  return game.get('players').findIndex((player) => {
+  return game.get('players').findIndex((player: any) => {
     return player.get('id') == playerId;
   });
 };
@@ -111,9 +131,9 @@ GameHelpers.getPlayerIndex = (game, playerId) => {
  * @param game
  * @returns {Immutable.Map}
  */
-GameHelpers.getCurrentPlayer = (game) => {
+GameHelpers.getCurrentPlayer = (game: Game): any => {
   const team = GameHelpers.getCurrentTeam(game);
-  const activePlayers = team.get('players').filter((player) => player.get('active'));
+  const activePlayers = team.get('players').filter((player: any) => player.get('active'));
   return activePlayers.get(MathUtil.mod(game.get('playerIndex'), activePlayers.size));
 };
 
@@ -122,7 +142,7 @@ GameHelpers.getCurrentPlayer = (game) => {
  * @param game
  * @returns {number}
  */
-GameHelpers.getCurrentPlayerIndex = (game) => {
+GameHelpers.getCurrentPlayerIndex = (game: Game): number => {
   return GameHelpers.getPlayerIndex(game, GameHelpers.getCurrentPlayer(game).get('id'));
 };
 
@@ -131,7 +151,7 @@ GameHelpers.getCurrentPlayerIndex = (game) => {
  * @param game
  * @returns {boolean}
  */
-GameHelpers.isCurrentPlayerConnected = (game) => {
+GameHelpers.isCurrentPlayerConnected = (game: Game): boolean => {
   const currentPlayer = GameHelpers.getCurrentPlayer(game);
   return Boolean(game.get('connections').get(currentPlayer.get('id')));
 };
@@ -141,7 +161,7 @@ GameHelpers.isCurrentPlayerConnected = (game) => {
  * @param game
  * @returns {*}
  */
-GameHelpers.getCurrentTeam = (game) => {
+GameHelpers.getCurrentTeam = (game: Game): any => {
   let teams = GameHelpers.getTeams(game);
   return teams.get(MathUtil.mod(game.get('teamIndex'), teams.size));
 };
@@ -152,12 +172,12 @@ GameHelpers.getCurrentTeam = (game) => {
  * @param playerId
  * @returns {boolean}
  */
-GameHelpers.playerIsGuessing = (game, playerId) => {
+GameHelpers.playerIsGuessing = (game: Game, playerId: string | null | undefined): boolean => {
   if (!playerId) {
     return false;
   }
   let team = GameHelpers.getCurrentTeam(game);
-  return team.get('players').some((player) => {
+  return team.get('players').some((player: any) => {
     return player.get('id') == playerId;
   });
 };
@@ -168,8 +188,8 @@ GameHelpers.playerIsGuessing = (game, playerId) => {
  * @param playerId
  * @returns {*}
  */
-GameHelpers.getPlayerWords = (game, playerId) => {
-  return game.get('words').filter((word) => {
+GameHelpers.getPlayerWords = (game: Game, playerId: string): any => {
+  return game.get('words').filter((word: any) => {
     return word.get('playerId') == playerId;
   });
 };
@@ -180,9 +200,9 @@ GameHelpers.getPlayerWords = (game, playerId) => {
  * @param playerId
  * @returns {boolean}
  */
-GameHelpers.playerWordsAreValid = (game, playerId) => {
+GameHelpers.playerWordsAreValid = (game: Game, playerId: string): boolean => {
   let words = GameHelpers.getPlayerWords(game, playerId);
-  return words.every((word) => {
+  return words.every((word: any) => {
     return Validation.validateWord(word.get('word'));
   });
 };
@@ -191,8 +211,8 @@ GameHelpers.playerWordsAreValid = (game, playerId) => {
  * Return only the words that are in the bowl.
  * @param game
  */
-GameHelpers.getWordsInBowl = (game) => {
-  return game.get('words').filter((word) => {
+GameHelpers.getWordsInBowl = (game: Game): any => {
+  return game.get('words').filter((word: any) => {
     return word.get('inBowl');
   });
 };
@@ -202,8 +222,8 @@ GameHelpers.getWordsInBowl = (game) => {
  * @param game
  * @returns {*}
  */
-GameHelpers.getMostSkippedWord = (game) => {
-  return game.get('words').reduce((last, current) => {
+GameHelpers.getMostSkippedWord = (game: Game): any => {
+  return game.get('words').reduce((last: any, current: any) => {
     if (!last) {
       return current;
     }
@@ -219,13 +239,13 @@ GameHelpers.getMostSkippedWord = (game) => {
  * Return true if the game is ready to be started.
  * @param game
  */
-GameHelpers.readyToStart = (game) => {
+GameHelpers.readyToStart = (game: Game): boolean => {
   // Not Enough Players
   if (game.get('players').size < 4) {
     return false;
   }
   // Not all words are done
-  if (!game.get('words').every((word) => {
+  if (!game.get('words').every((word: any) => {
       return Validation.validateWord(word.get('word')) && word.get('inBowl');
     })) {
     return false;
@@ -236,7 +256,7 @@ GameHelpers.readyToStart = (game) => {
     return false;
   }
   // Not enough players on each team
-  if (!teams.every((team) => {
+  if (!teams.every((team: any) => {
       return team.get('players').size >= 2;
     })) {
     return false;
@@ -251,7 +271,7 @@ GameHelpers.readyToStart = (game) => {
  * @param game
  * @returns {boolean}
  */
-GameHelpers.canSkip = (game) => {
+GameHelpers.canSkip = (game: Game): boolean => {
   return GameHelpers.getWordsInBowl(game).size > 1;
 };
 

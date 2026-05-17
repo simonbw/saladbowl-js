@@ -4,8 +4,9 @@ import * as Immutable from 'immutable';
 
 import ActionTypes from '../ActionTypes';
 import GameHelpers from '../GameHelpers';
+import type { Game, Action } from '../types';
 
-const reducers = {};
+const reducers: Record<string, (game: Game, action: Action) => Game> = {};
 
 /**
  * Called when a new player has joined.
@@ -15,9 +16,9 @@ const reducers = {};
  */
 reducers[ActionTypes.CLIENT.PLAYER_JOINED] = (game, action) => {
   const defaultPlayer = {team: 0, active: true}; // TODO: Move to default data somewhere
-  let player = Immutable.fromJS(Object.assign(defaultPlayer, action.player));
+  let player: any = Immutable.fromJS(Object.assign(defaultPlayer, action.player));
 
-  if (game.get('players').some((otherPlayer) => player.get('id') == otherPlayer.get('id'))) {
+  if (game.get('players').some((otherPlayer: any) => player.get('id') == otherPlayer.get('id'))) {
     throw new Error('Player already in game');
   }
 
@@ -25,7 +26,7 @@ reducers[ActionTypes.CLIENT.PLAYER_JOINED] = (game, action) => {
 
   return game
     .set('players', game.get('players').set(playerIndex, player))
-    .set('words', game.get('words').withMutations((words) => {
+    .set('words', game.get('words').withMutations((words: any) => {
       let wordsPerPlayer = game.get('wordsPerPlayer');
       for (let wordIndex = playerIndex * wordsPerPlayer; wordIndex < (playerIndex + 1) * wordsPerPlayer; wordIndex++) {
         words.set(wordIndex, Immutable.fromJS({ // TODO: Move to default data somewhere
@@ -52,8 +53,8 @@ reducers[ActionTypes.CLIENT.WORDS_UPDATED] = (game, action) => {
     throw new Error(`Player ${action.playerId} is not in game`);
   }
 
-  return game.set('words', game.get('words').withMutations((words) => {
-    action.words.forEach((wordData) => {
+  return game.set('words', game.get('words').withMutations((words: any) => {
+    action.words.forEach((wordData: any) => {
       const wordIndex = playerIndex * game.get('wordsPerPlayer') + wordData.playerWordIndex;
       const oldWord = words.get(wordIndex);
       if (!oldWord) {

@@ -3,8 +3,9 @@
 import ActionTypes from '../ActionTypes';
 import GameHelpers from '../GameHelpers';
 import * as Immutable from 'immutable';
+import type { Game, Action } from '../types';
 
-const reducers = {};
+const reducers: Record<string, (game: Game, action: Action) => Game> = {};
 
 
 /**

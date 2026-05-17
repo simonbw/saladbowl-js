@@ -1,6 +1,14 @@
 'use strict';
 
-const MathUtil = {};
+interface MathUtilType {
+  mod(a: number, b: number): number;
+  sum(a: number[]): number;
+  clamp(value: number, min: number, max: number): number;
+  mean(a: number[]): number;
+  median(a: number[]): number;
+}
+
+const MathUtil = {} as MathUtilType;
 
 /**
  * Math utility functions.
@@ -12,7 +20,7 @@ const MathUtil = {};
  * @param b {number}
  * @returns {number}
  */
-MathUtil.mod = (a, b) => {
+MathUtil.mod = (a: number, b: number): number => {
   return ((a % b) + b) % b;
 };
 
@@ -21,7 +29,7 @@ MathUtil.mod = (a, b) => {
  * @param a {Array.<number>}
  * @returns {number}
  */
-MathUtil.sum = (a) => {
+MathUtil.sum = (a: number[]): number => {
   let sum = 0;
   for (let i = 0; i < a.length; i++) {
     sum += a[i];
@@ -36,7 +44,7 @@ MathUtil.sum = (a) => {
  * @param max {number}
  * @returns {number}
  */
-MathUtil.clamp = function (value, min, max) {
+MathUtil.clamp = function (value: number, min: number, max: number): number {
   return Math.min(Math.max(value, min), max);
 };
 
@@ -45,7 +53,7 @@ MathUtil.clamp = function (value, min, max) {
  * @param a {Array.<number>}
  * @returns {number}
  */
-MathUtil.mean = (a) => {
+MathUtil.mean = (a: number[]): number => {
   return MathUtil.sum(a) / a.length;
 };
 
@@ -54,7 +62,7 @@ MathUtil.mean = (a) => {
  * @param a {Array.<number>}
  * @returns {number}
  */
-MathUtil.median = (a) => {
+MathUtil.median = (a: number[]): number => {
   if (a.length == 0) {
     return NaN;
   }

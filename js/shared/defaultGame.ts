@@ -1,8 +1,9 @@
 'use strict';
 
 import * as Immutable from 'immutable';
+import type { Game } from './types';
 
-export default Immutable.fromJS({
+const DEFAULT_GAME: Game = Immutable.fromJS({
   connections: {},
   ended: false,
   lastCorrectWordIndex: null,
@@ -19,4 +20,6 @@ export default Immutable.fromJS({
   wordIndex: 0,
   words: [],
   wordsPerPlayer: 5
-});
+}) as Game;
+
+export default DEFAULT_GAME;
