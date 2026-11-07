@@ -1,0 +1,44 @@
+'use strict';
+
+import React from 'react';
+
+import GameActions from '../actions/GameActions';
+import GameHelpers from '../../shared/GameHelpers';
+import LastCorrectWord from './LastCorrectWord';
+import TeamList from './TeamList';
+import Timer from './Timer';
+import type { PageProps } from '../types';
+
+
+export default (props: PageProps) => {
+  const game = props.state.get('game');
+  const teams = GameHelpers.getTeams(game);
+  const lastCorrectWord = game.get('words').get(game.get('lastCorrectWordIndex'));
+  const wordsInBowl = GameHelpers.getWordsInBowl(game);
+
+  return (
+    <div>
+      <h1>You Are Guessing</h1>
+      {game.get('roundStarted') &&
+      <Timer endTime={game.get('roundStartedAt') + game.get('secondsThisRound') * 1000}/>
+      }
+      <LastCorrectWord word={lastCorrectWord}/>
+      { /*TODO: Pluralize "words"*/ }
+      <div>{wordsInBowl.size} words remaining</div>
+      <TeamList
+        dispatch={props.dispatch}
+        joinable={false}
+        showScore={true}
+        teams={teams}
+      />
+      {!game.get('roundStarted') && !GameHelpers.isCurrentPlayerConnected(game) &&
+      <button
+        className="skip-player-button"
+        onClick={() => props.dispatch(GameActions.skipPlayer(GameHelpers.getCurrentPlayer(game).get('id')))}
+      >
+        SKIP PLAYER
+      </button>
+      }
+    </div>
+  );
+};

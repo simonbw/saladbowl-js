@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "allowJs": true,
+    "checkJs": false,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "verbatimModuleSyntax": false,
+    "jsx": "react",
+    "types": ["node"],
+    "lib": ["ES2022", "DOM"]
+  },
+  "include": ["js", "test", "convex", "vite.config.ts", "eslint.config.js"],
+  "exclude": ["convex/_generated"]
+}

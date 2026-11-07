@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>SaladBowl</title>
+  <link rel="icon" type="image/png" href="/images/favicon.png" />
+  <link rel="stylesheet" href="/styles/main.scss" />
+</head>
+<body>
+  <main>
+    <div id="main-content">
+      <form id="new-game-form" onsubmit="event.preventDefault()">
+        <h1>Create a New Game</h1>
+        <hr>
+        <label>
+          Nouns Per Player
+          <input
+            max="100"
+            min="1"
+            name="wordsPerPlayer"
+            type="number"
+            value="5"
+          />
+        </label>
+        <label>
+          Seconds Per Round
+          <input
+            max="200"
+            min="5"
+            name="secondsPerRound"
+            type="number"
+            value="60"
+            step="5"
+          />
+        </label>
+        <button type="submit" autofocus>Go</button>
+        <div class="error" id="new-game-error" hidden></div>
+        <a class="button" href="/">Back</a>
+      </form>
+    </div>
+    <hr>
+    <footer>
+      <a href="/">Home</a>
+      <a href="/how-to-play" target="_blank">How To Play</a>
+
+      <div>
+        <a target="_blank" href="https://github.com/simonbw/saladbowl-js">https://github.com/simonbw/saladbowl-js</a>
+      </div>
+    </footer>
+  </main>
+  <script type="module" src="/js/web/newGamePage.ts"></script>
+</body>
+</html>

@@ -5,3 +5,6 @@ public/css
 public/vendor
 dist/
 .cache/
+.env.local
+.vercel
+.env*
