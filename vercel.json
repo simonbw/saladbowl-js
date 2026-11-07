@@ -5,6 +5,6 @@
   "outputDirectory": "dist",
   "cleanUrls": true,
   "rewrites": [
-    { "source": "/:code([A-Za-z0-9]{3,8})", "destination": "/game.html" }
+    { "source": "/:code([A-Za-z0-9]{3,8})", "destination": "/game" }
   ]
 }
