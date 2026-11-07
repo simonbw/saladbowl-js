@@ -36,7 +36,7 @@ export default (props: PageProps) => {
       <h2 className="game-id">GameID: {game.get('id')}</h2>
       <form onSubmit={joinGame}>
         <div>Your Name</div>
-        <input autoFocus={true} type="text" onChange={onNameChange} value={ui.get('userName')}/>
+        <input autoFocus={true} type="text" onChange={onNameChange} value={ui.get('userName') ?? ''}/>
         <button type="submit" disabled={disabled}>Join Game</button>
       </form>
     </div>

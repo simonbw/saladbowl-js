@@ -4,54 +4,57 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-SaladBowl is a real-time multiplayer browser party game (the "Bowl of Nouns" word-guessing game). Each player joins a game from their own device; gameplay is synced over WebSockets.
+SaladBowl is a real-time multiplayer browser party game (the "Bowl of Nouns" word-guessing game). Each player joins a game from their own device; gameplay is synced through **Convex**. The frontend is a static Vite build hosted on **Vercel**. There is no server process of our own.
 
 ## Commands
 
-- `npm run dev` — run the server with nodemon (auto-restart on changes), port 3000
-- `npm run build` — bundle the client with Parcel into `dist/` (`js/web/gamePage.js` + `styles/main.scss`)
-- `npm start` — run the server in production mode (`NODE_ENV=production`)
-- `npm test` — run the Mocha test suite (`mocha --recursive --use_strict`)
-- Run a single test file: `npx mocha test/GameHelpersTest.js`
-- Filter tests by name: `npx mocha --recursive --grep "getNextWordIndex"`
+- `npm run dev` — runs `convex dev` (pushes `convex/` functions on change) and the Vite dev server on port 3000. The first run asks to log in or link a project; `CONVEX_AGENT_MODE=anonymous npx convex dev` gives a local backend with no account.
+- `npm run build` — Vite build of the static pages into `dist/` (needs `VITE_CONVEX_URL`, which `convex dev` writes to `.env.local`)
+- `npm test` — Vitest (`test/**/*.test.{js,ts}`); `test/convex/` uses `convex-test` in the edge-runtime environment
+- Single file: `npx vitest run test/GameHelpers.test.js`; filter by name: `npx vitest run -t "getNextWordIndex"`
+- `npm run typecheck` — `tsc` for the app, then for `convex/` with its own tsconfig
+- `npm run lint`
 
-The server serves the client bundle from `dist/`, so **`npm run build` must run before the client will load**. There is no build watcher wired up — rebuild after changing anything under `js/web/` or `styles/`. The `PORT` env var overrides the default 3000.
+In dev, the player id lives in `sessionStorage`, so each browser tab is a separate player. That makes it easy to play a whole game on one machine.
 
-Targets Node 12.x (`engines` in package.json). The `.travis.yml` pinning Node 5 is stale.
+## Deployment
+
+Vercel runs `npx convex deploy --cmd 'npm run build'` (see `vercel.json`). That deploys the Convex functions to production, then builds the frontend with the prod `VITE_CONVEX_URL` injected. It needs `CONVEX_DEPLOY_KEY` (a production deploy key) set in the Vercel project's environment. `vercel.json` also rewrites `/{code}` → `game.html` and turns on clean URLs.
 
 ## Architecture
 
-The defining idea: **the same Redux-style reducers run on both the server and the client.** Game state is a single `Immutable.Map`, and the reducer functions in `js/shared/reducers/` are pure transforms over it. The server is the source of truth; clients keep a local mirror and reconcile.
+The defining idea: **the same Redux-style reducers run in the Convex backend and on the client.** Game state is a single `Immutable.Map`, and the reducer functions in `js/shared/reducers/` are pure transforms over it. Convex holds the authoritative copy (as plain JSON in the `games` table); clients mirror it.
 
-### Three source trees under `js/`
+### Source trees
 
-- **`js/shared/`** — code imported by both server and client. The reducers, `ActionTypes`, `MessageTypes`, `GameHelpers` (queries over game state like `getCurrentPlayer`, `playerIsJoined`), `defaultGame` (the initial Immutable game map), and small utilities.
-- **`js/server/`** — Express app + socket.io. `app.js` builds the Express app; `www` is the entry point that creates the HTTP server and wires socket.io.
-- **`js/web/`** — the React + Redux client. `gamePage.js` is the Parcel entry point.
+- **`js/shared/`** — code imported by both Convex and the client: reducers, `ActionTypes`, `GameHelpers` (queries over game state like `getCurrentPlayer`), `defaultGame`, `GameCode`, small utilities.
+- **`convex/`** — the backend. `schema.ts` (`games`, `presence`), `game.ts` (all functions), `lib/serverActions.ts` (pure `SERVER.*` → `CLIENT.*` translation), `crons.ts` (daily cleanup of games older than 7 days). `convex/_generated/` is codegen; it is committed.
+- **`js/web/`** — the React 18 + Redux client. `gamePage.tsx` is the game page's entry; `newGamePage.ts` / `joinGamePage.ts` drive the two forms.
+- **`*.html` at the repo root** — the static pages (`index`, `new-game`, `join-game`, `how-to-play`, `game`, `404`), each a Vite entry point listed in `PAGES` in `vite.config.ts`.
 
 ### Action conventions (`js/shared/ActionTypes.js`)
 
 Action `type` strings are namespaced and the namespace controls routing:
 
-- `SERVER.*` — client→server intent. The client's `socketMiddleware` intercepts any action whose type starts with `SERVER.` and emits it over the socket *instead of* reducing it locally.
-- `CLIENT.*` — server→client broadcasts (e.g. `REPLACE_GAME`, `ROUND_STARTED`).
-- `UI.*` — client-only, handled by `js/web/reducers/UIReducers.js`, never sent over the wire.
+- `SERVER.*` — client intent. `convexMiddleware` sends these to the `game.dispatch` mutation (and passes them to local reducers, which only use them for UI flags like `waitingForServer`).
+- `CLIENT.*` — authoritative state changes. Only the backend creates these (in `translateServerAction`, where server timestamps enter), then runs them through `GameReducers`. On the client, only `CLIENT.REPLACE_GAME` is dispatched.
+- `UI.*` — client-only, handled by `js/web/reducers/UIReducers.ts`.
 
-### Server request/socket flow
+### Backend flow (`convex/game.ts`)
 
-1. `guaranteeUser` middleware assigns each visitor a `userId` cookie.
-2. HTTP routes (`js/server/Routes.js`) render Handlebars templates (`templates/`). `POST /new-game` creates a game; `GET /:gameId` renders the game page with the serialized initial game state embedded.
-3. `GameStore` holds games **in memory only** (a plain object, incrementing numeric IDs) — games are lost on restart and not shared across processes.
-4. socket.io connections pass through the middleware chain in `js/server/socket/GameSocket.js` (player attach → logging → heartbeat → game lookup → action handlers → connections).
-5. `SocketActionHandlers` receives `GAME` messages, looks up the handler for `action.type` in the merged `PreGameHandlers` / `MidGameHandlers` / `OutOfSyncHelper` maps, and calls it. Handlers mutate state via `GameStore.dispatch(gameId, action)`, which runs the shared `GameReducers` and saves.
+- `createGame` makes a row with a random 4-letter `code` (`js/shared/GameCode.ts`) and returns it. URLs are `/{code}`.
+- `dispatch(code, userId, action)` reads the row, runs `translateServerAction`, then `GameReducers`, and writes the result. Mutations are serializable transactions, so concurrent actions never lose updates.
+- **Round timer:** `applyClientAction` compares round state before and after. When a round starts it schedules `endRound` via `ctx.scheduler`. When a round stops early it cancels that and bumps `roundId`. `endRound` only fires if `roundId` still matches.
+- **Presence:** clients call `heartbeat` every 5s. It updates the `presence` table (not the game row, so it doesn't push state to everyone) and schedules `checkPresence`, which flips `connections[userId]` to false after 20s of silence. `heartbeat` returns the server clock; `js/web/Timing.ts` uses it so the countdown matches server time.
+- `getGame(code)` is the reactive query. Every change pushes the full game to every client.
 
 ### Client flow
 
-- `js/web/Store.js` builds the Redux store with `thunkMiddleware`, `loggingMiddleware`, and `socketMiddleware` (in that order). `AppReducers` splits state into `game` (shared reducers) and `ui` (client reducers).
-- `js/web/socket/SocketHandlers.js` registers handlers for incoming socket messages, which dispatch `CLIENT.*` actions into the store.
-- `GameApp.js` is a single connected component that picks which page to render purely from game state — `JoinGamePage` → `AddWordsPage` → `JoinTeamsPage` → then in-game `CurrentPlayerPage` / `GuessingPlayerPage` / `WaitingPlayerPage` → `GameOverPage`. There is no router; the visible "page" is derived state.
+- `gamePage.tsx` reads the code from the URL, gets a `userId` from storage (`js/web/backend/userId.ts`), builds the store (`Store.ts`: thunk → logging → convex middleware), and starts `startGameSync` (`js/web/backend/gameSync.ts`: game subscription → `REPLACE_GAME`, connection state, heartbeats).
+- `GameApp.tsx` is a single connected component that picks which page to render purely from game state — `JoinGamePage` → `AddWordsPage` → `JoinTeamsPage` → then in-game `CurrentPlayerPage` / `GuessingPlayerPage` / `WaitingPlayerPage` → `GameOverPage`. There is no router; the visible "page" is derived state.
 
 ### Notable constraints
 
-- Uses old major versions: React 0.14, Redux 3, react-redux 4, Immutable 3, socket.io 1. APIs differ from current versions — match the existing style.
-- Game state objects are Immutable collections; use `.get()` / `.set()`, not plain property access.
+- Game state objects are Immutable collections; use `.get()` / `.set()`, not plain property access. Keep reducers Immutable-based and pure — Convex runs the same code.
+- Components use the classic JSX runtime (`import React` explicitly).
+- Identity is a client-generated id in `localStorage`, passed to every mutation. No auth.

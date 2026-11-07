@@ -8,8 +8,9 @@ import {
 
 import AppReducers from './reducers/AppReducers';
 import loggingMiddleware from './middleware/loggingMiddleware';
-import socketMiddleware from './middleware/socketMiddleware';
+import convexMiddleware from './middleware/convexMiddleware';
 import thunkMiddleware from './middleware/thunkMiddleware';
+import type { ConvexClient } from 'convex/browser';
 import type { AppState } from './types';
 
 /**
@@ -19,13 +20,13 @@ import type { AppState } from './types';
  * `configureStore` is intentionally avoided — its serializability and
  * immutability checks fight this app's Immutable.js game state.
  *
- * @param initialState the serialized initial state
- * @param socket the open socket.io connection
+ * @param initialState the initial state
+ * @param convex the Convex client, plus which game and player this page is
  * @param enableReduxDevTools whether to wire up the Redux DevTools extension
  */
 export default (
   initialState: AppState,
-  socket: any,
+  convex: { client: ConvexClient; code: string; userId: string },
   enableReduxDevTools?: boolean,
 ) => {
   const devToolsCompose =
@@ -39,7 +40,7 @@ export default (
       applyMiddleware(
         thunkMiddleware,
         loggingMiddleware,
-        socketMiddleware(socket),
+        convexMiddleware(convex.client, convex.code, convex.userId),
       ),
     ),
   );

@@ -17,7 +17,6 @@ const ActionTypes = {
     SKIP_WORD: 'SERVER.SKIP_WORD',
     START_GAME: 'SERVER.START_GAME',
     START_ROUND: 'SERVER.START_ROUND',
-    OUT_OF_SYNC: 'SERVER.OUT_OF_SYNC',
     SKIP_PLAYER: 'SERVER.SKIP_PLAYER',
   },
 
@@ -51,6 +50,8 @@ const ActionTypes = {
   /////////////
   UI: {
     FIELD_CHANGED: 'UI.FIELD_CHANGED',
+    // A SERVER.* action's mutation finished (or failed).
+    SERVER_ACTION_SETTLED: 'UI.SERVER_ACTION_SETTLED',
   },
 };
 

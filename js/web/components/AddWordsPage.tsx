@@ -40,7 +40,7 @@ export default (props: PageProps) => {
   function addWords(e: React.FormEvent<HTMLFormElement>) {
     // TODO: Disable form / show progress
     e.preventDefault();
-    var words = getWords().map((word, i) => ({word: word, playerWordIndex: i}));
+    const words = getWords().map((word, i) => ({word: word, playerWordIndex: i}));
     dispatch(GameActions.saveWords(words));
   }
 

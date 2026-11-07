@@ -15,5 +15,6 @@
     "types": ["node"],
     "lib": ["ES2022", "DOM"]
   },
-  "include": ["js", "test", "www.js", "vite.config.ts", "eslint.config.js"]
+  "include": ["js", "test", "convex", "vite.config.ts", "eslint.config.js"],
+  "exclude": ["convex/_generated"]
 }

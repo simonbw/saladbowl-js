@@ -7,7 +7,7 @@ import type { Middleware } from 'redux';
  */
 const thunkMiddleware: Middleware = (store) => (next) => (action) => {
   if (typeof action == 'function') {
-    return (action as Function)(store.dispatch, store.getState); // NOTE: doesn't call next
+    return (action as (dispatch: unknown, getState: unknown) => unknown)(store.dispatch, store.getState); // NOTE: doesn't call next
   } else {
     return next(action);
   }

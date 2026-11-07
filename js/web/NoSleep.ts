@@ -10,7 +10,7 @@ function addSourceToVideo(
   type: string,
   dataURI: string,
 ) {
-  var source = document.createElement("source");
+  const source = document.createElement("source");
   source.src = dataURI;
   source.type = "video/" + type;
   element.appendChild(source);

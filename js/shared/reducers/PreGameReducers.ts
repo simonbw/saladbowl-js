@@ -16,18 +16,18 @@ const reducers: Record<string, (game: Game, action: Action) => Game> = {};
  */
 reducers[ActionTypes.CLIENT.PLAYER_JOINED] = (game, action) => {
   const defaultPlayer = {team: 0, active: true}; // TODO: Move to default data somewhere
-  let player: any = Immutable.fromJS(Object.assign(defaultPlayer, action.player));
+  const player: any = Immutable.fromJS(Object.assign(defaultPlayer, action.player));
 
   if (game.get('players').some((otherPlayer: any) => player.get('id') == otherPlayer.get('id'))) {
     throw new Error('Player already in game');
   }
 
-  let playerIndex = action.hasOwnProperty('playerIndex') ? action.playerIndex : game.get('players').size;
+  const playerIndex = Object.hasOwn(action, 'playerIndex') ? action.playerIndex : game.get('players').size;
 
   return game
     .set('players', game.get('players').set(playerIndex, player))
     .set('words', game.get('words').withMutations((words: any) => {
-      let wordsPerPlayer = game.get('wordsPerPlayer');
+      const wordsPerPlayer = game.get('wordsPerPlayer');
       for (let wordIndex = playerIndex * wordsPerPlayer; wordIndex < (playerIndex + 1) * wordsPerPlayer; wordIndex++) {
         words.set(wordIndex, Immutable.fromJS({ // TODO: Move to default data somewhere
           inBowl: false,
@@ -86,7 +86,7 @@ reducers[ActionTypes.CLIENT.GAME_STARTED] = (game, action) => {
  * @returns {Immutable.Map}
  */
 reducers[ActionTypes.CLIENT.TEAM_JOINED] = (game, action) => {
-  let playerIndex = GameHelpers.getPlayerIndex(game, action.playerId);
+  const playerIndex = GameHelpers.getPlayerIndex(game, action.playerId);
   return game.setIn(['players', playerIndex, 'team'], action.team);
 };
 

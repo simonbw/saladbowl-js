@@ -74,8 +74,9 @@ reducers[ActionTypes.CLIENT.WORD_CORRECT] = (game, action) => {
       return game
         .set('ended', true);
     } else {
-      const roundEndTime = game.get('roundStartedAt') + game.get('secondsThisRound')
-      const secondsLeftover = roundEndTime - action.time;
+      // roundStartedAt and action.time are ms timestamps; secondsThisRound is seconds.
+      const roundEndTime = game.get('roundStartedAt') + game.get('secondsThisRound') * 1000;
+      const secondsLeftover = (roundEndTime - action.time) / 1000;
       game = game
         .set('words', game.get('words').map((word: any) => {
           return word.set('inBowl', true);

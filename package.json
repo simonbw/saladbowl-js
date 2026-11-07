@@ -7,47 +7,37 @@
     "node": ">=20"
   },
   "scripts": {
-    "dev": "tsx watch www.js",
-    "build": "vite build && sass styles/main.scss dist/styles/main.css",
-    "start": "NODE_ENV=production tsx www.js",
+    "dev": "convex dev --start vite",
+    "build": "vite build",
+    "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p convex",
     "lint": "eslint .",
     "format": "prettier --write ."
   },
   "dependencies": {
-    "body-parser": "^1.20.3",
-    "child-process-promise": "^2.2.1",
-    "cookie-parser": "^1.4.7",
-    "debug": "^4.4.0",
-    "express": "^4.21.2",
-    "handlebars": "^4.7.8",
-    "hbs": "^4.2.0",
+    "convex": "^1.49.0",
     "immutable": "^4.3.7",
-    "morgan": "^1.10.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-redux": "^9.2.0",
-    "redux": "^5.0.1",
-    "serve-favicon": "^2.5.0",
-    "shortid": "^2.2.16",
-    "socket.io": "^1.7.4",
-    "socket.io-client": "^1.7.4"
+    "redux": "^5.0.1"
   },
   "devDependencies": {
+    "@edge-runtime/vm": "^5.0.0",
     "@eslint/js": "^9.17.0",
     "@types/node": "^22.10.2",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
+    "convex-test": "^0.0.67",
     "eslint": "^9.17.0",
     "globals": "^15.14.0",
     "prettier": "^3.4.2",
     "sass": "^1.83.0",
-    "tsx": "^4.19.2",
     "typescript": "^5.7.2",
     "typescript-eslint": "^8.18.1",
     "vite": "^6.0.5",
-    "vitest": "^2.1.8"
+    "vitest": "^3.2.4"
   }
 }

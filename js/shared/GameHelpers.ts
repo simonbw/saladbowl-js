@@ -162,7 +162,7 @@ GameHelpers.isCurrentPlayerConnected = (game: Game): boolean => {
  * @returns {*}
  */
 GameHelpers.getCurrentTeam = (game: Game): any => {
-  let teams = GameHelpers.getTeams(game);
+  const teams = GameHelpers.getTeams(game);
   return teams.get(MathUtil.mod(game.get('teamIndex'), teams.size));
 };
 
@@ -176,7 +176,7 @@ GameHelpers.playerIsGuessing = (game: Game, playerId: string | null | undefined)
   if (!playerId) {
     return false;
   }
-  let team = GameHelpers.getCurrentTeam(game);
+  const team = GameHelpers.getCurrentTeam(game);
   return team.get('players').some((player: any) => {
     return player.get('id') == playerId;
   });
@@ -201,7 +201,7 @@ GameHelpers.getPlayerWords = (game: Game, playerId: string): any => {
  * @returns {boolean}
  */
 GameHelpers.playerWordsAreValid = (game: Game, playerId: string): boolean => {
-  let words = GameHelpers.getPlayerWords(game, playerId);
+  const words = GameHelpers.getPlayerWords(game, playerId);
   return words.every((word: any) => {
     return Validation.validateWord(word.get('word'));
   });
@@ -250,7 +250,7 @@ GameHelpers.readyToStart = (game: Game): boolean => {
     })) {
     return false;
   }
-  let teams = GameHelpers.getTeams(game);
+  const teams = GameHelpers.getTeams(game);
   // Not enough teams
   if (teams.size < 2) {
     return false;

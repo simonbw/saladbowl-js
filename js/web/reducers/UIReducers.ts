@@ -23,16 +23,16 @@ reducers[ActionTypes.SERVER.SKIP_WORD] = (state) => {
   return state.set('waitingForServer', true);
 };
 
-reducers[ActionTypes.CLIENT.WORD_SKIPPED] = (state) => {
-  return state.set('waitingForServer', false);
-};
-
 reducers[ActionTypes.SERVER.CORRECT_WORD] = (state) => {
   return state.set('waitingForServer', true);
 };
 
-reducers[ActionTypes.CLIENT.WORD_CORRECT] = (state) => {
-  return state.set('waitingForServer', false);
+reducers[ActionTypes.UI.SERVER_ACTION_SETTLED] = (state, action) => {
+  const type = action.action?.type;
+  if (type == ActionTypes.SERVER.SKIP_WORD || type == ActionTypes.SERVER.CORRECT_WORD) {
+    return state.set('waitingForServer', false);
+  }
+  return state;
 };
 
 /**
@@ -43,7 +43,7 @@ export default (
   action: Action | null | undefined,
 ): UIState => {
   state = state || DEFAULT_STATE;
-  if (action && action.type && reducers.hasOwnProperty(action.type)) {
+  if (action && action.type && Object.hasOwn(reducers, action.type)) {
     return reducers[action.type](state, action);
   }
   return state;

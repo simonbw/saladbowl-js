@@ -1,6 +1,5 @@
 import ActionTypes from '../../shared/ActionTypes';
-import UIActions from './UIActions';
-import type { Action, Dispatch } from '../types';
+import type { Action } from '../types';
 
 const GameActions = {
   /**
@@ -76,16 +75,6 @@ const GameActions = {
     return {
       type: ActionTypes.SERVER.SKIP_PLAYER,
       playerId: playerId,
-    };
-  },
-
-  /**
-   * Ask to replace the current game.
-   */
-  outOfSync() {
-    return (dispatch: Dispatch) => {
-      dispatch(UIActions.updateField('synced', false));
-      dispatch({ type: ActionTypes.SERVER.OUT_OF_SYNC });
     };
   },
 };

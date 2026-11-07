@@ -20,7 +20,7 @@ const reducers: Record<string, (game: Game, action: Action) => Game> = Object.as
  */
 export default (game: Game | null | undefined, action: Action | null | undefined): Game => {
   game = game || DEFAULT_GAME;
-  if (action && action.type && reducers.hasOwnProperty(action.type)) {
+  if (action && action.type && Object.hasOwn(reducers, action.type)) {
     return reducers[action.type](game, action);
   }
   return game;

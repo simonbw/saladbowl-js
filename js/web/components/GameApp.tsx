@@ -26,8 +26,16 @@ function GameComponent(props: PageProps) {
   const ui = state.get('ui');
 
 
-  if (!game.get('id')) {
-    return (<div>Game Not Found</div>);
+  if (!ui.get('loaded')) {
+    return (<div>loading...</div>);
+  }
+  if (ui.get('gameNotFound') || !game.get('id')) {
+    return (
+      <div>
+        <h1>Game Not Found</h1>
+        <p>Either this game is already over, or you typed the code in wrong.</p>
+      </div>
+    );
   }
 
   // Choose which page to show.
@@ -55,9 +63,6 @@ function GameComponent(props: PageProps) {
   const errors = [];
   if (ui.get('connected') === false) {
     errors.push(<div key={0} className="error">Disconnected</div>);
-  }
-  if (ui.get('synced') == false) {
-    errors.push(<div key={1} className="error">Out Of Sync</div>);
   }
 
   return (

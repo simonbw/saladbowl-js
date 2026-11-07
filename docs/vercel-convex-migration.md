@@ -1,7 +1,24 @@
 # Migration Design: Heroku → Vercel + Convex
 
-**Status:** Phases 0 & 0.5 implemented on branch `migrate/vercel-convex`;
-Phases 1–6 (Convex) pending · **Date:** 2026-05-16
+**Status:** Phases 0–5 implemented on branch `migrate/vercel-convex`
+(2026-11-07); Phase 6 (DNS cutover, Heroku decommission) pending ·
+**Date:** 2026-05-16
+
+> **Implementation notes (2026-11-07)** — where the build differs from this design:
+> - Presence uses a separate `presence` table plus a scheduled `checkPresence`
+>   per user, not `lastSeen` in the game row. That way a heartbeat doesn't push
+>   the whole game to every client, and "disconnected" is noticed even when
+>   nothing else changes.
+> - `heartbeat` also returns the server clock, which replaces the old socket
+>   heartbeat for clock sync (`js/web/Timing.ts`).
+> - Static pages are plain HTML at the repo root, built as a Vite multi-page
+>   app. `vite.config.ts` copies Vercel's clean-URL and `/{code}` routing
+>   into the dev server.
+> - Server-side guards were added: `START_ROUND` while a round is running, and
+>   `CORRECT_WORD`/`SKIP_WORD` outside a round, are ignored.
+> - A daily cron deletes games older than 7 days.
+> - Fixed a units bug in `WORD_CORRECT`'s `secondsLeftover` (it mixed ms and
+>   s), which had kept the "leftover + bonus seconds" feature from ever working.
 
 ## 1. Goal
 
@@ -291,7 +308,7 @@ the app behaves identically and is still deployable to Heroku.
 > Heroku-deployable, so they can ship as independent checkpoints before any
 > Convex work begins — de-risking the migration.
 
-### Phase 1 — Stand up Convex
+### Phase 1 — Stand up Convex ✅ done
 - Add the Convex Marketplace integration to the Vercel project; run
   `npx convex dev` locally.
 - Add the `games` table schema (§4.1). Store `state` as `v.any()`.
@@ -300,24 +317,24 @@ the app behaves identically and is still deployable to Heroku.
 - **Verify early:** Immutable.js 3 runs in the Convex runtime, and the
   CommonJS `js/shared/` modules import cleanly under Convex's esbuild bundler.
 
-### Phase 2 — Port the game handlers into Convex
+### Phase 2 — Port the game handlers into Convex ✅ done
 - Move `PreGameHandlers` / `MidGameHandlers` logic into `dispatch`'s
   `action.type` → handler table.
 - Port the round timer to `ctx.scheduler` + `internal.game.endRound` with the
   `roundId` guard (§4.5).
 - Add the `heartbeat` mutation and derived `connected` status.
 
-### Phase 3 — Rewire the client
+### Phase 3 — Rewire the client ✅ done
 - `socketMiddleware` → `convexMiddleware`; `SocketHandlers` → the `onUpdate`
   subscription; `userId` via `localStorage`; `code` from the URL.
 - Remove `socket.io-client`; add `convex`.
 
-### Phase 4 — Replace the HTTP/template layer
+### Phase 4 — Replace the HTTP/template layer ✅ done
 - Convert the four content templates to static HTML; wire the new-game form to
   `createGame`.
 - Delete `js/server/`, Express, hbs/handlebars, `www`, `Routes.js`.
 
-### Phase 5 — Deploy configuration
+### Phase 5 — Deploy configuration ✅ done
 - `vercel.json`: output directory + the `/:code` → `game.html` rewrite.
 - Build command: `npx convex deploy --cmd 'npm run build'` (deploys Convex
   functions, then builds the frontend with the injected `CONVEX_URL`).
@@ -356,5 +373,4 @@ the app behaves identically and is still deployable to Heroku.
 *Resolved:* bundler → **Vite**; React/Redux → **upgraded in Phase 0.5** (not
 deferred indefinitely).
 
-1. **Game codes:** short random codes (recommended, shareable) vs keeping
-   integer-style IDs?
+*Resolved:* game codes → **short random codes** (4 chars, no 0/O/1/I/L).

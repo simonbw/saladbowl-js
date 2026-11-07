@@ -5,7 +5,7 @@ import tseslint from "typescript-eslint";
 // Lenient baseline for a legacy codebase mid-migration. Tighten over time;
 // the goal here is useful signal, not a wall of errors.
 export default tseslint.config(
-  { ignores: ["dist/", "node_modules/", "public/"] },
+  { ignores: ["dist/", "node_modules/", "public/", "convex/_generated/"] },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
