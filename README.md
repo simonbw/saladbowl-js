@@ -48,4 +48,12 @@ The team with the most points after all three rounds is the winner.
 
 Development
 -----------
-Checkout out the [wiki](https://github.com/simonbw/saladbowl-js/wiki) for the development process.
+SaladBowl is a static Vite frontend hosted on Vercel, with a [Convex](https://convex.dev) backend.
+It's live at [saladbowl.xyz](https://saladbowl.xyz).
+
+- `npm install`, then `npm run dev`: runs Convex and the Vite dev server at http://localhost:3000.
+  Each browser tab is a separate player.
+- `npm test`, `npm run typecheck` and `npm run lint` run the checks.
+- Pushing to `integration` deploys to production. Other branches get preview deployments.
+
+See [CLAUDE.md](CLAUDE.md) for the architecture.

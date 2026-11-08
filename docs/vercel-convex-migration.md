@@ -1,7 +1,7 @@
 # Migration Design: Heroku → Vercel + Convex
 
-**Status:** Phases 0–5 implemented on branch `migrate/vercel-convex`
-(2026-11-07); Phase 6 (DNS cutover, Heroku decommission) pending ·
+**Status:** ✅ Complete (2026-11-07). All phases done (PR #83); live on Vercel +
+Convex at saladbowl.xyz and saladbowl.simonbw.com; Heroku app deleted ·
 **Date:** 2026-05-16
 
 > **Implementation notes (2026-11-07)** — where the build differs from this design:
@@ -340,12 +340,18 @@ the app behaves identically and is still deployable to Heroku.
   functions, then builds the frontend with the injected `CONVEX_URL`).
 - Prune `package.json` dependencies and scripts; confirm Node 20.
 
-### Phase 6 — Cutover
+### Phase 6 — Cutover ✅ done
 - Deploy to Vercel; smoke-test a full multi-device game (join → add words →
   teams → rounds → game over), including a round that ends on the timer and one
   that ends early.
 - Move the domain/DNS from Heroku to Vercel.
 - Decommission the Heroku dyno.
+
+Done 2026-11-07. A four-browser game passed against production. The domains
+saladbowl.xyz, www.saladbowl.xyz and saladbowl.simonbw.com now point at the
+Vercel project `saladbowl` (DNS on Vercel), and the Heroku app is deleted. The
+Vercel production branch is `integration`: pushes there deploy to production,
+and every other branch gets a preview with its own Convex preview backend.
 
 ## 7. Risks & mitigations
 
@@ -366,7 +372,8 @@ the app behaves identically and is still deployable to Heroku.
 - **Optimistic updates.** The client could reduce `SERVER.*` actions locally
   for snappier UI and let the Convex push reconcile — restoring the full
   "same reducers, both sides" experience. Not needed for parity.
-- **Convex function tests** with `convex-test` to replace the deleted server.
+- ~~**Convex function tests** with `convex-test` to replace the deleted
+  server.~~ Done in Phases 1–5 (`test/convex/game.test.ts`).
 
 ## 9. Open questions for Simon
 
