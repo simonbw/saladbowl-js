@@ -2,9 +2,10 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import Timing from '../Timing';
+import { formatSeconds } from '../format';
 
 const DELAY = 50; // milliseconds to wait before drawing again
-const PRECISION = 2; // number of sig figs for timer to use
+const LOW_TIME_MS = 10_000;
 
 interface TimerProps {
   endTime: number;
@@ -28,6 +29,6 @@ export default function Timer(props: TimerProps) {
     return () => clearInterval(timerInterval);
   }, []);
 
-  const seconds = Math.max(remaining / 1000, 0);
-  return <div className="timer">{seconds.toPrecision(PRECISION)}</div>;
+  const className = remaining < LOW_TIME_MS ? 'timer low' : 'timer';
+  return <div className={className}>{formatSeconds(remaining)}</div>;
 }

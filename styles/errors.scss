@@ -9,3 +9,15 @@
     padding: 10px;
   }
 }
+.errors .error.dismissable {
+  cursor: pointer;
+  position: relative;
+  padding-right: 30px;
+
+  .dismiss {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}

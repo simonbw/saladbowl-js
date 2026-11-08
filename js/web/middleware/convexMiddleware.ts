@@ -5,6 +5,8 @@ import type { Middleware } from 'redux';
 
 import { api } from '../../../convex/_generated/api';
 import ActionTypes from '../../shared/ActionTypes';
+import UIActions from '../actions/UIActions';
+import { errorMessage } from '../errorMessage';
 import type { Action } from '../types';
 
 // The prefix that all server actions start with
@@ -33,6 +35,7 @@ export default (
     .mutation(api.game.dispatch, { code, userId, action: typedAction })
     .catch((error) => {
       console.error('server action failed:', typedAction, error);
+      store.dispatch(UIActions.showError(errorMessage(error)) as any);
     })
     .finally(() => {
       store.dispatch({ type: ActionTypes.UI.SERVER_ACTION_SETTLED, action: typedAction });

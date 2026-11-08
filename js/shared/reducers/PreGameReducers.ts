@@ -55,6 +55,10 @@ reducers[ActionTypes.CLIENT.WORDS_UPDATED] = (game, action) => {
 
   return game.set('words', game.get('words').withMutations((words: any) => {
     action.words.forEach((wordData: any) => {
+      const playerWordIndex = wordData.playerWordIndex;
+      if (!Number.isInteger(playerWordIndex) || playerWordIndex < 0 || playerWordIndex >= game.get('wordsPerPlayer')) {
+        throw new Error('Invalid word slot: ' + playerWordIndex);
+      }
       const wordIndex = playerIndex * game.get('wordsPerPlayer') + wordData.playerWordIndex;
       const oldWord = words.get(wordIndex);
       if (!oldWord) {
@@ -88,6 +92,17 @@ reducers[ActionTypes.CLIENT.GAME_STARTED] = (game, action) => {
 reducers[ActionTypes.CLIENT.TEAM_JOINED] = (game, action) => {
   const playerIndex = GameHelpers.getPlayerIndex(game, action.playerId);
   return game.setIn(['players', playerIndex, 'team'], action.team);
+};
+
+/**
+ * Every player moved at once. `action.teams` maps player id → team index; the
+ * server picked them (reducers stay deterministic).
+ */
+reducers[ActionTypes.CLIENT.TEAMS_SHUFFLED] = (game, action) => {
+  return game.set('players', game.get('players').map((player: any) => {
+    const team = action.teams[player.get('id')];
+    return Number.isInteger(team) ? player.set('team', team) : player;
+  }));
 };
 
 export default reducers;

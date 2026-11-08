@@ -22,7 +22,7 @@ import type { AppState } from './types';
  *
  * @param initialState the initial state
  * @param convex the Convex client, plus which game and player this page is
- * @param enableReduxDevTools whether to wire up the Redux DevTools extension
+ * @param enableReduxDevTools dev mode: wire up the Redux DevTools extension and log every action
  */
 export default (
   initialState: AppState,
@@ -39,7 +39,8 @@ export default (
     composeEnhancers(
       applyMiddleware(
         thunkMiddleware,
-        loggingMiddleware,
+        // Logs every action and the full state after it; dev only.
+        ...(enableReduxDevTools ? [loggingMiddleware] : []),
         convexMiddleware(convex.client, convex.code, convex.userId),
       ),
     ),

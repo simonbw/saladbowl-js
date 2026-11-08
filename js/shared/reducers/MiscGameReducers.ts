@@ -49,4 +49,14 @@ reducers[ActionTypes.CLIENT.SET_USER_ID] = (game, action) => {
   return game.set('userId', action.userId);
 };
 
+/**
+ * Someone pressed "Play again"; point everyone at the new game.
+ * @param game
+ * @param action
+ * @returns {*}
+ */
+reducers[ActionTypes.CLIENT.NEXT_GAME_CREATED] = (game, action) => {
+  return game.set('nextGameCode', action.code);
+};
+
 export default reducers;

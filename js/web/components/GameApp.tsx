@@ -11,6 +11,7 @@ import GameOverPage from './GameOverPage';
 import GuessingPlayerPage from './GuessingPlayerPage';
 import JoinGamePage from './JoinGamePage';
 import JoinTeamsPage from './JoinTeamsPage';
+import { AnnouncementOverlay, ErrorBanner, SoundToggle } from './Overlays';
 import WaitingPlayerPage from './WaitingPlayerPage';
 import type { AppState, Dispatch, PageProps } from '../types';
 
@@ -52,7 +53,7 @@ function GameComponent(props: PageProps) {
     page = (<JoinTeamsPage state={state} dispatch={dispatch}/>);
   } else if (game.get('ended')) {
     page = (<GameOverPage state={state} dispatch={dispatch}/>);
-  } else if (GameHelpers.getCurrentPlayer(game).get('id') == userId) {
+  } else if (GameHelpers.isCurrentPlayer(game, userId)) {
     page = (<CurrentPlayerPage state={state} dispatch={dispatch}/>);
   } else if (GameHelpers.playerIsGuessing(game, userId)) {
     page = (<GuessingPlayerPage state={state} dispatch={dispatch}/>);
@@ -60,17 +61,15 @@ function GameComponent(props: PageProps) {
     page = (<WaitingPlayerPage state={state} dispatch={dispatch}/>);
   }
 
-  const errors = [];
-  if (ui.get('connected') === false) {
-    errors.push(<div key={0} className="error">Disconnected</div>);
-  }
-
   return (
     <div>
-      {errors.length > 0 &&
-      <div className="errors">{errors}</div>
+      {ui.get('connected') === false &&
+      <div className="errors"><div className="error">Connection lost. Reconnecting…</div></div>
       }
+      <ErrorBanner state={state} dispatch={dispatch}/>
       {page}
+      <AnnouncementOverlay state={state} dispatch={dispatch}/>
+      {game.get('started') && <SoundToggle/>}
       {window.DEBUG_MODE &&
       <DebugPane state={state} dispatch={dispatch}/>
       }

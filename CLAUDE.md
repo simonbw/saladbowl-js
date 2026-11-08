@@ -44,13 +44,16 @@ Action `type` strings are namespaced and the namespace controls routing:
 
 - `createGame` makes a row with a random 4-letter `code` (`js/shared/GameCode.ts`) and returns it. URLs are `/{code}`.
 - `dispatch(code, userId, action)` reads the row, runs `translateServerAction`, then `GameReducers`, and writes the result. Mutations are serializable transactions, so concurrent actions never lose updates.
+- `translateServerAction` is also where the rules live: lobby actions only before the game starts, `START_GAME` only when `readyToStart`, round actions (start/correct/skip/undo/end) only from the current clue-giver. Lobby violations throw a `ConvexError` (the client shows its message); stale or out-of-turn in-game actions return `null` and are ignored.
+- `playAgain(code, userId)` (from the game-over screen) creates one follow-up game, links it as `nextGameCode` on the old one, and joins each caller with their old name and team.
 - **Round timer:** `applyClientAction` compares round state before and after. When a round starts it schedules `endRound` via `ctx.scheduler`. When a round stops early it cancels that and bumps `roundId`. `endRound` only fires if `roundId` still matches.
 - **Presence:** clients call `heartbeat` every 5s. It updates the `presence` table (not the game row, so it doesn't push state to everyone) and schedules `checkPresence`, which flips `connections[userId]` to false after 20s of silence. `heartbeat` returns the server clock; `js/web/Timing.ts` uses it so the countdown matches server time.
 - `getGame(code)` is the reactive query. Every change pushes the full game to every client.
 
 ### Client flow
 
-- `gamePage.tsx` reads the code from the URL, gets a `userId` from storage (`js/web/backend/userId.ts`), builds the store (`Store.ts`: thunk → logging → convex middleware), and starts `startGameSync` (`js/web/backend/gameSync.ts`: game subscription → `REPLACE_GAME`, connection state, heartbeats).
+- `gamePage.tsx` reads the code from the URL, gets a `userId` from storage (`js/web/backend/userId.ts`), builds the store (`Store.ts`: thunk → logging (dev only) → convex middleware), and starts `startGameSync` (`js/web/backend/gameSync.ts`: game subscription → `REPLACE_GAME`, connection state, heartbeats).
+- `gameEffects.ts` subscribes to the store and runs `diffGameEvents` (`GameEvents.ts`) over consecutive game states to detect time's up / new phase / game over, then plays sounds (`Sounds.ts`, Web Audio) and shows announcements. `WakeLock.ts` keeps the screen on. Failed `SERVER.*` mutations show in the error banner via `convexMiddleware`.
 - `GameApp.tsx` is a single connected component that picks which page to render purely from game state — `JoinGamePage` → `AddWordsPage` → `JoinTeamsPage` → then in-game `CurrentPlayerPage` / `GuessingPlayerPage` / `WaitingPlayerPage` → `GameOverPage`. There is no router; the visible "page" is derived state.
 
 ### Notable constraints

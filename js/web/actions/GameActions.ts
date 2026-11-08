@@ -33,6 +33,15 @@ const GameActions = {
   },
 
   /**
+   * Deal everyone onto random, evenly sized teams.
+   */
+  shuffleTeams(): Action {
+    return {
+      type: ActionTypes.SERVER.SHUFFLE_TEAMS,
+    };
+  },
+
+  /**
    * Start the game.
    */
   startGame(): Action {
@@ -65,6 +74,15 @@ const GameActions = {
   correctWord(): Action {
     return {
       type: ActionTypes.SERVER.CORRECT_WORD,
+    };
+  },
+
+  /**
+   * Take back the last "Correct" (a mis-tap).
+   */
+  undoCorrect(): Action {
+    return {
+      type: ActionTypes.SERVER.UNDO_CORRECT,
     };
   },
 

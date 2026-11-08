@@ -14,10 +14,12 @@ const ActionTypes = {
     END_ROUND: 'SERVER.END_ROUND',
     JOIN_GAME: 'SERVER.JOIN_GAME',
     JOIN_TEAM: 'SERVER.JOIN_TEAM',
+    SHUFFLE_TEAMS: 'SERVER.SHUFFLE_TEAMS',
     SKIP_WORD: 'SERVER.SKIP_WORD',
     START_GAME: 'SERVER.START_GAME',
     START_ROUND: 'SERVER.START_ROUND',
     SKIP_PLAYER: 'SERVER.SKIP_PLAYER',
+    UNDO_CORRECT: 'SERVER.UNDO_CORRECT',
   },
 
   //////////////////////
@@ -33,6 +35,7 @@ const ActionTypes = {
     GAME_STARTED: 'CLIENT.GAME_STARTED',
     PLAYER_JOINED: 'CLIENT.PLAYER_JOINED',
     TEAM_JOINED: 'CLIENT.TEAM_JOINED',
+    TEAMS_SHUFFLED: 'CLIENT.TEAMS_SHUFFLED',
     WORDS_UPDATED: 'CLIENT.WORDS_UPDATED',
 
     // mid game
@@ -41,8 +44,10 @@ const ActionTypes = {
     WORD_CORRECT: 'CLIENT.WORD_CORRECT',
     WORD_SKIPPED: 'CLIENT.WORD_SKIPPED',
     PLAYER_SKIPPED: 'CLIENT.PLAYER_SKIPPED',
+    CORRECT_UNDONE: 'CLIENT.CORRECT_UNDONE',
 
-    // TODO: Pausing?
+    // post game
+    NEXT_GAME_CREATED: 'CLIENT.NEXT_GAME_CREATED',
   },
 
   /////////////
@@ -52,6 +57,12 @@ const ActionTypes = {
     FIELD_CHANGED: 'UI.FIELD_CHANGED',
     // A SERVER.* action's mutation finished (or failed).
     SERVER_ACTION_SETTLED: 'UI.SERVER_ACTION_SETTLED',
+    // Show a message in the error banner.
+    SHOW_ERROR: 'UI.SHOW_ERROR',
+    DISMISS_ERROR: 'UI.DISMISS_ERROR',
+    // A short full-screen announcement ("Time's up!", "Round 2: Charades").
+    SHOW_ANNOUNCEMENT: 'UI.SHOW_ANNOUNCEMENT',
+    DISMISS_ANNOUNCEMENT: 'UI.DISMISS_ANNOUNCEMENT',
   },
 };
 

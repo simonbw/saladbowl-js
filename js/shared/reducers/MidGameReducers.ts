@@ -10,6 +10,18 @@ import type { Game, Action } from '../types';
 const reducers: Record<string, (game: Game, action: Action) => Game> = {};
 
 /**
+ * Pass the turn to the next team. Each time play wraps back to the first
+ * team, every team moves on to its next clue-giver.
+ */
+function advanceTurn(game: Game): Game {
+  const teams = GameHelpers.getTeams(game);
+  const teamIndex = MathUtil.mod(game.get('teamIndex') + 1, teams.size);
+  return game
+    .set('teamIndex', teamIndex)
+    .set('playerIndex', game.get('playerIndex') + (teamIndex == 0 ? 1 : 0));
+}
+
+/**
  * Start the round.
  * @param game {Immutable.Map}
  * @param action
@@ -22,6 +34,8 @@ reducers[ActionTypes.CLIENT.ROUND_STARTED] = (game, action) => {
     .set('roundStartedAt', action.startTime)
     .set('secondsThisRound', action.secondsThisRound)
     .set('secondsLeftover', 0)
+    // Lets clients say how many words this turn got when it ends.
+    .set('pointsAtRoundStart', game.get('points').size)
     .set('wordIndex', GameHelpers.getNextWordIndex(game));
 };
 
@@ -36,12 +50,7 @@ reducers[ActionTypes.CLIENT.ROUND_ENDED] = (game, action) => {
   if (!game.get('roundStarted')) { // Cannot end a round that has not started.
     return game;
   }
-  const teams = GameHelpers.getTeams(game);
-  const teamIndex = MathUtil.mod(game.get('teamIndex') + 1, teams.size);
-  return game
-    .set('roundStarted', false)
-    .set('teamIndex', teamIndex)
-    .set('playerIndex', game.get('playerIndex') + (teamIndex == 0));
+  return advanceTurn(game.set('roundStarted', false));
 };
 
 
@@ -98,11 +107,32 @@ reducers[ActionTypes.CLIENT.WORD_CORRECT] = (game, action) => {
  * @returns {Immutable.Map}
  */
 reducers[ActionTypes.CLIENT.WORD_SKIPPED] = (game, action) => {
+  const skippedIndex = game.get('wordIndex');
+  game = game.updateIn(['words', skippedIndex], (word: any) => {
+    return word.set('skips', word.get('skips', 0) + 1);
+  });
+  // Never hand back the word that was just skipped (unless it's the last one).
+  return game.set('wordIndex', GameHelpers.getNextWordIndex(game, skippedIndex));
+};
+
+
+/**
+ * Take back the last "Correct" of the running round: remove the point, put the
+ * word back in the bowl, and make it the current word again.
+ * @param game {Immutable.Map}
+ * @param action
+ * @returns {Immutable.Map}
+ */
+reducers[ActionTypes.CLIENT.CORRECT_UNDONE] = (game, action) => {
+  if (!GameHelpers.canUndoCorrect(game)) {
+    return game;
+  }
+  const wordIndex = game.get('lastCorrectWordIndex');
   return game
-    .updateIn(['words', game.get('wordIndex')], (word: any) => {
-      return word.set('skips', word.get('skips', 0) + 1);
-    })
-    .set('wordIndex', GameHelpers.getNextWordIndex(game));
+    .set('points', game.get('points').pop())
+    .setIn(['words', wordIndex, 'inBowl'], true)
+    .set('lastCorrectWordIndex', null)
+    .set('wordIndex', wordIndex);
 };
 
 
@@ -121,7 +151,20 @@ reducers[ActionTypes.CLIENT.PLAYER_SKIPPED] = (game, action) => {
     return game;
   }
   const playerIndex = GameHelpers.getPlayerIndex(game, action.playerId);
-  return game.setIn(['players', playerIndex, 'active'], false);
+  if (playerIndex < 0) {
+    return game;
+  }
+  const team = game.getIn(['players', playerIndex, 'team']);
+  const skipped = game.setIn(['players', playerIndex, 'active'], false);
+  const teamHasActivePlayers = skipped.get('players')
+    .some((player: any) => player.get('team') === team && player.get('active'));
+  if (teamHasActivePlayers) {
+    return skipped;
+  }
+  // Everyone on this team is gone. Leave this player in the rotation (so the
+  // team still has a clue-giver if they come back) and pass the turn instead.
+  const isCurrentTeam = GameHelpers.getCurrentTeam(game).get('index') === team;
+  return isCurrentTeam && !game.get('roundStarted') ? advanceTurn(game) : game;
 };
 
 export default reducers;

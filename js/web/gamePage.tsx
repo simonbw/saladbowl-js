@@ -4,7 +4,9 @@ import * as Immutable from 'immutable';
 import { Provider as ReduxProvider } from 'react-redux';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import disableSleeping from './NoSleep';
+import { initSounds } from './Sounds';
+import { keepScreenAwake } from './WakeLock';
+import { startGameEffects } from './gameEffects';
 
 import Store from './Store';
 import GameApp from './components/GameApp';
@@ -12,6 +14,7 @@ import GameHelpers from '../shared/GameHelpers';
 import { normalizeGameCode } from '../shared/GameCode';
 import { createConvexClient } from './backend/convexClient';
 import { startGameSync } from './backend/gameSync';
+import { setSession } from './backend/session';
 import { getUserId } from './backend/userId';
 import type { AppState } from './types';
 
@@ -40,7 +43,11 @@ function main() {
 
   const client = createConvexClient();
   const store = Store(initialState, { client, code, userId }, window.DEBUG_MODE);
+  setSession({ client, code, userId });
+  startGameEffects(store, userId);
   startGameSync(client, code, userId, store.dispatch);
+  initSounds();
+  keepScreenAwake();
 
   render(store);
 
@@ -48,12 +55,6 @@ function main() {
   if (window.DEBUG_MODE) {
     window.DEBUG = { client, store, GameHelpers };
   }
-
-  const onTouchStart = () => {
-    disableSleeping();
-    document.removeEventListener('touchstart', onTouchStart);
-  };
-  document.addEventListener('touchstart', onTouchStart);
 }
 
 /**

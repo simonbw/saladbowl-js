@@ -77,3 +77,184 @@
     color: $red;
   }
 }
+
+.timer.low {
+  color: $red;
+}
+
+.hint {
+  color: $gray1;
+  margin: 5px auto 15px;
+  max-width: 400px;
+}
+
+// "Round 2 of 3 · Charades"
+.phase-banner {
+  border-bottom: 1px solid $gray4;
+  margin: 0 auto 10px;
+  max-width: 400px;
+  padding-bottom: 10px;
+
+  .phase-name {
+    font-size: 0.85em;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .phase-instructions {
+    color: $gray1;
+    margin-top: 3px;
+  }
+}
+
+.turn-status {
+  font-size: 1.1em;
+  line-height: 1.5;
+  margin: 10px auto;
+  max-width: 400px;
+
+  .carry-over {
+    color: $gray1;
+  }
+}
+
+.offline-player {
+  border: 1px solid $gray4;
+  border-radius: 10px;
+  margin: 15px auto;
+  padding: 10px;
+
+  .hint {
+    font-size: 0.85em;
+    margin-bottom: 0;
+  }
+}
+
+.words-remaining {
+  color: $gray1;
+  margin: 10px;
+}
+
+.start-round-button {
+  font-size: 2em;
+}
+
+.undo-button, .shuffle-teams-button {
+  border-color: $gray4;
+  color: $gray1;
+  font-size: 0.9em;
+  font-weight: 400;
+  text-transform: none;
+  width: auto;
+}
+
+.sound-toggle {
+  border-color: $gray4;
+  color: $gray2;
+  font-size: 0.8em;
+  font-weight: 400;
+  margin-top: 30px;
+  width: auto;
+}
+
+// Game code + invite, shown in the lobby.
+.share-game {
+  border-top: 1px solid $gray4;
+  margin: 30px auto 0;
+  max-width: 400px;
+  padding-top: 15px;
+
+  .game-code-label {
+    color: $gray1;
+    font-size: 0.85em;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .game-code {
+    font-family: $font-monospace;
+    font-size: 2.5em;
+    letter-spacing: 0.15em;
+    margin: 5px 0;
+  }
+
+  .share-buttons {
+    display: flex;
+    gap: 10px;
+
+    button {
+      margin: 10px 0;
+    }
+  }
+
+  .qr-code {
+    display: block;
+    margin: 10px auto;
+    max-width: 240px;
+    width: 100%;
+  }
+}
+
+.lobby-status {
+  color: $gray1;
+  line-height: 1.6;
+  list-style: none;
+  margin: 10px auto;
+  max-width: 400px;
+  padding: 0;
+}
+
+// Full-screen "Time's up!" card.
+.announcement {
+  align-items: center;
+  animation: announcement-in 0.2s ease-out;
+  background: rgba(255, 255, 255, 0.92);
+  cursor: pointer;
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  padding: 20px;
+  position: fixed;
+  z-index: 10;
+
+  .announcement-card {
+    background: $white;
+    border: 1px solid $gray2;
+    border-radius: 10px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    max-width: 400px;
+    padding: 20px 30px;
+    width: 100%;
+  }
+
+  .announcement-subtitle {
+    font-size: 1.3em;
+    text-align: center;
+    text-indent: 0;
+  }
+
+  .announcement-detail {
+    color: $gray1;
+    text-align: center;
+    text-indent: 0;
+  }
+
+  .announcement-hint {
+    color: $gray2;
+    font-size: 0.8em;
+    margin-top: 15px;
+  }
+}
+
+@keyframes announcement-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
+.shuffle-teams-button {
+  display: block;
+  margin: 0 auto 10px;
+}

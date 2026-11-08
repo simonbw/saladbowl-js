@@ -21,6 +21,7 @@ import {
 } from './_generated/server';
 import ActionTypes from '../js/shared/ActionTypes';
 import DEFAULT_GAME from '../js/shared/defaultGame';
+import GameHelpers from '../js/shared/GameHelpers';
 import GameReducers from '../js/shared/reducers/GameReducers';
 import MathUtil from '../js/shared/MathUtil';
 import type { Action, Game } from '../js/shared/types';
@@ -103,6 +104,35 @@ async function applyClientAction(
   await ctx.db.patch(row._id, patch);
 }
 
+/** Insert a fresh game with a unique code and return its row. */
+async function insertGame(
+  ctx: MutationCtx,
+  settings: { wordsPerPlayer: number; secondsPerRound: number },
+): Promise<Doc<'games'>> {
+  const wordsPerPlayer = MathUtil.clamp(Math.floor(settings.wordsPerPlayer) || 5, 1, 100);
+  const secondsPerRound = MathUtil.clamp(Math.floor(settings.secondsPerRound) || 60, 1, 200);
+
+  let code = randomGameCode();
+  for (let attempt = 1; await findGame(ctx, code); attempt++) {
+    // Lengthen the code if the short space is getting crowded.
+    code = randomGameCode(attempt < 10 ? undefined : 5);
+  }
+
+  const state = DEFAULT_GAME.set('id', code)
+    .set('wordsPerPlayer', wordsPerPlayer)
+    .set('secondsPerRound', secondsPerRound)
+    .toJS();
+
+  const id = await ctx.db.insert('games', {
+    code,
+    state,
+    roundId: 0,
+    roundTimeoutId: null,
+    createdAt: Date.now(),
+  });
+  return (await ctx.db.get(id))!;
+}
+
 // ---------------------------------------------------------------------------
 // Public API
 // ---------------------------------------------------------------------------
@@ -111,28 +141,48 @@ async function applyClientAction(
 export const createGame = mutation({
   args: { wordsPerPlayer: v.number(), secondsPerRound: v.number() },
   handler: async (ctx, args) => {
-    const wordsPerPlayer = MathUtil.clamp(Math.floor(args.wordsPerPlayer) || 5, 1, 100);
-    const secondsPerRound = MathUtil.clamp(Math.floor(args.secondsPerRound) || 60, 1, 200);
+    const row = await insertGame(ctx, args);
+    return row.code;
+  },
+});
 
-    let code = randomGameCode();
-    for (let attempt = 1; await findGame(ctx, code); attempt++) {
-      // Lengthen the code if the short space is getting crowded.
-      code = randomGameCode(attempt < 10 ? undefined : 5);
+/**
+ * "Play again" from the game-over screen. The first caller creates a new game
+ * with the same settings and links it from the old one (so everyone else's
+ * screen offers to follow). Each caller is joined to the new game under their
+ * old name and team, and lands straight on "Add Nouns". Returns the new code.
+ */
+export const playAgain = mutation({
+  args: { code: v.string(), userId: v.string() },
+  handler: async (ctx, { code, userId }) => {
+    const row = await getGameOrThrow(ctx, code);
+    const game = toGame(row);
+    if (!game.get('ended')) {
+      throw new ConvexError('This game is not over yet.');
     }
 
-    const state = DEFAULT_GAME.set('id', code)
-      .set('wordsPerPlayer', wordsPerPlayer)
-      .set('secondsPerRound', secondsPerRound)
-      .toJS();
+    const linkedCode: string | undefined = game.get('nextGameCode');
+    let nextRow = linkedCode ? await findGame(ctx, linkedCode) : null;
+    if (!nextRow) {
+      nextRow = await insertGame(ctx, {
+        wordsPerPlayer: game.get('wordsPerPlayer'),
+        secondsPerRound: game.get('secondsPerRound'),
+      });
+      await applyClientAction(ctx, row, game, {
+        type: ActionTypes.CLIENT.NEXT_GAME_CREATED,
+        code: nextRow.code,
+      });
+    }
 
-    await ctx.db.insert('games', {
-      code,
-      state,
-      roundId: 0,
-      roundTimeoutId: null,
-      createdAt: Date.now(),
-    });
-    return code;
+    const player = GameHelpers.getPlayer(game, userId);
+    const nextGame = toGame(nextRow);
+    if (player && !nextGame.get('started') && !GameHelpers.playerIsJoined(nextGame, userId)) {
+      await applyClientAction(ctx, nextRow, nextGame, {
+        type: ActionTypes.CLIENT.PLAYER_JOINED,
+        player: { id: userId, name: player.get('name'), team: player.get('team') },
+      });
+    }
+    return nextRow.code;
   },
 });
 

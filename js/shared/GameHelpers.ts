@@ -4,10 +4,22 @@ import * as Immutable from 'immutable';
 import MathUtil from './MathUtil';
 import TeamNames from './TeamNames';
 import * as Validation from './Validation';
+import { PHASE_COUNT } from './Phases';
 import type { Game } from './types';
 
+/** Final scores and superlatives, computed from `game.points`. */
+export interface GameStats {
+  teams: { index: number; name: string; total: number; byPhase: number[] }[];
+  /** Indices of the team(s) with the top score; more than one means a tie. */
+  winners: number[];
+  /** Clue-givers by points earned, best first. */
+  players: { id: string; name: string; team: number; points: number }[];
+  /** The noun skipped the most, or null if nothing was ever skipped. */
+  mostSkipped: { word: string; skips: number; playerName: string } | null;
+}
+
 interface GameHelpersType {
-  getNextWordIndex(game: Game): number;
+  getNextWordIndex(game: Game, excludeIndex?: number): number;
   playerIsJoined(game: Game, playerId: string | null | undefined): boolean;
   getTeams(game: Game): Immutable.List<any>;
   getPlayer(game: Game, playerId: string): any;
@@ -23,6 +35,9 @@ interface GameHelpersType {
   getMostSkippedWord(game: Game): any;
   readyToStart(game: Game): boolean;
   canSkip(game: Game): boolean;
+  isCurrentPlayer(game: Game, playerId: string | null | undefined): boolean;
+  canUndoCorrect(game: Game): boolean;
+  getGameStats(game: Game): GameStats;
 }
 
 const GameHelpers = {} as GameHelpersType;
@@ -32,10 +47,15 @@ const GameHelpers = {} as GameHelpersType;
 /**
  * Calculate the next word index.
  * @param game
+ * @param excludeIndex a word not to pick (the one just skipped), unless it's
+ *   the only word left
  * @returns {number}
  */
-GameHelpers.getNextWordIndex = (game: Game): number => {
-  const words = GameHelpers.getWordsInBowl(game);
+GameHelpers.getNextWordIndex = (game: Game, excludeIndex?: number): number => {
+  let words = GameHelpers.getWordsInBowl(game);
+  if (excludeIndex != null && words.size > 1) {
+    words = words.filter((word: any) => word.get('index') !== excludeIndex);
+  }
   if (words.size == 0) {
     throw new Error('No next word available');
   } else if (words.size == 1) {
@@ -89,7 +109,7 @@ GameHelpers.getTeams = (game: Game): Immutable.List<any> => {
   if (game.get('started') && !game.get('ended')) {
     const currentTeam = teams[game.get('teamIndex') % teams.length];
     currentTeam.current = true;
-    const activePlayers = currentTeam.players.filter((player: any) => player.get('active'));
+    const activePlayers = activeOrAll(currentTeam.players);
     const activePlayerIndex = game.get('playerIndex') % activePlayers.length;
     const currentPlayer = activePlayers[activePlayerIndex];
     const currentPlayerIndex = currentTeam.players.findIndex((player: any) => player.get('id') == currentPlayer.get('id'));
@@ -133,7 +153,7 @@ GameHelpers.getPlayerIndex = (game: Game, playerId: string | null | undefined): 
  */
 GameHelpers.getCurrentPlayer = (game: Game): any => {
   const team = GameHelpers.getCurrentTeam(game);
-  const activePlayers = team.get('players').filter((player: any) => player.get('active'));
+  const activePlayers = activeOrAll(team.get('players'));
   return activePlayers.get(MathUtil.mod(game.get('playerIndex'), activePlayers.size));
 };
 
@@ -274,5 +294,82 @@ GameHelpers.readyToStart = (game: Game): boolean => {
 GameHelpers.canSkip = (game: Game): boolean => {
   return GameHelpers.getWordsInBowl(game).size > 1;
 };
+
+/**
+ * Return true if it is this player's turn to give clues.
+ */
+GameHelpers.isCurrentPlayer = (game: Game, playerId: string | null | undefined): boolean => {
+  if (!playerId || !game.get('started') || game.get('ended')) {
+    return false;
+  }
+  const current = GameHelpers.getCurrentPlayer(game);
+  return Boolean(current) && current.get('id') === playerId;
+};
+
+/**
+ * Return true if the last "Correct" tap of the running round can be taken back.
+ */
+GameHelpers.canUndoCorrect = (game: Game): boolean => {
+  const lastIndex = game.get('lastCorrectWordIndex');
+  const lastPoint = game.get('points').last();
+  return Boolean(game.get('roundStarted')) && !game.get('ended') && lastIndex != null &&
+    Boolean(lastPoint) && lastPoint.get('wordIndex') === lastIndex &&
+    lastPoint.get('phaseIndex') === game.get('phaseIndex');
+};
+
+/**
+ * Final scores and superlatives for the game-over screen.
+ */
+GameHelpers.getGameStats = (game: Game): GameStats => {
+  const teams = GameHelpers.getTeams(game).toJS() as any[];
+  const teamStats = teams.map((team) => {
+    const byPhase = new Array(PHASE_COUNT).fill(0);
+    team.points.forEach((point: any) => {
+      byPhase[point.phaseIndex] = (byPhase[point.phaseIndex] ?? 0) + 1;
+    });
+    return { index: team.index, name: team.name, total: team.points.length, byPhase };
+  });
+
+  const best = Math.max(0, ...teamStats.map((team) => team.total));
+  const winners = best > 0
+    ? teamStats.filter((team) => team.total === best).map((team) => team.index)
+    : [];
+
+  const pointsByPlayer: Record<string, number> = {};
+  game.get('points').forEach((point: any) => {
+    pointsByPlayer[point.get('playerId')] = (pointsByPlayer[point.get('playerId')] ?? 0) + 1;
+  });
+  const players = game.get('players').toJS()
+    .map((player: any) => ({
+      id: player.id,
+      name: player.name,
+      team: player.team,
+      points: pointsByPlayer[player.id] ?? 0,
+    }))
+    .sort((a: any, b: any) => b.points - a.points);
+
+  let mostSkipped: GameStats['mostSkipped'] = null;
+  const skipped = game.get('words').size ? GameHelpers.getMostSkippedWord(game) : null;
+  if (skipped && skipped.get('skips') > 0) {
+    const owner = GameHelpers.getPlayer(game, skipped.get('playerId'));
+    mostSkipped = {
+      word: skipped.get('word'),
+      skips: skipped.get('skips'),
+      playerName: owner ? owner.get('name') : '',
+    };
+  }
+
+  return { teams: teamStats, winners, players, mostSkipped };
+};
+
+/**
+ * A team's players who are still in the rotation. If every one of them has
+ * been skipped, fall back to all of them so there is always a current player.
+ */
+function activeOrAll(players: any): any {
+  // Works on both an Immutable.List (`size`) and a plain array (`length`).
+  const active = players.filter((player: any) => player.get('active'));
+  return (active.size ?? active.length) > 0 ? active : players;
+}
 
 export default GameHelpers;

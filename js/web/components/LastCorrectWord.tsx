@@ -17,6 +17,6 @@ export default (props: LastCorrectWordProps) => {
       </div>
     );
   } else {
-    return <noscript/>;
+    return null;
   }
 };
