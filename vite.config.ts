@@ -2,6 +2,8 @@ import { resolve } from "node:path";
 import type { Connect, Plugin } from "vite";
 import { defineConfig } from "vitest/config";
 
+import { LOGO_HTML, faviconSvg } from "./js/web/logo";
+
 const projectRoot = import.meta.dirname;
 
 // Every static page (an HTML file at the project root); each is a Vite entry point.
@@ -36,8 +38,42 @@ function vercelRouting(): Plugin {
   };
 }
 
+const FONTS_URL = "https://fonts.googleapis.com/css2?family=Cause:wght@100..900&family=Rubik:wght@300;400;500;600&display=swap";
+
+/**
+ * Shared bits of every page: the font and icon links in the head, and the
+ * wordmark wherever a page has a `<!-- logo -->` comment (so it's in the HTML,
+ * not drawn in by script after load). The SVG favicon is generated from the
+ * logo's bowl; the PNG icons in public/images are renders of it.
+ */
+function pageChrome(): Plugin {
+  const favicon = faviconSvg();
+  return {
+    name: "saladbowl-page-chrome",
+    configureServer: (server) => void server.middlewares.use("/favicon.svg", (_req, res) => {
+      res.setHeader("Content-Type", "image/svg+xml");
+      res.end(favicon);
+    }),
+    generateBundle() {
+      this.emitFile({ type: "asset", fileName: "favicon.svg", source: favicon });
+    },
+    transformIndexHtml: (html) => ({
+      html: html.replaceAll("<!-- logo -->", LOGO_HTML),
+      tags: [
+        { tag: "link", attrs: { rel: "preconnect", href: "https://fonts.googleapis.com" }, injectTo: "head" },
+        { tag: "link", attrs: { rel: "preconnect", href: "https://fonts.gstatic.com", crossorigin: "" }, injectTo: "head" },
+        { tag: "link", attrs: { rel: "stylesheet", href: FONTS_URL }, injectTo: "head" },
+        { tag: "link", attrs: { rel: "icon", href: "/images/favicon.png", sizes: "48x48", type: "image/png" }, injectTo: "head" },
+        { tag: "link", attrs: { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" }, injectTo: "head" },
+        { tag: "link", attrs: { rel: "apple-touch-icon", href: "/images/apple-touch-icon.png" }, injectTo: "head" },
+        { tag: "meta", attrs: { name: "theme-color", content: "#FFFFFF" }, injectTo: "head" },
+      ],
+    }),
+  };
+}
+
 export default defineConfig({
-  plugins: [vercelRouting()],
+  plugins: [vercelRouting(), pageChrome()],
   esbuild: {
     // Classic JSX runtime (components import React explicitly).
     jsxFactory: "React.createElement",

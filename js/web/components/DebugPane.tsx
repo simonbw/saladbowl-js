@@ -18,12 +18,8 @@ export default (props: PageProps) => {
       </div>
     );
   } else {
-    const style = {
-      margin: '20px',
-      fontSize: '8px'
-    };
     return (
-      <div style={style} onClick={() => dispatch(UIActions.updateField('debug', true))}>
+      <div className="debug-toggle" onClick={() => dispatch(UIActions.updateField('debug', true))}>
         debug
       </div>
     )

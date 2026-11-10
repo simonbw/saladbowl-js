@@ -2,53 +2,30 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>SaladBowl</title>
-  <link rel="icon" type="image/png" href="/images/favicon.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>New game · SaladBowl</title>
   <link rel="stylesheet" href="/styles/main.scss" />
 </head>
 <body>
-  <main>
-    <div id="main-content">
-      <form id="new-game-form" onsubmit="event.preventDefault()">
-        <h1>Create a New Game</h1>
-        <hr>
-        <label>
-          Nouns Per Player
-          <input
-            max="100"
-            min="1"
-            name="wordsPerPlayer"
-            type="number"
-            value="5"
-          />
+  <div class="screen">
+    <header class="app-header"><a href="/" class="logo-link"><!-- logo --></a></header>
+    <form id="new-game-form" class="screen-form" onsubmit="event.preventDefault()">
+      <h1 class="title">New game</h1>
+      <div class="settings">
+        <label class="setting">
+          <span>Nouns per player</span>
+          <input inputmode="numeric" max="100" min="1" name="wordsPerPlayer" type="number" value="5" />
         </label>
-        <label>
-          Seconds Per Round
-          <input
-            max="200"
-            min="5"
-            name="secondsPerRound"
-            type="number"
-            value="60"
-            step="5"
-          />
+        <label class="setting">
+          <span>Seconds per turn</span>
+          <input inputmode="numeric" max="200" min="5" name="secondsPerRound" step="5" type="number" value="60" />
         </label>
-        <button type="submit" autofocus>Go</button>
-        <div class="error" id="new-game-error" hidden></div>
-        <a class="button" href="/">Back</a>
-      </form>
-    </div>
-    <hr>
-    <footer>
-      <a href="/">Home</a>
-      <a href="/how-to-play" target="_blank">How To Play</a>
-
-      <div>
-        <a target="_blank" href="https://github.com/simonbw/saladbowl-js">https://github.com/simonbw/saladbowl-js</a>
       </div>
-    </footer>
-  </main>
+      <p class="form-error" id="new-game-error" hidden></p>
+      <div class="spacer"></div>
+      <button class="btn btn-primary" type="submit" autofocus>Create game</button>
+    </form>
+  </div>
   <script type="module" src="/js/web/newGamePage.ts"></script>
 </body>
 </html>

@@ -1,24 +1,26 @@
-/*
- * One easy place to go to configure styles across pages.
- */
+// Colours, type and the slip look, shared by every page.
 
-// FONTS
-$font-main: "Raleway", Helvetica, Arial, sans-serif;;
-$font-monospace: monospace;
+$ink: #141414;
+$muted: #6B6B68;
+$soft: #8A8A86;
+$line: #E6E6E2;
+$row: #F0F0ED;
+$slip-border: #D6D6D1;
+$placeholder: #A3A39F;
+$disabled-bg: #EFEFEC;
+$disabled-fg: #77776F;
+$page: #FFF;
+$wash: #FAFAF8;
 
+// Rubik for the app; Cause for anything a player wrote (nouns, names).
+$font-ui: "Rubik", Helvetica, Arial, sans-serif;
+$font-hand: "Cause", "Rubik", Helvetica, Arial, sans-serif;
+$font-monospace: ui-monospace, Menlo, monospace;
 
-// COLORS
-$black: #111;
-$gray1: #666;
-$gray2: #AAA;
-$gray4: #EEE;
-$gray5: #FAFAFA;
-$white: #FFF;
+$max-width: 430px;
 
-$red: #F00;
-$dark-red: #966;
-$light-red: #FDD;
-
-$green: #0F0;
-$dark-green: #696;
-$light-green: #DFD;
+@mixin slip {
+  background: $page;
+  border: 1px solid $slip-border;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 6px 16px rgba(0, 0, 0, 0.05);
+}

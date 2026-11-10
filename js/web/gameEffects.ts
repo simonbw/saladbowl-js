@@ -42,7 +42,7 @@ function handleEvent(event: GameEvent, store: StoreLike, userId: string): void {
         vibrate([300, 100, 300]);
       }
       const you = event.playerId === userId;
-      const announcement: Announcement = { title: "Time's up!" };
+      const announcement: Announcement = { title: "Time's up!", names: [event.playerName, event.nextPlayerName] };
       if (event.pointsThisTurn != null) {
         announcement.subtitle = `${you ? 'You' : event.playerName} got ${pluralize(event.pointsThisTurn, 'word')}.`;
       }
@@ -59,6 +59,7 @@ function handleEvent(event: GameEvent, store: StoreLike, userId: string): void {
       const announcement: Announcement = {
         title: `Round ${event.phaseIndex + 1}: ${phase.name}`,
         subtitle: phase.instructions,
+        names: [event.playerName],
       };
       if (event.secondsLeftover > 0) {
         announcement.detail = `The bowl is full again. ${you ? 'You keep' : `${event.playerName} keeps`} going with ` +

@@ -11,7 +11,8 @@ import GameOverPage from './GameOverPage';
 import GuessingPlayerPage from './GuessingPlayerPage';
 import JoinGamePage from './JoinGamePage';
 import JoinTeamsPage from './JoinTeamsPage';
-import { AnnouncementOverlay, ErrorBanner, SoundToggle } from './Overlays';
+import { AnnouncementOverlay, ErrorBanner } from './Overlays';
+import { Header, Screen } from './ui';
 import WaitingPlayerPage from './WaitingPlayerPage';
 import type { AppState, Dispatch, PageProps } from '../types';
 
@@ -28,14 +29,16 @@ function GameComponent(props: PageProps) {
 
 
   if (!ui.get('loaded')) {
-    return (<div>loading...</div>);
+    return (<Screen><Header/></Screen>);
   }
   if (ui.get('gameNotFound') || !game.get('id')) {
     return (
-      <div>
-        <h1>Game Not Found</h1>
-        <p>Either this game is already over, or you typed the code in wrong.</p>
-      </div>
+      <Screen>
+        <Header/>
+        <h1 className="title">Game not found</h1>
+        <p className="lede">Either this game is already over, or the code is wrong.</p>
+        <a className="btn btn-secondary" href="/join-game">Try another code</a>
+      </Screen>
     );
   }
 
@@ -43,7 +46,14 @@ function GameComponent(props: PageProps) {
   let page;
   if (!GameHelpers.playerIsJoined(game, userId)) {
     if (game.get('started')) {
-      page = (<div>You cannot join a game once it has started.</div>)
+      page = (
+        <Screen>
+          <Header/>
+          <h1 className="title">This game has started</h1>
+          <p className="lede">You can't join a game once it's underway.</p>
+          <a className="btn btn-secondary" href="/new-game">Start a new game</a>
+        </Screen>
+      );
     } else {
       page = (<JoinGamePage state={state} dispatch={dispatch}/>);
     }
@@ -62,18 +72,13 @@ function GameComponent(props: PageProps) {
   }
 
   return (
-    <div>
-      {ui.get('connected') === false &&
-      <div className="errors"><div className="error">Connection lost. Reconnecting…</div></div>
-      }
+    <>
+      {ui.get('connected') === false && <div className="banner" role="status">Connection lost. Reconnecting…</div>}
       <ErrorBanner state={state} dispatch={dispatch}/>
       {page}
       <AnnouncementOverlay state={state} dispatch={dispatch}/>
-      {game.get('started') && <SoundToggle/>}
-      {window.DEBUG_MODE &&
-      <DebugPane state={state} dispatch={dispatch}/>
-      }
-    </div>
+      {window.DEBUG_MODE && <DebugPane state={state} dispatch={dispatch}/>}
+    </>
   );
 }
 

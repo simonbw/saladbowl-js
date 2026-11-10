@@ -2,37 +2,29 @@
 
 import React, { useState } from 'react';
 
-import TeamList from './TeamList';
-import GameHelpers from '../../shared/GameHelpers';
-import { PHASE_COUNT, getPhase } from '../../shared/Phases';
 import { pluralize } from '../../shared/StringUtil';
+import GameHelpers from '../../shared/GameHelpers';
 import UIActions from '../actions/UIActions';
 import { playAgain } from '../backend/session';
 import { errorMessage } from '../errorMessage';
+import { Header, Name, Screen, Spacer, Tally, TeamDot, shortTeamName } from './ui';
 import type { PageProps } from '../types';
 
 const TOP_PLAYERS = 3;
 
 export default (props: PageProps) => {
   const game = props.state.get('game');
-  const userId = props.state.get('userId');
-  const teams = GameHelpers.getTeams(game);
   const stats = GameHelpers.getGameStats(game);
-  const myTeam = GameHelpers.getPlayer(game, userId)?.get('team');
   const [joining, setJoining] = useState(false);
 
-  let headline = 'Game Over';
-  let subhead: string | null = null;
+  let headline = 'Nobody scored';
   if (stats.winners.length === 1) {
-    const winner = stats.teams[stats.winners[0]];
-    headline = `${winner.name} Win!`;
-    if (myTeam != null) {
-      subhead = myTeam === winner.index ? 'Your team won!' : 'Better luck next time.';
-    }
+    headline = `${stats.teams[stats.winners[0]].name} win`;
   } else if (stats.winners.length > 1) {
-    headline = "It's a Tie!";
+    headline = "It's a tie";
   }
 
+  const teams = [...stats.teams].sort((a, b) => b.total - a.total);
   const topPlayers = stats.players.filter((player) => player.points > 0).slice(0, TOP_PLAYERS);
   const nextGameCode = game.get('nextGameCode');
 
@@ -49,66 +41,65 @@ export default (props: PageProps) => {
   };
 
   return (
-    <div>
-      <h1>{headline}</h1>
-      {subhead && <div className="hint">{subhead}</div>}
-
-      <table className="score-table">
-        <thead>
-          <tr>
-            <th>Team</th>
-            {Array.from({ length: PHASE_COUNT }, (_, i) => (
-              <th key={i} title={getPhase(i).name}>R{i + 1}</th>
-            ))}
-            <th>Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          {stats.teams.map((team) => (
-            <tr key={team.index} className={stats.winners.includes(team.index) ? 'winner' : ''}>
-              <td>{team.name}</td>
-              {team.byPhase.map((points, i) => <td key={i}>{points}</td>)}
-              <td className="total">{team.total}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      <button className="play-again-button" disabled={joining} onClick={onPlayAgain}>
-        {joining ? 'Joining…' : nextGameCode ? 'Join the next game' : 'Play again'}
-      </button>
-      {nextGameCode && !joining && <div className="hint">A new game is ready. Same teams, fresh nouns.</div>}
-
-      <div className="game-over-stats">
-        {topPlayers.length > 0 && (
-          <div className="category">
-            <div className="category-title">Best Clue-Givers</div>
-            <div className="category-content">
-              <ol>
-                {topPlayers.map((player) => (
-                  <li key={player.id}>{player.name}: {pluralize(player.points, 'word')}</li>
-                ))}
-              </ol>
-            </div>
-          </div>
-        )}
-        {stats.mostSkipped && (
-          <div className="category">
-            <div className="category-title">Most Skipped Noun</div>
-            <div className="category-content">
-              <span className="word">{stats.mostSkipped.word}</span>, skipped {pluralize(stats.mostSkipped.skips, 'time')}
-              {stats.mostSkipped.playerName && <> (from {stats.mostSkipped.playerName})</>}
-            </div>
-          </div>
-        )}
+    <Screen>
+      <Header/>
+      <div className="headline">
+        <span className="label">Game over</span>
+        <h1 className="title">{headline}</h1>
       </div>
 
-      <TeamList
-        dispatch={props.dispatch}
-        joinable={false}
-        showScore={true}
-        teams={teams}
-      />
-    </div>
+      <div className="final-scores">
+        {teams.map((team) => {
+          const won = stats.winners.includes(team.index);
+          return (
+            <div key={team.index} className={'final-team' + (won ? ' won' : '')}>
+              <div className="final-team-head">
+                <TeamDot index={team.index}/>
+                <span className="final-team-name">{shortTeamName(team.name)}</span>
+                {won && stats.winners.length === 1 && <span className="badge">Winner</span>}
+                <span className="final-team-total">{team.total}</span>
+              </div>
+              <div className="final-team-detail">
+                <Tally count={team.total}/>
+                <span className="rounds">rounds {team.byPhase.join(' · ')}</span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {topPlayers.length > 0 && (
+        <section className="stat-section">
+          <span className="label">Best clue-givers</span>
+          <ol className="clue-givers">
+            {topPlayers.map((player, i) => (
+              <li key={player.id}>
+                <span className="rank">{i + 1}</span>
+                <Name>{player.name}</Name>
+                <span className="clue-giver-count">{pluralize(player.points, 'word')}</span>
+              </li>
+            ))}
+          </ol>
+        </section>
+      )}
+
+      {stats.mostSkipped && (
+        <section className="stat-section most-skipped">
+          <div className="slip slip-small"><span className="hand">{stats.mostSkipped.word}</span></div>
+          <div>
+            <span className="label">Most skipped</span>
+            <p>
+              {pluralize(stats.mostSkipped.skips, 'skip')}
+              {stats.mostSkipped.playerName && <> · <Name>{stats.mostSkipped.playerName}</Name></>}
+            </p>
+          </div>
+        </section>
+      )}
+
+      <Spacer/>
+      <button className="btn btn-primary" disabled={joining} onClick={onPlayAgain}>
+        {joining ? 'Joining…' : nextGameCode ? 'Join the next game' : 'Play again'}
+      </button>
+    </Screen>
   );
 };

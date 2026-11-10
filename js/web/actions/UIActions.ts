@@ -10,6 +10,7 @@ export interface Announcement {
   title: string;
   subtitle?: string;
   detail?: string;
+  names?: string[]; // player names in the text, shown as names (caps, hand font)
 }
 
 const UIActions = {
