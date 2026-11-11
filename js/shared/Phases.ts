@@ -10,9 +10,9 @@ export interface Phase {
 }
 
 const PHASES: Phase[] = [
-  { name: 'Describe It', instructions: 'Say anything but the word.' },
-  { name: 'Charades', instructions: "Just don't make a sound." },
-  { name: 'One Word', instructions: 'You only get one word.' },
+  { name: 'Describe It', instructions: 'Say anything but the word. No gestures.' },
+  { name: 'Charades', instructions: 'Act it out. No words, no sounds.' },
+  { name: 'One Word', instructions: 'One word only. No gestures.' },
 ];
 
 export const PHASE_COUNT = PHASES.length;

@@ -1,73 +1,1059 @@
-@import "debug";
-@import "errors";
-@import "fonts";
-@import "form";
-@import "game";
-@import "game-over";
-@import "team-list";
-@import "util";
 @import "variables";
+@import "debug";
 
-* {
+// ---------------------------------------------------------------- base
+
+*, *::before, *::after {
   box-sizing: border-box;
 }
 
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
-  font-family: $font-main;
-  font-size: 14px;
+  --logo-gap: #{$page}; // the logo's bowl is cut out with the page colour
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  background: $page;
+  color: $ink;
+  font-family: $font-ui;
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1.4;
   margin: 0;
-  padding: 0;
-  text-align: center;
 }
 
-main {
-  margin: 5% auto 0;
-  max-width: 600px;
-  padding: 40px;
+h1, h2, h3, p {
+  margin: 0;
 }
 
-p {
-  font-size: 1.1em;
-  margin: 10px auto;
-  max-width: 400px;
-  text-align: left;
-  text-indent: 20px;
-  line-height: 1.5;
-}
-
-pre {
-  text-align: left;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  font-weight: 200;
-  text-align: center;
-}
-
-h1 {
-  font-size: 36px;
-}
-
-h2 {
-  font-size: 24px;
-}
-
-hr {
-  border-top: 1px solid $gray2;
-  border-bottom: none;
-  margin: 20px 0;
+button, input {
+  color: inherit;
+  font: inherit;
 }
 
 a {
-  color: $gray1;
+  color: inherit;
+}
 
-  &:focus, &:active {
-    color: $black;
-    outline: none;
+:focus-visible {
+  outline: 2px solid $ink;
+  outline-offset: 2px;
+}
+
+.sr-only {
+  clip: rect(0 0 0 0);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+// One full-height column per screen.
+.screen {
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  max-width: $max-width;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 0 20px calc(24px + env(safe-area-inset-bottom));
+}
+
+.screen-form {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.spacer {
+  flex: 1;
+  min-height: 20px;
+}
+
+// ---------------------------------------------------------------- type
+
+.title {
+  font-size: 34px;
+  font-weight: 300;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+  margin: 8px 0 22px;
+}
+
+.lede {
+  font-size: 18px;
+  line-height: 1.45;
+}
+
+.muted {
+  color: $muted;
+}
+
+.label {
+  color: $soft;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+// Anything a player wrote.
+.hand {
+  font-family: $font-hand;
+  font-weight: 400;
+}
+
+// Player names: the hand font, in caps.
+.name {
+  font-family: $font-hand;
+  font-size: 0.9em;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.count-line {
+  color: $soft;
+  font-size: 13px;
+  margin: 0 0 16px;
+  text-align: center;
+}
+
+// ---------------------------------------------------------------- logo + headers
+
+.logo {
+  color: $ink;
+  font-family: $font-ui;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.logo-bowl {
+  margin-left: 0.015em; // the o→bowl gap is tightened half as much as the rest
+  margin-right: -0.03em;
+  overflow: visible;
+  vertical-align: baseline;
+}
+
+.logo-link {
+  text-decoration: none;
+}
+
+.app-header {
+  align-items: center;
+  display: flex;
+  flex: none;
+  height: 56px;
+  justify-content: space-between;
+}
+
+.code-chip {
+  align-items: center;
+  background: $page;
+  border: 1px solid $line;
+  border-radius: 17px;
+  color: $muted;
+  cursor: pointer;
+  display: flex;
+  font-size: 13px;
+  font-weight: 500;
+  gap: 8px;
+  height: 34px;
+  letter-spacing: 0.14em;
+  padding: 0 12px;
+}
+
+.phase-header {
+  align-items: center;
+  border-bottom: 1px solid $row;
+  display: flex;
+  flex: none;
+  gap: 12px;
+  min-height: 56px;
+
+  .label {
+    white-space: nowrap;
+  }
+
+  .scores {
+    color: $soft;
+    flex: 1;
+    font-size: 13px;
+    text-align: right;
   }
 }
 
-footer a {
+.phase-rule {
+  align-items: center;
+  color: $muted;
+  display: flex;
+  font-size: 14px;
+  gap: 12px;
+  justify-content: space-between;
+  margin-top: 2px;
+
+  .icon-button {
+    margin-right: -10px;
+  }
+}
+
+// ---------------------------------------------------------------- buttons
+
+.btn {
+  align-items: center;
+  border-radius: 14px;
+  cursor: pointer;
+  display: flex;
+  flex: none;
+  font-size: 15px;
+  font-weight: 500;
+  gap: 8px;
+  height: 56px;
+  justify-content: center;
+  text-decoration: none;
+  user-select: none;
+  width: 100%;
+
+  &:disabled {
+    cursor: default;
+  }
+
+  &:not(:disabled):active {
+    transform: scale(0.985);
+  }
+}
+
+.btn-primary {
+  background: $ink;
+  border: 0;
+  color: #FFF;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+
+  &:disabled {
+    background: $disabled-bg;
+    color: $disabled-fg;
+  }
+}
+
+.btn-big {
+  height: 76px;
+}
+
+.btn-secondary {
+  background: $page;
+  border: 1px solid $line;
+  color: $muted;
+  font-size: 14px;
+  height: 52px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+
+  .name {
+    letter-spacing: 0.05em;
+  }
+
+  &:disabled {
+    color: $placeholder;
+  }
+}
+
+// The lobby's "New team" and "Shuffle teams".
+.btn-dashed, .btn-outline {
+  background: $page;
+  border-radius: 18px;
+  flex: 1;
+  font-weight: 400;
+  height: 48px;
+}
+
+.btn-dashed {
+  border: 1.5px dashed #D0D0CB;
+  color: $muted;
+}
+
+.btn-outline {
+  border: 1px solid $line;
+  color: $ink;
+
+  &:disabled {
+    color: $placeholder;
+  }
+}
+
+.btn-pill {
+  background: $page;
+  border: 1px solid $ink;
+  border-radius: 18px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  height: 36px;
+  padding: 0 16px;
+}
+
+.btn-quiet {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  color: $muted;
+  cursor: pointer;
+  display: flex;
+  font-size: 14px;
+  gap: 6px;
+  height: 40px;
+  justify-content: center;
+
+  .hand {
+    font-size: 15px;
+  }
+}
+
+.icon-button {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  color: $soft;
+  cursor: pointer;
+  display: flex;
+  flex: none;
+  height: 40px;
+  justify-content: center;
+  width: 40px;
+}
+
+// ---------------------------------------------------------------- slips
+
+.slip {
+  @include slip;
+}
+
+.slip-stage {
+  align-items: center;
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  padding: 20px 0;
+}
+
+// The clue-giver's slip. The noun is fitted to it (see FittedText).
+.slip-big {
+  align-items: center;
+  display: flex;
+  height: 220px;
+  justify-content: center;
+  max-width: 330px;
+  padding: 28px 22px;
+  text-align: center;
+  width: 100%;
+
+  .hand {
+    display: block;
+    line-height: 1.1;
+    text-wrap: balance;
+  }
+}
+
+.slip-small {
+  font-size: 22px;
+  line-height: 1.1;
+  max-width: 60%;
+  padding: 12px 16px;
+
+  .hand {
+    display: block;
+    overflow-wrap: anywhere;
+  }
+}
+
+.mini-slips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.mini-slip {
+  @include slip;
+  align-items: center;
+  display: flex;
+  font-size: 16px;
+  min-height: 34px;
+  padding: 4px 12px;
+}
+
+.slip-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.slip-input-label {
+  display: block;
+}
+
+.slip-input {
+  @include slip;
+  border-radius: 0;
+  display: block;
+  font-family: $font-hand;
+  font-size: 20px;
+  font-weight: 400;
+  height: 76px;
+  outline: none;
+  padding: 0 18px;
+  text-align: center;
+  width: 100%;
+
+  &:focus {
+    border-color: $ink;
+  }
+
+  &:disabled {
+    color: $muted;
+  }
+
+  &::placeholder {
+    color: $placeholder;
+    font-family: $font-ui;
+    font-weight: 300;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+}
+
+.name-input {
+  font-size: 26px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.bowl-status {
+  align-items: center;
+  color: $muted;
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+
+  &.center {
+    font-size: 14px;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 14px;
+  }
+
+  .bowl-icon {
+    flex: none;
+  }
+}
+
+.bowl-status-main {
+  color: $ink;
+  font-size: 15px;
+  font-weight: 400;
+}
+
+.bowl-status-sub {
+  color: $soft;
+  font-size: 13px;
+  margin-top: 2px;
+}
+
+// ---------------------------------------------------------------- lobby
+
+.teams {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.team-card {
+  border: 1px solid $line;
+  border-radius: 18px;
+  padding: 4px 0 6px;
+
+  &.mine {
+    border: 1.5px solid $ink;
+
+    h2 {
+      font-weight: 500;
+    }
+  }
+
+  h2 {
+    flex: 1;
+    font-size: 16px;
+    font-weight: 400;
+  }
+}
+
+.team-card-head {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+  min-height: 50px;
+  padding: 6px 8px 6px 16px;
+}
+
+.team-card-note {
+  color: $soft;
+  font-size: 13px;
+  padding-right: 8px;
+}
+
+.team-dot {
+  border-radius: 50%;
+  flex: none;
+  height: 9px;
+  width: 9px;
+}
+
+.player-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 4px 16px 12px;
+}
+
+.player-chip {
+  @include slip;
+  align-items: center;
+  display: flex;
+  font-size: 18px;
+  gap: 8px;
+  height: 40px;
+  padding: 0 14px;
+
+  &.you {
+    background: $ink;
+    border-color: $ink;
+    box-shadow: none;
+    color: #FFF;
+  }
+
+  &.writing {
+    background: transparent;
+    border: 1.5px dashed #B5B5B0;
+    box-shadow: none;
+    color: $muted;
+
+    .chip-note {
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0;
+      opacity: 1;
+      text-transform: none;
+    }
+  }
+
+  &.offline {
+    opacity: 0.45;
+  }
+}
+
+.chip-note {
+  font-family: $font-ui;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  opacity: 0.75;
+  text-transform: uppercase;
+}
+
+.team-actions {
+  display: flex;
+  gap: 10px;
+}
+
+// ---------------------------------------------------------------- in play
+
+.center-stage {
+  align-items: center;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 12px;
+  justify-content: center;
+  padding: 24px 0;
+  text-align: center;
+
+  .title {
+    margin: 0 0 4px;
+  }
+}
+
+.button-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.timer-bar {
+  background: $row;
+  border-radius: 3px;
+  flex: none;
+  height: 5px;
+  margin-top: 24px;
+  overflow: hidden;
+}
+
+.timer-bar-fill {
+  background: $ink;
+  border-radius: 3px;
+  height: 100%;
+}
+
+.timer-ring {
+  align-items: center;
+  display: flex;
+  flex: none;
+  height: 264px;
+  justify-content: center;
+  position: relative;
+  width: 264px;
+
+  svg {
+    inset: 0;
+    position: absolute;
+    // Start at 12 o'clock; the spent part grows clockwise from there.
+    transform: rotate(-90deg) scaleY(-1);
+  }
+}
+
+.timer-ring-track {
+  stroke: $row;
+}
+
+.timer-ring-fill {
+  stroke: $ink;
+}
+
+.timer-ring-seconds {
+  font-size: 120px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 300;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin-left: -0.04em;
+}
+
+.giving-clues {
+  font-size: 20px;
+  margin-top: 22px;
+
+  .name {
+    font-size: 1.1em;
+  }
+}
+
+.this-turn {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 8px;
+
+  .count-line {
+    margin: 8px 0 0;
+  }
+}
+
+.offline-player {
+  border: 1px solid $line;
+  border-radius: 14px;
+  color: $muted;
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  gap: 12px;
+  margin-top: 12px;
+  padding: 16px;
+  width: 100%;
+}
+
+// ---------------------------------------------------------------- game over
+
+.headline {
+  padding: 10px 0 20px;
+
+  .title {
+    margin: 8px 0 0;
+  }
+}
+
+.final-team {
+  border-top: 1px solid $line;
+  padding: 14px 0 12px;
+
+  &.won {
+    border-top: 1.5px solid $ink;
+
+    .final-team-name {
+      font-weight: 500;
+    }
+
+    .final-team-total {
+      font-size: 40px;
+      font-weight: 400;
+    }
+  }
+}
+
+.final-team-head {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+}
+
+.final-team-name {
+  font-size: 17px;
+}
+
+.badge {
+  align-items: center;
+  background: $ink;
+  color: #FFF;
+  display: flex;
+  font-size: 10px;
+  font-weight: 500;
+  height: 20px;
+  letter-spacing: 0.12em;
+  padding: 0 7px;
+  text-transform: uppercase;
+}
+
+.final-team-total {
+  font-size: 30px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  margin-left: auto;
+}
+
+.final-team-detail {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  margin-top: 8px;
+  padding-left: 19px;
+}
+
+.tally {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 8px;
+}
+
+.rounds {
+  color: $soft;
   font-size: 12px;
-  display: inline-block;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.stat-section {
+  margin-top: 20px;
+}
+
+.clue-givers {
+  font-size: 15px;
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+
+  li {
+    align-items: center;
+    border-bottom: 1px solid $row;
+    display: flex;
+    gap: 12px;
+    height: 40px;
+  }
+
+  .rank {
+    color: $soft;
+    width: 16px;
+  }
+
+  .name {
+    flex: 1;
+    font-size: 17px;
+  }
+}
+
+.clue-giver-count {
+  color: $muted;
+  font-variant-numeric: tabular-nums;
+}
+
+.most-skipped {
+  align-items: center;
+  display: flex;
+  gap: 16px;
+
+  p {
+    color: $muted;
+    font-size: 14px;
+    margin-top: 4px;
+  }
+
+  .name {
+    color: $ink;
+  }
+}
+
+// ---------------------------------------------------------------- overlays
+
+.banner {
+  align-items: center;
+  background: $ink;
+  color: #FFF;
+  display: flex;
+  font-size: 14px;
+  font-weight: 400;
+  gap: 8px;
+  justify-content: center;
+  min-height: 40px;
+  padding: 6px 8px 6px 16px;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+
+  span {
+    flex: 1;
+    text-align: center;
+  }
+
+  .icon-button {
+    color: #FFF;
+  }
+}
+
+.announcement {
+  align-items: center;
+  animation: fade-in 0.2s ease-out;
+  background: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  padding: 20px;
+  position: fixed;
+  z-index: 30;
+}
+
+.announcement-card {
+  @include slip;
+  animation: pop-in 0.2s ease-out;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 360px;
+  padding: 32px 24px 20px;
+  text-align: center;
+  width: 100%;
+
+  .title {
+    margin: 0;
+  }
+}
+
+.announcement-subtitle {
+  font-size: 18px;
+}
+
+.announcement-detail {
+  color: $muted;
+}
+
+.announcement-hint {
+  color: $soft;
+  font-size: 12px;
+  margin-top: 10px;
+}
+
+.sheet-backdrop {
+  align-items: flex-end;
+  animation: fade-in 0.15s ease-out;
+  background: rgba(20, 20, 20, 0.35);
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  position: fixed;
+  z-index: 40;
+}
+
+.sheet {
+  align-items: center;
+  animation: sheet-in 0.2s ease-out;
+  background: $page;
+  border-radius: 22px 22px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: $max-width;
+  padding: 28px 20px calc(24px + env(safe-area-inset-bottom));
+  position: relative;
+  width: 100%;
+}
+
+.sheet-close {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+
+.sheet-code {
+  font-size: 44px;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  line-height: 1;
+  margin-right: -0.14em;
+}
+
+.qr-code {
+  display: block;
+  height: 220px;
+  width: 220px;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+}
+
+@keyframes pop-in {
+  from { opacity: 0; transform: scale(0.96); }
+}
+
+@keyframes sheet-in {
+  from { transform: translateY(40px); opacity: 0; }
+}
+
+// ---------------------------------------------------------------- static pages
+
+.home-hero {
+  align-items: center;
+  display: flex;
+  flex: 1;
+  justify-content: center;
+
+  .logo {
+    font-size: 52px;
+  }
+}
+
+.home-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.footer {
+  color: $soft;
+  display: flex;
+  font-size: 13px;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 24px;
+
+  a {
+    text-decoration: none;
+  }
+}
+
+.settings {
+  border-top: 1px solid $line;
+}
+
+.setting {
+  align-items: center;
+  border-bottom: 1px solid $line;
+  display: flex;
+  font-size: 16px;
+  gap: 16px;
+  min-height: 64px;
+
+  span {
+    flex: 1;
+  }
+
+  input {
+    border: 1px solid $line;
+    border-radius: 10px;
+    font-size: 20px;
+    font-variant-numeric: tabular-nums;
+    font-weight: 400;
+    height: 44px;
+    text-align: center;
+    width: 88px;
+
+    &:focus {
+      border-color: $ink;
+      outline: none;
+    }
+  }
+}
+
+.code-input {
+  border: 0;
+  border-bottom: 1.5px solid $line;
+  border-radius: 0;
+  display: block;
+  font-size: 44px;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  padding: 8px 0;
+  text-align: center;
+  text-transform: uppercase;
+  width: 100%;
+
+  &:focus {
+    border-bottom-color: $ink;
+    outline: none;
+  }
+
+  &::placeholder {
+    color: $line;
+  }
+}
+
+.form-error {
+  color: #B3261E;
+  font-size: 14px;
+  margin-top: 14px;
+}
+
+.prose {
+  p {
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 0 0 14px;
+  }
+
+  h2 {
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    margin: 26px 0 8px;
+    text-transform: uppercase;
+  }
+
+  .btn {
+    margin-top: 24px;
+  }
+}
+
+.link-row {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
 }

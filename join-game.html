@@ -2,32 +2,23 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>SaladBowl</title>
-  <link rel="icon" type="image/png" href="/images/favicon.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Join a game · SaladBowl</title>
   <link rel="stylesheet" href="/styles/main.scss" />
 </head>
 <body>
-  <main>
-    <div id="main-content">
-      <form id="join-game-form" onsubmit="event.preventDefault()">
-        <h1>Join a Game</h1>
-        <hr>
-        <input autocapitalize="characters" autocorrect="off" autocomplete="off" autofocus name="game-id" placeholder="Game Code" type="text">
-        <button type="submit">Go</button>
-        <a class="button" href="/">Back</a>
-      </form>
-    </div>
-    <hr>
-    <footer>
-      <a href="/">Home</a>
-      <a href="/how-to-play" target="_blank">How To Play</a>
-
-      <div>
-        <a target="_blank" href="https://github.com/simonbw/saladbowl-js">https://github.com/simonbw/saladbowl-js</a>
-      </div>
-    </footer>
-  </main>
+  <div class="screen">
+    <header class="app-header"><a href="/" class="logo-link"><!-- logo --></a></header>
+    <form id="join-game-form" class="screen-form" onsubmit="event.preventDefault()">
+      <h1 class="title">Join a game</h1>
+      <label>
+        <span class="sr-only">Game code</span>
+        <input class="code-input" autocapitalize="characters" autocorrect="off" autocomplete="off" autofocus maxlength="8" name="game-id" placeholder="CODE" spellcheck="false" type="text">
+      </label>
+      <div class="spacer"></div>
+      <button class="btn btn-primary" type="submit">Join</button>
+    </form>
+  </div>
   <script type="module" src="/js/web/joinGamePage.ts"></script>
 </body>
 </html>

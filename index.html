@@ -2,31 +2,21 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>SaladBowl</title>
-  <link rel="icon" type="image/png" href="/images/favicon.png" />
   <link rel="stylesheet" href="/styles/main.scss" />
 </head>
 <body>
-  <main>
-    <div id="main-content">
-      <div id="index-page">
-        <h1>Welcome to SaladBowl</h1>
-        <hr>
-        <a class="button" href="/new-game">New Game</a>
-        <a class="button" href="/join-game">Join Game</a>
-      </div>
+  <div class="screen">
+    <div class="home-hero"><!-- logo --></div>
+    <div class="home-actions">
+      <a class="btn btn-primary" href="/new-game">New game</a>
+      <a class="btn btn-secondary" href="/join-game">Join a game</a>
     </div>
-    <hr>
-    <footer>
-      <a href="/">Home</a>
-      <a href="/how-to-play" target="_blank">How To Play</a>
-
-      <div>
-        <a target="_blank" href="https://github.com/simonbw/saladbowl-js">https://github.com/simonbw/saladbowl-js</a>
-      </div>
+    <footer class="footer">
+      <a href="/how-to-play">How to play</a>
+      <a href="https://github.com/simonbw/saladbowl-js" target="_blank" rel="noopener">GitHub</a>
     </footer>
-  </main>
-
+  </div>
 </body>
 </html>
